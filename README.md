@@ -13,6 +13,7 @@ SetRoomInfo|/api/room/info|Sets information about the room|POST|{roomId:uuid}
 #### Socket calls
 
 Client -> Server
+
 Name|Description|Required
 ---|---|---
 JoinRoom|Joins user to the room given|{roomId:uuid}
@@ -21,6 +22,7 @@ PlayCard|Plays specific card that the user selected|{cardId:uuid}
 
 
 Server -> Client
+
 Name|Description|Required
 ---|---|---
 Chat|Sends a message to display in the chat|{message:string, user:object}
