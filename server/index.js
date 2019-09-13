@@ -35,7 +35,7 @@ app.post('/api/auth/register', (req, res) => {
    })) {
         // register
    }else{
-        response(res, req.body, 400, "Request did not validate to required parameters and its rules")
+        response(res, req.body, {}, 400, "Request did not validate to required parameters and its rules")
    }
 })
 
