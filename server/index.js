@@ -11,11 +11,11 @@ const app = express();
 
 app.use(bodyparser());
 
-app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`), {
-    define: function(db, models, next) {
+// app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`), {
+//     define: function(db, models, next) {
 
-    }
-})
+//     }
+// })
 
 app.post('/api/auth/register', (req, res) => {
     /* 
