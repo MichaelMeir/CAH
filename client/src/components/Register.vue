@@ -142,6 +142,13 @@ export default {
         })
       }
 
+      if (this.password !== this.password_confirmation) {
+        this.errors.push({
+          field: 'password_confirmation',
+          error: 'Please confirm your password.'
+        })
+      }
+
       if (!this.password_confirmation) {
         this.errors.push({
           field: 'password_confirmation',
@@ -157,19 +164,20 @@ export default {
       }
 
       if (this.errors.length === 0) {
-        const url = `${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT
-
-        console.log(url)
-
         try {
-          await axios.post(url + '/api/auth/register', {
+          await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/register', {
             username: this.username,
             email: this.email,
             password: this.password,
             password_confirmation: this.password_confirmation
           })
         } catch (err) {
-          console.log(err)
+          err.response.data.errors.forEach(error => {
+            this.errors.push({
+              field: error.field,
+              error: error.message
+            })
+          })
         }
       }
     },
