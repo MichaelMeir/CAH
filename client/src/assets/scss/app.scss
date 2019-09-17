@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply .font-sans .antialiased;
+}
+
+.transition {
+  transition: all 0.1s linear;
+}
