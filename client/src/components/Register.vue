@@ -157,12 +157,20 @@ export default {
       }
 
       if (this.errors.length === 0) {
-        let request = await axios.post(location.url + '/api/auth/register', {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          password_confirmation: this.password_confirmation
-        })
+        const url = `${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT
+
+        console.log(url)
+
+        try {
+          await axios.post(url + '/api/auth/register', {
+            username: this.username,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation
+          })
+        } catch (err) {
+          console.log(err)
+        }
       }
     },
 

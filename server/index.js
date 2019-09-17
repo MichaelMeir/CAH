@@ -43,4 +43,4 @@ app.post('/api/auth/register', (req, res) => {
      }
 })
 
-app.listen(process.env.DEV?"8080":"80")
+app.listen(process.env.DEV? "9000" : "80")
