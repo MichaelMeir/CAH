@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "set DEV=1 && node ./index.js",
+    "windev": "set DEV=1 && node ./index.js",
+    "dev": "DEV=1 node ./index.js",
     "prod": "node ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
