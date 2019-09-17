@@ -6,23 +6,24 @@ const errors = require('../errors')
  */
 const RULES = {
     "string": (value, args) => {
-        return typeof value == "string"
+        return [typeof value == "string"]
     },
 
     "min": (value, args) => {
-        return value.length >= Number(args[0])
+        return [value.length >= Number(args[0]), `value requires a length of minimal ${args[0]} characters`]
     },
 
     "max": (value, args) => {
-        return value.length <= Number(args[0])
+        return [value.length <= Number(args[0]), `value requires a length of maximal ${args[0]} characters`]
     },
 
-    "mail": (value, args) => {
-        return /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/gm.exec(value)
+    "email": (value, args) => {
+        let result = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/gm.exec(value)
+        return [result != null]
     },
 
     "word": (value, args) => {
-        return /^[\w][^_]*$/gm.exec(value)
+        return [/^[\w][^_]*$/gm.exec(value)]
     }
 }
 
@@ -60,10 +61,10 @@ module.exports = (data, template) => {
                 //check if rule function exists
                 if(ruleFunc) {
                     //get result of rule function using the request value
-                    let result = ruleFunc(value, args)
+                    let [result, message] = ruleFunc(value, args)
                     //add error if value did not match rule
                     if(!result) {
-                        err.push(errors.New(key, errors.code.NotValid))
+                        err.push(errors.New(key, errors.code.NotValid, message))
                         continue
                     }
                 }
