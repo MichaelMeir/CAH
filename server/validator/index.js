@@ -1,19 +1,9 @@
-/*
+const errors = require('../errors')
 
-data:
-{
-    username: "test"
-    password: "test2"
-}
-
-template:
-{
-    username: "string min:3 nonnumerical word"
-    password: "string min:3"
-}
-
-*/
-
+/**
+ * @private
+ * @description Rules that can be used in a validator template
+ */
 const RULES = {
     "string": (value, args) => {
         return typeof value == "string"
@@ -38,13 +28,17 @@ const RULES = {
 
 
 /**
+ * @method validator
  * @description Validates data with given template, template requires keys with values as rules
- * @param {Object} data
- * @param {Object} template
- * @return {Boolean} Returns true if data validates with the given template
+ * 
+ * @param {Object} data Data given from the request body
+ * @param {Object} template template with keys and rules as values
+ * 
+ * @returns {Boolean} Returns true if data validates with the given template
  */
 module.exports = (data, template) => {
     let keys = Object.keys(template)
+    let err = []
     //loop through template keys
     for(let i = 0; i < keys.length; i++) {
         //get key
@@ -67,14 +61,17 @@ module.exports = (data, template) => {
                 if(ruleFunc) {
                     //get result of rule function using the request value
                     let result = ruleFunc(value, args)
-                    //return false if rule function failed
-                    if(!result) return false
+                    //add error if value did not match rule
+                    if(!result) {
+                        err.push(errors.New(key, errors.code.NotValid))
+                        continue
+                    }
                 }
             }
         }else{
-            //return false if value did not exist in request
-            return false
+            //add error if key does not exist
+            err.push(errors.New(key, errors.code.NotFilledIn))
         }
     }
-    return true
+    return [(err.length == 0), err]
 }
