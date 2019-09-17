@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors')
+const helmet = require('helmet')
 const bodyparser = require('body-parser');
 
 const orm = require('orm');
@@ -9,6 +11,8 @@ const response = require('./response')
 
 const app = express();
 
+app.use(cors());
+app.use(helmet());
 app.use(bodyparser());
 
 // app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`), {
