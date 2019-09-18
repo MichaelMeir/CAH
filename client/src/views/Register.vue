@@ -164,12 +164,16 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/register', {
+          let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/register', {
             username: this.username,
             email: this.email,
             password: this.password,
             password_confirmation: this.password_confirmation
           })
+
+          if (request.status === 200) {
+            this.$router.push('/')
+          }
         } catch (err) {
           err.response.data.errors.forEach(error => {
             this.errors.push({
