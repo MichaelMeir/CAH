@@ -16,6 +16,7 @@ const errors = require('./errors')
 
 const app = express();
 
+
 app.use(cors());
 app.use(helmet());
 app.use(bodyparser());
@@ -49,5 +50,9 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
  * @yields {Object} JSON response made by the response method
  */
 app.post('/api/auth/register', Controller("Auth@Register"))
+
+let MailService = require('./services/mailservice');
+MailService = new MailService();
+MailService.send("99044420@mydavinci.nl", "yeet@hi.com", "dikzak", "test", "<b>test</b>");
 
 app.listen(process.env.DEV? "9000" : "80")

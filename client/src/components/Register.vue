@@ -141,14 +141,13 @@ export default {
           error: 'Please enter a password.'
         })
       }
-
+      
       if (this.password !== this.password_confirmation) {
         this.errors.push({
           field: 'password_confirmation',
           error: 'Please confirm your password.'
         })
       }
-
       if (!this.password_confirmation) {
         this.errors.push({
           field: 'password_confirmation',
