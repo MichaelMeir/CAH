@@ -6,7 +6,11 @@ module.exports.code = {
     NotValid: {
         id: 2,
         msg: "value was not valid."
-    }
+    },
+    Exists: {
+        id: 3,
+        msg: "value has already been used."
+    },
 }
 
 module.exports.New = (field, code, message = false) => {
