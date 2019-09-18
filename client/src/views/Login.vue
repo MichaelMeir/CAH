@@ -9,18 +9,18 @@
       </div>
       <div class="mb-3">
         <input
-          @keydown="clearError('username')"
-          :class="(hasError('username') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
+          @keydown="clearError('email')"
+          :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
           type="text"
-          placeholder="Username"
+          placeholder="Email address"
           autocomplete="off"
-          v-model="username"
+          v-model="email"
         />
         <div
-          v-if="hasError('username')"
+          v-if="hasError('email')"
           class="error-message"
         >
-          {{ getError('username') }}
+          {{ getError('email') }}
         </div>
       </div>
 
@@ -41,58 +41,12 @@
         </div>
       </div>
 
-      <div class="mb-3">
-        <input
-          @keydown="clearError('password_confirmation')"
-          :class="(hasError('password_confirmation') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
-          type="password"
-          placeholder="Confirm your password"
-          autocomplete="off"
-          v-model="password_confirmation"
-        />
-        <div
-          v-if="hasError('password_confirmation')"
-          class="error-message"
-        >
-          {{ getError('password_confirmation') }}
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <input
-          @keydown="clearError('email')"
-          :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
-          type="email"
-          placeholder="Email address"
-          autocomplete="off"
-          v-model="email"
-        />
-        <div
-          v-if="hasError('email')"
-          class="error-message"
-        >
-          {{ getError('email') }}
-        </div>
-      </div>
-
-      <div class="mb-4">
-        <label :class="(hasError('tos') ? 'error-message underline' : '') + ' flex text-xs items-center cursor-pointer'">
-          <input
-            @change="clearError('tos')"
-            class="mr-3"
-            type="checkbox"
-            v-model="tos"
-          >
-          I agree to the terms &amp; conditions
-        </label>
-      </div>
-
       <div>
         <button
           class="w-full focus:outline-none rounded bg-blue-500 shadow font-semibold text-sm text-white py-3 hover:bg-blue-600 transition"
           @click="submit()"
         >
-          Create account
+          Login
         </button>
       </div>
     </div>
@@ -104,11 +58,8 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      username: null,
-      password: null,
-      password_confirmation: null,
       email: null,
-      tos: false,
+      password: null,
 
       errors: []
     }
@@ -121,54 +72,25 @@ export default {
      * @return {Boolean}
      */
     async submit () {
-      if (!this.username) {
-        this.errors.push({
-          field: 'username',
-          error: 'Please fill in a username.'
-        })
-      }
-
       if (!this.email) {
         this.errors.push({
           field: 'email',
-          error: 'Please fill in a valid e-mail address.'
+          error: 'Please fill in your email address.'
         })
       }
 
       if (!this.password) {
         this.errors.push({
           field: 'password',
-          error: 'Please enter a password.'
-        })
-      }
-      
-      if (this.password !== this.password_confirmation) {
-        this.errors.push({
-          field: 'password_confirmation',
-          error: 'Please confirm your password.'
-        })
-      }
-      if (!this.password_confirmation) {
-        this.errors.push({
-          field: 'password_confirmation',
-          error: 'Please confirm your password.'
-        })
-      }
-
-      if (!this.tos) {
-        this.errors.push({
-          field: 'tos',
-          error: 'You must agree to our terms and conditions.'
+          error: 'Please enter your password.'
         })
       }
 
       if (this.errors.length === 0) {
         try {
-          await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/register', {
-            username: this.username,
+          await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/login', {
             email: this.email,
-            password: this.password,
-            password_confirmation: this.password_confirmation
+            password: this.password
           })
         } catch (err) {
           err.response.data.errors.forEach(error => {
