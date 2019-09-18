@@ -26,6 +26,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
                username_withcase: String,
                password: String,
                email: String,
+               verification: String,
                session_id: String,
                session_ip: String,
           })
@@ -70,6 +71,7 @@ app.post('/api/auth/register', (req, res) => {
                               username_withcase: req.body.username,
                               password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)),
                               email: req.body.email.toLowerCase(),
+                              verification: uuidv4(),
                               session_id: "",
                               session_ip: "",
                          })
