@@ -97,6 +97,48 @@ app.post('/api/auth/register', (req, res) => {
      }
 })
 
+/**
+ * @callback /api/auth/login
+ * @description Authenticates an existing user
+ * 
+ * @param {String} email Email that the user wants to authenticate and verify with
+ * @param {String} password The password the user wishes to use to authenticate
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/login', (req, res) => {
+     let [success, err] = validator(req.body, {
+          "email": "string email",
+          "password": "string min:5"
+      })
+     if(success) {
+          req.db.sync(function(err) {
+               if(err) {
+                    response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [err])
+                    return
+               }
+
+               req.models.person.find({email: req.body.email.toLowerCase()}, (err, results) => {
+                    if (err) {
+                         response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err])
+                         return
+                    }
+
+                    if (results.length > 0) {
+                         // TODO: Authenticate user
+                    } else {
+                         var err = []
+                         err.push(errors.New("email", errors.code.Exists, "You have entered the wrong credentials."))
+
+                         response(res, req.body, {}, 403, "User could not authenticate due to wrong credentials.", err);
+                    }
+               });
+          })
+     }else{
+          response(res, req.body, {}, 400, "Request did not validate to required parameters and its rules", err)
+     }
+})
+
 let MailService = require('./services/mailservice');
 MailService = new MailService();
 MailService.send("99044420@mydavinci.nl", "yeet@hi.com", "dikzak", "test", "<b>test</b>");
