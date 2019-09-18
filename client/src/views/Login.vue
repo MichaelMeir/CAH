@@ -9,7 +9,7 @@
       </div>
       <div class="mb-3">
         <input
-          @keydown="clearError('email')"
+          @keydown="clearErrors()"
           :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
           type="text"
           placeholder="Email address"
@@ -26,7 +26,7 @@
 
       <div class="mb-3">
         <input
-          @keydown="clearError('password')"
+          @keydown="clearErrors()"
           :class="(hasError('password') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
           type="password"
           placeholder="Password"
@@ -88,10 +88,14 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/login', {
+          let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/login', {
             email: this.email,
             password: this.password
           })
+
+          if (request.status === 200) {
+            console.log('Authenticated succesfully')
+          }
         } catch (err) {
           err.response.data.errors.forEach(error => {
             this.errors.push({
@@ -142,6 +146,15 @@ export default {
       this.errors = this.errors.filter(e => {
         return e.field !== field
       })
+    },
+
+    /**
+     * A helper function clear all errors
+     *
+     * @return {Boolean}
+     */
+    clearErrors () {
+      this.errors = []
     }
   }
 }
