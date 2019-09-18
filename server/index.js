@@ -41,7 +41,40 @@ app.post('/api/auth/register', (req, res) => {
           "password_confirmation": "string min:5"
       })
      if(success) {
-          // register
+          db.sync(function(err) {
+          if (err) {
+                         response(res,req.body,{}, 500, "database error occured.", [err])
+                         return
+                    } 
+
+          Person.find({ surname: "Doe" }, function (err, people) { //[{}, {}]
+               if (err) {
+                         response(res,req.body,{}, 500, "database error occured.", [err])
+                         return
+                    }
+               people.foreach() => {
+                    if(people.name != this.username) {
+                         response(res,req.body,{}, 500, "database error occured.", [err])
+                         return
+                    }
+               }
+
+               {    
+                    Person.create({ id: 1, name: "John", surname: "Doe", age: 27 }, function(err) {
+                         if (err) {
+                              response(res,req.body,{}, 500, "database error occured.", [err])
+                         } else {
+                              response(res,req.body, {}, 200, "user succesfully created.")
+                         }
+                    }
+               } else{
+                    response(res,req.body,{}, 500, "database error occured.", [err])
+                    return
+               }
+
+          }
+     }
+
      }else{
           response(res, req.body, {}, 400, "Request did not validate to required parameters and its rules", errors)
      }
