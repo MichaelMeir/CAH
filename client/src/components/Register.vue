@@ -141,7 +141,13 @@ export default {
           error: 'Please enter a password.'
         })
       }
-
+      
+      if (this.password !== this.password_confirmation) {
+        this.errors.push({
+          field: 'password_confirmation',
+          error: 'Please confirm your password.'
+        })
+      }
       if (!this.password_confirmation) {
         this.errors.push({
           field: 'password_confirmation',
@@ -157,12 +163,21 @@ export default {
       }
 
       if (this.errors.length === 0) {
-        let request = await axios.post(location.url + '/api/auth/register', {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          password_confirmation: this.password_confirmation
-        })
+        try {
+          await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/register', {
+            username: this.username,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation
+          })
+        } catch (err) {
+          err.response.data.errors.forEach(error => {
+            this.errors.push({
+              field: error.field,
+              error: error.message
+            })
+          })
+        }
       }
     },
 
