@@ -14,6 +14,7 @@ const errors = require('./errors')
 
 const app = express();
 
+
 app.use(cors());
 app.use(helmet());
 app.use(bodyparser());
@@ -95,5 +96,9 @@ app.post('/api/auth/register', (req, res) => {
           response(res, req.body, {}, 400, "Request did not validate to required parameters and its rules", err)
      }
 })
+
+let MailService = require('./services/mailservice');
+MailService = new MailService();
+MailService.send("99044420@mydavinci.nl", "yeet@hi.com", "dikzak", "test", "<b>test</b>");
 
 app.listen(process.env.DEV? "9000" : "80")
