@@ -1,3 +1,11 @@
+const bcrypt = require('bcrypt');
+const uuidv4 = require('uuid/v4');
+
+const validator = require('../../validator');
+const response = require('../../response');
+const errors = require('../../errors')
+const mailService = new (require('../../services/mailservice'))();
+
 module.exports = {
     Register: (req, res) => {
         let [success, err] = validator(req.body, {
@@ -12,13 +20,13 @@ module.exports = {
                        response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [err])
                        return
                   }
-                  req.models.person.find({or:[{username: req.body.username.toLowerCase()},{email: req.body.email.toLowerCase()}]}, (err, results) => {
+                  req.models.user.find({or:[{username: req.body.username.toLowerCase()},{email: req.body.email.toLowerCase()}]}, (err, results) => {
                        if(err) {
                             response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err])
                             return
                        }
                        if(results.length == 0) {
-                            req.models.person.create({
+                            let user = req.models.user.create({
                                  uuid: uuidv4(),
                                  username: req.body.username.toLowerCase(),
                                  username_withcase: req.body.username,
@@ -27,7 +35,14 @@ module.exports = {
                                  verification: uuidv4(),
                                  session_id: "",
                                  session_ip: "",
+                            }, err => {
+                              if (err) {
+                                   response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err])
+                                   return
+                              }
                             })
+
+                            response(res, req.body, {}, 200, "User created succesfully", err);
                        }else{
                             var err = []
                             for(let i = 0; i < results.length; i++) {
@@ -51,8 +66,8 @@ module.exports = {
 
    Login: (req, res) => {
           let [success, err] = validator(req.body, {
-               "email": "string email",
-               "password": "string min:5"
+               "email": "string",
+               "password": "string"
           })
           if(success) {
                req.db.sync(function(err) {
@@ -61,16 +76,31 @@ module.exports = {
                          return
                     }
 
-                    req.models.person.find({email: req.body.email.toLowerCase()}, (err, results) => {
+                    req.models.user.find({email: req.body.email.toLowerCase()}, (err, results) => {
                          if (err) {
                               response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err])
                               return
                          }
 
-                         if (results.length > 0) {
-                              // TODO: Authenticate user
+                         var err = []
+
+                         if (results.length === 1) {
+                              // TODO: Check if password is correct
+                              const result = results[0]
+                              
+                              const checkPassword = bcrypt.compareSync(req.body.password, result.password);
+
+                              if (checkPassword) {
+                                   // Success
+                                   // mailService.send(result.email, "info@cardsagainst.me", "Test", "Test", "Test");
+                                   response(res, req.body, {}, 200, "Authentication succesful", err);
+                              } else {
+                                   err.push(errors.New("email", errors.code.Exists, "You have entered the wrong credentials."))
+
+                                   response(res, req.body, {}, 403, "User could not authenticate due to wrong credentials.", err);
+                              }
+
                          } else {
-                              var err = []
                               err.push(errors.New("email", errors.code.Exists, "You have entered the wrong credentials."))
 
                               response(res, req.body, {}, 403, "User could not authenticate due to wrong credentials.", err);
