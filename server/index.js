@@ -3,16 +3,22 @@ const express = require('express');
 const cors = require('cors')
 const helmet = require('helmet')
 const bodyparser = require('body-parser');
+const cookieParser = require('cookie-parser')
+const fs = require('fs')
 
 const orm = require('orm');
 
 const Controller = require('./controller')
-
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+}));
+
 app.use(helmet());
 app.use(bodyparser());
+app.use(cookieParser(fs.readFileSync('private.key').toString()));
 
 app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`, {
     define: function(db, models, next) {
@@ -42,7 +48,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
  * 
  * @yields {Object} JSON response made by the response method
  */
-app.post('/api/auth/register', Controller("Auth@Register"))
+app.post('/api/auth/register', Controller("Auth@register"))
 
 /**
  * @callback /api/auth/login
@@ -53,6 +59,26 @@ app.post('/api/auth/register', Controller("Auth@Register"))
  * 
  * @yields {Object} JSON response made by the response method
  */
-app.post('/api/auth/login', Controller("Auth@Login"))
+app.post('/api/auth/login', Controller("Auth@login"))
 
-app.listen(process.env.DEV? "9000" : "80")
+/**
+ * @callback /api/auth/check
+ * @description Checks if an user is authenticated
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/check', Controller("Auth@checkUser"))
+
+/**
+ * @callback /api/auth/logout
+ * @description Logs an authenticated user out
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/logout', Controller("Auth@logout"))
+
+app.listen(process.env.DEV ? "9000" : "80")
