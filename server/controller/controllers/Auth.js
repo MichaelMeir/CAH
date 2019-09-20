@@ -89,15 +89,15 @@ module.exports = {
                               const result = results[0]
                               
                               const checkPassword = bcrypt.compareSync(req.body.password, result.password);
-
-                              if (checkPassword) {
+                             
+                             if (checkPassword) {
                                    // Success
                                    mailService.send(
                                         result.email, 
                                         "info@cardsagainst.me",
                                         "Email Confirmation as HTML", 
                                         "plain",
-                                        "<h1 style='color: red;'>Red text</h1>"
+                                        "<a href='localhost:8080/api/auth/" + result.verification + "'style='color: red;'>Click to verify</h1>"
                                    );
                                    response(res, req.body, {}, 200, "Authentication succesful", err);
                               } else {

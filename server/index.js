@@ -55,4 +55,6 @@ app.post('/api/auth/register', Controller("Auth@Register"))
  */
 app.post('/api/auth/login', Controller("Auth@Login"))
 
+app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
+
 app.listen(process.env.DEV? "9000" : "80")
