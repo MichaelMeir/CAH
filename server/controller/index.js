@@ -5,7 +5,6 @@ var controllers = {}
 
 fs.readdirSync(folder).forEach(file => {
     if(file.endsWith(".js")) {
-        console.log(file)
         let name = file.split('.').slice(0, -1).join('.')
         controllers[name] = require("./controllers/"+file)
     }
