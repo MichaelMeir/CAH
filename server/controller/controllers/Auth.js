@@ -48,10 +48,10 @@ module.exports = {
                             for(let i = 0; i < results.length; i++) {
                                  let user = results[i]
                                  if(user.email == req.body.email.toLowerCase()) {
-                                      err.push(errors.New("email", errors.code.Exists, "someone else has already used this email address."))
+                                      err.push(errors.New("email", errors.code.Exists, "Someone has already used this email address."))
                                  }
                                  if(user.username == req.body.username.toLowerCase()) {
-                                      err.push(errors.New("username", errors.code.Exists, "someone else has already used this username."))
+                                      err.push(errors.New("username", errors.code.Exists, "Someone has already used this username."))
                                  }
                             }
                             response(res, req.body, {}, 409, "User could not be created due to conflicts between existing users.", err)
@@ -92,7 +92,13 @@ module.exports = {
 
                               if (checkPassword) {
                                    // Success
-                                   // mailService.send(result.email, "info@cardsagainst.me", "Test", "Test", "Test");
+                                   mailService.send(
+                                        result.email, 
+                                        "info@cardsagainst.me",
+                                        "Email Confirmation as HTML", 
+                                        "plain",
+                                        "<h1 style='color: red;'>Red text</h1>"
+                                   );
                                    response(res, req.body, {}, 200, "Authentication succesful", err);
                               } else {
                                    err.push(errors.New("email", errors.code.Exists, "You have entered the wrong credentials."))

@@ -10,7 +10,7 @@ class MailService {
             from: from,
             subject: subject,
             text: text,
-            html: html,
+            html: html
         });
     }
 

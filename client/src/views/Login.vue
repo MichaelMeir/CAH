@@ -8,6 +8,9 @@
         >
       </div>
       <div class="mb-3">
+        <div v-if="loggedIn" class="bg-green-500 rounded-t">
+          <p class="text-center text-white font-bold">Logged in</p>
+        </div>
         <input
           @keydown="clearErrors()"
           :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
@@ -60,7 +63,7 @@ export default {
     return {
       email: null,
       password: null,
-
+      loggedIn: null,
       errors: []
     }
   },
@@ -95,6 +98,7 @@ export default {
 
           if (request.status === 200) {
             console.log('Authenticated succesfully')
+            this.loggedIn = true
           }
         } catch (err) {
           err.response.data.errors.forEach(error => {
