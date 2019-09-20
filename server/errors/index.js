@@ -16,6 +16,10 @@ module.exports.code = {
         id: 3,
         msg: "value has already been used."
     },
+    DatabaseError: {
+        id: 4,
+        msg: "Unexpected database error."
+    }
 }
 
 /**

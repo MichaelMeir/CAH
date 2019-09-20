@@ -3,7 +3,8 @@ const uuidv4 = require('uuid/v4');
 
 const validator = require('../../validator');
 const response = require('../../response');
-const errors = require('../../errors')
+const errors = require('../../errors');
+const User = require('../../user');
 const mailService = new (require('../../services/mailservice'))();
 
 const jwt = require('jsonwebtoken');
@@ -77,13 +78,13 @@ module.exports = {
           if (success) {
                req.db.sync(function (err) {
                     if (err) {
-                         response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [err])
+                         response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [errors.New("", errors.code.DatabaseError, err)])
                          return
                     }
 
                     req.models.user.find({ email: req.body.email.toLowerCase() }, (err, results) => {
                          if (err) {
-                              response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err])
+                              response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [errors.New("", errors.code.DatabaseError, err)])
                               return
                          }
 
@@ -111,13 +112,13 @@ module.exports = {
 
                                    response(res, req.body, token, 200, "Authentication succesful", err);
                               } else {
-                                   err.push(errors.New("email", errors.code.Exists, "You have entered the wrong credentials."))
+                                   err.push(errors.New("email", errors.code.NotValid, "You have entered the wrong credentials."))
 
                                    response(res, req.body, {}, 403, "User could not authenticate due to wrong credentials.", err);
                               }
 
                          } else {
-                              err.push(errors.New("email", errors.code.Exists, "You have entered the wrong credentials."))
+                              err.push(errors.New("email", errors.code.NotValid, "You have entered the wrong credentials."))
 
                               response(res, req.body, {}, 403, "User could not authenticate due to wrong credentials.", err);
                          }
@@ -129,76 +130,57 @@ module.exports = {
      },
 
      checkUser: (req, res) => {
-          let privateKey = fs.readFileSync('server.cert', 'utf8').toString();
-
-          if (req.signedCookies.jwt === null) {
-               response(res, req.body, req.signedCookies, 403, "The user is not authenticated", [])
-               return
-          }
-
-          jwt.verify(req.signedCookies.jwt, privateKey, { algorithms: ['RS256'] }, (err, decoded) => {
-               if (err) {
-                    response(res, req.body, req.signedCookies, 500, "Unexpected error while trying to decode JWT token.", [err])
+          User(req, (result, err) => {
+               if(err) {
+                    response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
                     return
                }
-
-               const uuid = decoded.uuid;
-               const ip = req.connection.remoteAddress;
-
-               req.db.sync(function (err) {
-                    if (err) {
-                         response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [err])
-                         return
-                    }
-                    req.models.user.find({ session_id: uuid, session_ip: ip }, (err, results) => {
-                         if (err) {
-                              response(res, req.body, {}, 500, "Unexpected error while requesting the user from database.", [err])
-                              return
-                         }
-
-                         (results.length > 0) ? response(res, req.body, true, 200, "The user is authenticated.", err) : response(res, req.body, false, 403, "The user is not authenticated.", err);
-                         return
-                    });
-               });
-          });
+               if(result) {
+                    response(res, req.body, {}, 200, "User is authenticated", [])
+               }else{
+                    response(res, req.body, {}, 403, "User is not authenticated", [])
+               }
+          })
      },
 
      logout: (req, res) => { 
-          let privateKey = fs.readFileSync('server.cert', 'utf8').toString();
-
-          jwt.verify(req.signedCookies.jwt, privateKey, { algorithms: ['RS256'] }, (err, decoded) => {
-               if (err) {
-                    response(res, req.body, req.signedCookies, 500, "Unexpected error while trying to decode JWT token.", [err])
+          User(req, (user, err) => {
+               if(err) {
+                    response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
+                    return
+               }
+               if(!user) {
+                    response(res, req.body, {}, 403, "User is not authenticated", [])
                     return
                }
 
-               const uuid = decoded.uuid;
-               const ip = req.connection.remoteAddress;
+               user.session_id = null;
+               user.session_ip = null;
 
-               req.db.sync(function (err) {
-                    if (err) {
-                         response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [err])
-                         return
-                    }
-                    req.models.user.find({ session_id: uuid, session_ip: ip }, (err, results) => {
-                         if (err) {
-                              response(res, req.body, {}, 500, "Unexpected error while requesting the user from database.", [err])
-                              return
-                         }
+               user.save();
 
-                         if (results.length > 0) {
-                              // Logout
-                              const user = results[0]
+               res.cookie("jwt", null, { signed: true, maxAge: 0 })
+               response(res, req.body, {}, 200, "Logged out without errors", [])
+          })
+     },
 
-                              user.session_id = null;
-                              user.session_ip = null;
+     me: (req, res) => {
+          User(req, (user, err) => {
+               if(err) {
+                    response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
+                    return
+               }
+               if(!user) {
+                    response(res, req.body, {}, 403, "User is not authenticated", [])
+                    return
+               }
+               
+               user.password = undefined
+               user.id = undefined
+               user.session_id = undefined
+               user.session_ip = undefined
 
-                              user.save();
-
-                              res.cookie("jwt", null, { signed: true, maxAge: 0 })
-                         }
-                    });
-               });
-          });
+               response(res, req.body, {user: user}, 200, "Requested user without errors", [])
+          })
      }
 }

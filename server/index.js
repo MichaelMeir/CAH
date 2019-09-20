@@ -81,4 +81,14 @@ app.post('/api/auth/check', Controller("Auth@checkUser"))
  */
 app.post('/api/auth/logout', Controller("Auth@logout"))
 
+/**
+ * @callback /api/auth/me
+ * @description Fetches data about logged in user
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/me', Controller("Auth@me"))
+
 app.listen(process.env.DEV ? "9000" : "80")
