@@ -51,6 +51,8 @@
         >
           Login
         </button>
+
+        {{ this.$parent.authenticated ? this.$router.push('/') : '' }}
       </div>
     </div>
   </div>
@@ -63,7 +65,6 @@ export default {
     return {
       email: null,
       password: null,
-      loggedIn: null,
       errors: []
     }
   },
@@ -94,6 +95,8 @@ export default {
           let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/login', {
             email: this.email,
             password: this.password
+          }, {
+            withCredentials: true
           })
 
           if (request.status === 200) {
