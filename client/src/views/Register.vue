@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="loaded">
     <Navbar />
     <div class="max-w-md mx-auto flex mt-8 flex-col">
       <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t">
@@ -106,6 +106,7 @@
 </template>
 <script>
 import axios from 'axios'
+import AuthService from '../services/AuthService'
 
 import Navbar from '../components/Navbar'
 
@@ -116,6 +117,7 @@ export default {
 
   data () {
     return {
+      loaded: null,
       username: null,
       password: null,
       password_confirmation: null,
@@ -123,6 +125,16 @@ export default {
       tos: false,
 
       errors: []
+    }
+  },
+
+  async mounted () {
+    let isAuthenticated = await AuthService.isAuthenticated()
+
+    if (isAuthenticated) {
+      this.$router.push('/')
+    } else {
+      this.loaded = true
     }
   },
 

@@ -24,6 +24,14 @@ const RULES = {
 
     "word": (value, args) => {
         return [/^[\w][^_]*$/gm.exec(value)]
+    },
+
+    "uuid": (value, args) => {
+        return [/[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/gm.exec(value)]
+    },
+
+    "jwt": (value, args) => {
+        return [/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/gm.exec(value)]
     }
 }
 

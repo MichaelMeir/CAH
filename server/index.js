@@ -11,6 +11,10 @@ const orm = require('orm');
 const Controller = require('./controller')
 const app = express();
 
+const socketServer = require('./socket').start().setHandler((msg) => {
+    return msg + "test"
+})
+
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true
@@ -35,6 +39,8 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
         next();
     }
 }))
+
+app.use(socketServer);
 
 /**
  * @callback /api/auth/register
@@ -130,5 +136,7 @@ app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@
  * @yields {Object} JSON response made by the response method
  */
 app.post('/api/auth/resendMail', Controller("Verification@resendMail"))
+
+console.log("Server listening on " + (process.env.DEV ? "9000" : "80"))
 
 app.listen(process.env.DEV ? "9000" : "80")
