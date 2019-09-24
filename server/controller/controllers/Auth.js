@@ -241,5 +241,31 @@ module.exports = {
                     }
                }
           })
+     },
+
+     deleteAccount: (req, res) => {
+          User(req, (user, err) => {
+               if (err) {
+                    response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
+                    return
+               }
+               if (!user) {
+                    response(res, req.body, {}, 403, "User is not authenticated", [])
+                    return
+               }
+
+               if (req.body.deleteCurrentPassword) {
+                    const checkPassword = bcrypt.compareSync(req.body.deleteCurrentPassword, user.password);
+                    let err = []
+
+                    if (checkPassword) {
+                         user.remove()
+                         response(res, req.body, {}, 200, "Account deleted", err);
+                    } else {
+                         err.push(errors.New("deleteCurrentPassword", errors.code.Exists, "Please enter a correct current password"));
+                         response(res, req.body, {}, 500, "Could not delete account", err);
+                    }
+               }
+          })
      }
 }
