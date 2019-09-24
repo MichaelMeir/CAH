@@ -3,13 +3,13 @@ const fs = require('fs')
 
 const publicKey = fs.readFileSync('server.cert', 'utf8').toString()
 
-module.exports = (req, callback, db = null, models = null) => {
+module.exports = (req, callback, db = null, models = null, ip = null) => {
     if(req.signedCookies.jwt) {
-        validate(req.db, req.models, req.signedCookies.jwt, callback)
+        validate(req.connection.remoteAddress, req.db, req.models, req.signedCookies.jwt, callback)
     }else{
         if(req instanceof String) {
             if(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/gm.exec(req)) {
-                validate(db, models, req, callback)
+                validate(ip, db, models, req, callback)
             }else{
                 callback(false)
                 return
@@ -21,11 +21,10 @@ module.exports = (req, callback, db = null, models = null) => {
     }
 }
 
-function validate(db, models, token, callback) {
+function validate(ip, db, models, token, callback) {
     let decoded = jwt.verify(token, publicKey, { algorithms: ['RS256'] })
         if(decoded) {
             let uuid = decoded.uuid;
-            let ip = req.connection.remoteAddress;
             db.sync(function (err) {
                 if (err) {
                      callback(false, err)

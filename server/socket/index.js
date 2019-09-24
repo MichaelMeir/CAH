@@ -26,7 +26,7 @@ function Server(port = 8127) {
     console.log("starting websocket on " + port.toString())
     this.server = new websocket.Server({port: port})
     this.server.on('connection', ws => {
-        let client = new Client(ws, (msg) => {
+        let client = new Client(ws, (msg, ip) => {
             try{
                 let data = JSON.parse(msg)
                 let [success] = validator(data, {
@@ -42,7 +42,7 @@ function Server(port = 8127) {
                         } else {
                             return false
                         }
-                    }, this.db, this.models)
+                    }, this.db, this.models, ip)
                 }else{
                     return false
                 }
@@ -67,9 +67,10 @@ function Server(port = 8127) {
 
 function Client(ws, authentication, handler) {
     this.authenticated = false
+    this.ip = ws._socket.remoteAddress
     ws.on('message', (message) => {
         if(!this.authenticated) {
-            if(authentication(message)) {
+            if(authentication(message, this.ip)) {
                 this.authenticated = true
                 ws.send(JSON.stringify({
                     type: "auth",
