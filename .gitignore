@@ -62,6 +62,6 @@ typings/
 
 private.key
 private.key.pub
-key.pem
-server.cert
+*.pem
+*.cert
 server.crt
