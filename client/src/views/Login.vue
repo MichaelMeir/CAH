@@ -8,7 +8,10 @@
         >
       </div>
       <div class="mb-3">
-        <div v-if="loggedIn" class="bg-green-500 rounded-t">
+        <div
+          v-if="loggedIn"
+          class="bg-green-500 rounded-t"
+        >
           <p class="text-center text-white font-bold">Logged in</p>
         </div>
         <input
@@ -51,14 +54,13 @@
         >
           Login
         </button>
-
-        {{ this.$parent.authenticated ? this.$router.push('/') : '' }}
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from 'axios'
+import AuthService from '../services/AuthService'
 
 export default {
   data () {
@@ -66,6 +68,14 @@ export default {
       email: null,
       password: null,
       errors: []
+    }
+  },
+
+  async mounted () {
+    let isAuthenticated = await AuthService.isAuthenticated()
+
+    if (isAuthenticated) {
+      this.$router.push('/')
     }
   },
 
@@ -100,8 +110,7 @@ export default {
           })
 
           if (request.status === 200) {
-            console.log('Authenticated succesfully')
-            this.loggedIn = true
+            location.href = '/'
           }
         } catch (err) {
           err.response.data.errors.forEach(error => {

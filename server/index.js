@@ -11,6 +11,10 @@ const orm = require('orm');
 const Controller = require('./controller')
 const app = express();
 
+const socketServer = require('./socket').start().setHandler((msg) => {
+    return msg + "test"
+})
+
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true
@@ -21,20 +25,22 @@ app.use(bodyparser());
 app.use(cookieParser(fs.readFileSync('private.key').toString()));
 
 app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`, {
-    define: function(db, models, next) {
-          models.user = db.define("users", {
-               uuid: String,
-               username: String,
-               username_withcase: String,
-               password: String,
-               email: String,
-               verification: String,
-               session_id: String,
-               session_ip: String,
-          })
-          next();
+    define: function (db, models, next) {
+        models.user = db.define("users", {
+            uuid: String,
+            username: String,
+            username_withcase: String,
+            password: String,
+            email: String,
+            verification: String,
+            session_id: String,
+            session_ip: String,
+        })
+        next();
     }
 }))
+
+app.use(socketServer);
 
 /**
  * @callback /api/auth/register
@@ -92,6 +98,16 @@ app.post('/api/auth/logout', Controller("Auth@logout"))
 app.post('/api/auth/me', Controller("Auth@me"))
 
 /**
+    * @callback /api/auth/profile
+    * @description The route to save modifications made to the profile of the authenticated user
+    * 
+    * @param {String} jwt The token that gets set when the user authenticates
+    * 
+    * @yields {Object} JSON response made by the response method
+    */
+app.post('/api/auth/profile', Controller("Auth@saveChanges"))
+
+/**
  * @callback /api/verification/{uuid}
  * @description Verifies email, this link should only be available from email
  *
@@ -101,9 +117,5 @@ app.post('/api/auth/me', Controller("Auth@me"))
  */
 app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
 
-require('./socket').start().setHandler((msg) => {
-    return msg + "test"
-})
-
 console.log("Listening on " + (process.env.DEV ? "9000" : "80"))
-app.listen(process.env.DEV? "9000" : "80")
+app.listen(process.env.DEV ? "9000" : "80")
