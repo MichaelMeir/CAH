@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <Navbar ref="navbar" />
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="text-indigo-800 bg-indigo-100 rounded p-4 text-sm w-full">
         <div class="font-semibold mb-4 text-base">Modify your account settings</div>
@@ -150,7 +150,9 @@ export default {
             withCredentials: true
           })
 
-          console.log(request)
+          if (request.data.message === "Email has been saved") {
+            this.$refs['navbar'].isVerified = false
+          }
         } catch (err) {
           err.response.data.errors.forEach(error => {
             this.errors.push({
