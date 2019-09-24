@@ -91,4 +91,9 @@ app.post('/api/auth/logout', Controller("Auth@logout"))
  */
 app.post('/api/auth/me', Controller("Auth@me"))
 
+require('./socket').start().setHandler((msg) => {
+    return msg + "test"
+})
+
+console.log("Listening on " + process.env.DEV ? "9000" : "80")
 app.listen(process.env.DEV ? "9000" : "80")
