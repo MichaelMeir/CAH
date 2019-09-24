@@ -91,9 +91,19 @@ app.post('/api/auth/logout', Controller("Auth@logout"))
  */
 app.post('/api/auth/me', Controller("Auth@me"))
 
+/**
+ * @callback /api/verification/{uuid}
+ * @description Verifies email, this link should only be available from email
+ *
+ * @param {String} uuid used to get the unverified user, if found it removes the uuid so that the user's email is verified
+ *
+ * @yields {Object} JSON response made by the response method
+ */
+app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
+
 require('./socket').start().setHandler((msg) => {
     return msg + "test"
 })
 
-console.log("Listening on " + process.env.DEV ? "9000" : "80")
-app.listen(process.env.DEV ? "9000" : "80")
+console.log("Listening on " + (process.env.DEV ? "9000" : "80"))
+app.listen(process.env.DEV? "9000" : "80")
