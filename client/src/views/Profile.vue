@@ -2,7 +2,12 @@
   <div>
     <Navbar ref="navbar" />
     <div
-      class="absolute left-0 top-0 z-20 w-full"
+      @click="deleteModalOpen = false"
+      v-if="deleteModalOpen"
+      class="absolute z-10 left-0 top-0 bg-white opacity-50 h-full w-full"
+    ></div>
+    <div
+      class="absolute left-0 right-0 top-0 z-20"
       v-if="deleteModalOpen"
     >
       <div class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4">
@@ -48,11 +53,6 @@
         </div>
       </div>
     </div>
-    <div
-      @click="deleteModalOpen = false"
-      v-if="deleteModalOpen"
-      class="absolute z-10 left-0 top-0 bg-white opacity-50 h-full w-full"
-    ></div>
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="text-indigo-800 bg-indigo-100 rounded p-4 text-sm w-full">
         <div class="font-semibold mb-4 text-base">Modify your account settings</div>
