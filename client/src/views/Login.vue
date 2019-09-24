@@ -1,59 +1,65 @@
 <template>
-  <div class="max-w-sm mx-auto">
-    <div>
-      <div class="mb-4 px-3 py-3 text-sm font-semibold rounded flex justify-center">
-        <img
-          class="h-40"
-          src="@/assets/logo.png"
-        >
+  <div>
+    <Navbar />
+    <div class="max-w-md mx-auto flex mt-8 flex-col">
+      <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t">
+        Login
       </div>
-      <div class="mb-3">
+      <div class="px-4 py-4 bg-indigo-800 rounded-b">
         <div
-          v-if="loggedIn"
-          class="bg-green-500 rounded-t"
+          class="bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
+          v-if="$route.query.accountCreated"
         >
-          <p class="text-center text-white font-bold">Logged in</p>
+          Your account has been created successfully, you are now able to login.
         </div>
-        <input
-          @keydown="clearErrors()"
-          :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
-          type="text"
-          placeholder="Email address"
-          autocomplete="off"
-          v-model="email"
-        />
-        <div
-          v-if="hasError('email')"
-          class="error-message"
-        >
-          {{ getError('email') }}
+        <div class="mb-3">
+          <input
+            @keydown="clearErrors()"
+            :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
+            type="text"
+            placeholder="Email address"
+            autocomplete="off"
+            v-model="email"
+          />
+          <div
+            v-if="hasError('email')"
+            class="error-message"
+          >
+            {{ getError('email') }}
+          </div>
         </div>
-      </div>
 
-      <div class="mb-3">
-        <input
-          @keydown="clearErrors()"
-          :class="(hasError('password') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-gray-400 focus:outline-none py-2 text-sm rounded shadow'"
-          type="password"
-          placeholder="Password"
-          autocomplete="off"
-          v-model="password"
-        />
-        <div
-          v-if="hasError('password')"
-          class="error-message"
-        >
-          {{ getError('password') }}
+        <div class="mb-3">
+          <input
+            @keydown="clearErrors()"
+            :class="(hasError('password') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
+            type="password"
+            placeholder="Password"
+            autocomplete="off"
+            v-model="password"
+          />
+          <div
+            v-if="hasError('password')"
+            class="error-message"
+          >
+            {{ getError('password') }}
+          </div>
         </div>
-      </div>
 
-      <div>
-        <button
-          class="w-full focus:outline-none rounded bg-blue-500 shadow font-semibold text-sm text-white py-3 hover:bg-blue-600 transition"
-          @click="submit()"
-        >
-          Login
-        </button>
+        <div class="mt-8">
+          <button
+            class="focus:outline-none w-full text-sm hover:bg-indigo-600 mt-2 bg-indigo-600 rounded py-2 px-4 font-semibold text-white"
+            @click="submit()"
+          >
+            Login
+          </button>
+          <div class="text-center text-white text-xs mt-5">
+            Don't have an account yet? <span
+              @click="$router.push('/register')"
+              class="cursor-pointer underline"
+            >Create one here</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,7 +68,13 @@
 import axios from 'axios'
 import AuthService from '../services/AuthService'
 
+import Navbar from '../components/Navbar'
+
 export default {
+  components: {
+    Navbar
+  },
+
   data () {
     return {
       email: null,
@@ -177,11 +189,15 @@ export default {
 </script>
 <style lang="scss" scoped>
 input {
+  &::placeholder {
+    @apply .text-white;
+  }
+
   &.has-error {
-    @apply .border .border-red-300 .text-red-500;
+    @apply .border .border-red-500 .text-red-500;
 
     &::placeholder {
-      @apply .text-red-500 .font-semibold;
+      @apply .text-red-200 .font-semibold;
     }
   }
 }

@@ -108,6 +108,16 @@ app.post('/api/auth/me', Controller("Auth@me"))
 app.post('/api/auth/profile', Controller("Auth@saveChanges"))
 
 /**
+    * @callback /api/auth/deleteAccount
+    * @description The route to delete an account
+    * 
+    * @param {String} jwt The token that gets set when the user authenticates
+    * 
+    * @yields {Object} JSON response made by the response method
+    */
+   app.post('/api/auth/deleteAccount', Controller("Auth@deleteAccount"))
+
+/**
  * @callback /api/verification/{uuid}
  * @description Verifies email, this link should only be available from email
  *
