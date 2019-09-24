@@ -30,6 +30,14 @@ module.exports = {
                               return
                          }
                          if (results.length == 0) {
+                              if (req.body.password !== req.body.password_confirmation) {
+                                   let err = []
+
+                                   err.push(errors.New("password", errors.code.Exists, "Please confirm your password"))
+                                   response(res, req.body, {}, 409, "User could not be created due to password conflicts.", err)
+                                   return
+
+                              } else {
                               let user = req.models.user.create({
                                    uuid: uuidv4(),
                                    username: req.body.username.toLowerCase(),
@@ -57,6 +65,7 @@ module.exports = {
                                         response(res, req.body, {}, 200, "User created succesfully", err);
                                    }
                               })
+                         }
                          } else {
                               var err = []
                               for (let i = 0; i < results.length; i++) {
