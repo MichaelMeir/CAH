@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Index from '@/views/Index'
 import Profile from '@/views/Profile'
+import Verification from '@/views/Verification'
 
 import Register from '@/views/Register'
 import Login from '@/views/Login'
@@ -37,6 +38,11 @@ export default new Router({
       path: '/profile',
       name: 'Profile',
       component: Profile
+    },
+    {
+      path: '/verification/:uuid',
+      name: 'Verification',
+      component: Verification
     }
   ]
 })

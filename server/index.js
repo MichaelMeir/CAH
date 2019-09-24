@@ -108,14 +108,14 @@ app.post('/api/auth/me', Controller("Auth@me"))
 app.post('/api/auth/profile', Controller("Auth@saveChanges"))
 
 /**
-    * @callback /api/auth/deleteAccount
-    * @description The route to delete an account
-    * 
-    * @param {String} jwt The token that gets set when the user authenticates
-    * 
-    * @yields {Object} JSON response made by the response method
-    */
-   app.post('/api/auth/deleteAccount', Controller("Auth@deleteAccount"))
+* @callback /api/auth/deleteAccount
+* @description The route to delete an account
+* 
+* @param {String} jwt The token that gets set when the user authenticates
+* 
+* @yields {Object} JSON response made by the response method
+*/
+app.post('/api/auth/deleteAccount', Controller("Auth@deleteAccount"))
 
 /**
  * @callback /api/verification/{uuid}
@@ -127,5 +127,16 @@ app.post('/api/auth/profile', Controller("Auth@saveChanges"))
  */
 app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
 
-console.log("Listening on " + (process.env.DEV ? "9000" : "80"))
+/**
+ * @callback /api/auth/resendMailMail
+ * @description Resend verification mail
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/resendMail', Controller("Verification@resendMail"))
+
+console.log("Server listening on " + (process.env.DEV ? "9000" : "80"))
+
 app.listen(process.env.DEV ? "9000" : "80")
