@@ -2,9 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Index from '@/views/Index'
+import Profile from '@/views/Profile'
+
 import Register from '@/views/Register'
 import Login from '@/views/Login'
-
 import Logout from '@/views/Logout'
 
 Vue.use(Router)
@@ -31,6 +32,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile
     }
   ]
 })
