@@ -131,25 +131,25 @@ module.exports = {
 
      checkUser: (req, res) => {
           User(req, (result, err) => {
-               if(err) {
+               if (err) {
                     response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
                     return
                }
-               if(result) {
+               if (result) {
                     response(res, req.body, {}, 200, "User is authenticated", [])
-               }else{
+               } else {
                     response(res, req.body, {}, 403, "User is not authenticated", [])
                }
           })
      },
 
-     logout: (req, res) => { 
+     logout: (req, res) => {
           User(req, (user, err) => {
-               if(err) {
+               if (err) {
                     response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
                     return
                }
-               if(!user) {
+               if (!user) {
                     response(res, req.body, {}, 403, "User is not authenticated", [])
                     return
                }
@@ -166,21 +166,58 @@ module.exports = {
 
      me: (req, res) => {
           User(req, (user, err) => {
-               if(err) {
+               if (err) {
                     response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
                     return
                }
-               if(!user) {
+               if (!user) {
                     response(res, req.body, {}, 403, "User is not authenticated", [])
                     return
                }
-               
+
                user.password = undefined
                user.id = undefined
                user.session_id = undefined
                user.session_ip = undefined
+               user.verification = undefined
 
-               response(res, req.body, {user: user}, 200, "Requested user without errors", [])
+               response(res, req.body, { user: user }, 200, "Requested user without errors", [])
+          })
+     },
+
+     saveChanges: (req, res) => {
+          User(req, (user, err) => {
+               if (err) {
+                    response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)])
+                    return
+               }
+               if (!user) {
+                    response(res, req.body, {}, 403, "User is not authenticated", [])
+                    return
+               }
+
+               if (req.body.email !== user.email) {
+                    // TODO: Email of user changed
+               }
+
+               if (req.body.new_password !== null || req.body.new_password !== "") {
+                    let err = []
+                    if (req.body.new_password !== req.body.new_password_confirmation) {
+                         err.push(errors.New("new_password", errors.code.Exists, "Please confirm your new password"))
+                         response(res, req.body, {}, 500, "Could not save changes", err);
+                    } else {
+                         const checkPassword = bcrypt.compareSync(req.body.current_password, user.password);
+
+                         if (checkPassword) {
+                              user.password = bcrypt.hashSync(req.body.new_password, bcrypt.genSaltSync(10))
+                              user.save()
+                              response(res, req.body, {}, 200, "Changes to the profile has been made", err)
+                         } else {
+                              err.push(errors.New("current_password", errors.code.Exists, "Please enter a correct current password"))
+                              response(res, req.body, {}, 500, "Could not save changes", err);
+                         }
+                    }
+               }
           })
      }
 }

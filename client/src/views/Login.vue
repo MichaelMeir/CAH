@@ -48,14 +48,13 @@
         >
           Login
         </button>
-
-        {{ this.$parent.authenticated ? this.$router.push('/') : '' }}
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from 'axios'
+import AuthService from '../services/AuthService'
 
 export default {
   data () {
@@ -63,6 +62,14 @@ export default {
       email: null,
       password: null,
       errors: []
+    }
+  },
+
+  async mounted () {
+    let isAuthenticated = await AuthService.isAuthenticated()
+
+    if (isAuthenticated) {
+      this.$router.push('/')
     }
   },
 
@@ -97,7 +104,7 @@ export default {
           })
 
           if (request.status === 200) {
-            console.log('Authenticated succesfully')
+            location.href = '/'
           }
         } catch (err) {
           err.response.data.errors.forEach(error => {

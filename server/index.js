@@ -91,4 +91,14 @@ app.post('/api/auth/logout', Controller("Auth@logout"))
  */
 app.post('/api/auth/me', Controller("Auth@me"))
 
+/**
+ * @callback /api/auth/profile
+ * @description The route to save modifications made to the profile of the authenticated user
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/profile', Controller("Auth@saveChanges"))
+
 app.listen(process.env.DEV ? "9000" : "80")
