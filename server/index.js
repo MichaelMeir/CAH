@@ -21,18 +21,18 @@ app.use(bodyparser());
 app.use(cookieParser(fs.readFileSync('private.key').toString()));
 
 app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`, {
-    define: function(db, models, next) {
-          models.user = db.define("users", {
-               uuid: String,
-               username: String,
-               username_withcase: String,
-               password: String,
-               email: String,
-               verification: String,
-               session_id: String,
-               session_ip: String,
-          })
-          next();
+    define: function (db, models, next) {
+        models.user = db.define("users", {
+            uuid: String,
+            username: String,
+            username_withcase: String,
+            password: String,
+            email: String,
+            verification: String,
+            session_id: String,
+            session_ip: String,
+        })
+        next();
     }
 }))
 
@@ -92,13 +92,23 @@ app.post('/api/auth/logout', Controller("Auth@logout"))
 app.post('/api/auth/me', Controller("Auth@me"))
 
 /**
- * @callback /api/auth/profile
- * @description The route to save modifications made to the profile of the authenticated user
- * 
- * @param {String} jwt The token that gets set when the user authenticates
- * 
+    * @callback /api/auth/profile
+    * @description The route to save modifications made to the profile of the authenticated user
+    * 
+    * @param {String} jwt The token that gets set when the user authenticates
+    * 
+    * @yields {Object} JSON response made by the response method
+    */
+app.post('/api/auth/profile', Controller("Auth@saveChanges"))
+
+/**
+ * @callback /api/verification/{uuid}
+ * @description Verifies email, this link should only be available from email
+ *
+ * @param {String} uuid used to get the unverified user, if found it removes the uuid so that the user's email is verified
+ *
  * @yields {Object} JSON response made by the response method
  */
-app.post('/api/auth/profile', Controller("Auth@saveChanges"))
+app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
 
 app.listen(process.env.DEV ? "9000" : "80")
