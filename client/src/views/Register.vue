@@ -172,7 +172,12 @@ export default {
           })
 
           if (request.status === 200) {
-            this.$router.push('/')
+            this.$router.push({
+              path: '/login',
+              query: {
+                'accountCreated': true
+              }
+            })
           }
         } catch (err) {
           err.response.data.errors.forEach(error => {

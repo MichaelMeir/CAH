@@ -6,12 +6,14 @@
       </div>
       <div class="flex flex-1 justify-end text-sm">
         <ul class="flex items-center">
-          <li class="cursor-pointer nav-item active ml-8">Home</li>
-          <li class="cursor-pointer nav-item ml-8">Rooms</li>
+          <li
+            v-if="isAuthenticated"
+            class="cursor-pointer nav-item active ml-8"
+          >Home</li>
           <li
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
-          >Settings</li>
+          >Rooms</li>
           <li
             @click="$router.push('/profile')"
             v-if="isAuthenticated"
