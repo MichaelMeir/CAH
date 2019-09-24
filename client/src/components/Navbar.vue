@@ -26,6 +26,11 @@
           >Logout</li>
           <li
             v-if="!isAuthenticated"
+            @click="$router.push('/register')"
+            class="cursor-pointer nav-item ml-8"
+          >Create account</li>
+          <li
+            v-if="!isAuthenticated"
             @click="$router.push('/login')"
             class="cursor-pointer nav-item ml-8"
           >Login</li>
@@ -57,9 +62,7 @@ export default {
   async mounted () {
     let isAuthenticated = await AuthService.isAuthenticated()
 
-    if (!isAuthenticated) {
-      this.$router.push('/login')
-    } else {
+    if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
 
       if (!isVerified) this.isVerified = false

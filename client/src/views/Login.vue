@@ -53,6 +53,12 @@
           >
             Login
           </button>
+          <div class="text-center text-white text-xs mt-5">
+            Don't have an account yet? <span
+              @click="$router.push('/register')"
+              class="cursor-pointer underline"
+            >Create one here</span>
+          </div>
         </div>
       </div>
     </div>

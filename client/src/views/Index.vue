@@ -83,9 +83,19 @@
 <script>
 import Navbar from '../components/Navbar'
 
+import AuthService from '../services/AuthService'
+
 export default {
   components: {
     Navbar
+  },
+
+  async mounted () {
+    let isAuthenticated = await AuthService.isAuthenticated()
+
+    if (!isAuthenticated) {
+      this.$router.push('/login')
+    }
   }
 }
 </script>
