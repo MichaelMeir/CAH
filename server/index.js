@@ -166,6 +166,6 @@ app.post('/api/reset', Controller("PasswordReset@saveChanges"))
  */
 app.post('/api/sendResetLink', Controller("PasswordReset@sendResetLink"))
 
-console.log("Server listening on " + (process.env.DEV ? "9000" : "80"))
+console.log("Server listening on 9000")
 
-app.listen(process.env.DEV ? "9000" : "80")
+app.listen("9000")
