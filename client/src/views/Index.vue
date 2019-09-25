@@ -10,7 +10,7 @@
             :key="index"
             class="w-1/3 p-2"
           >
-            <div :class="'bg-' + getRandomColor() + '-500 text-white text-sm rounded p-4'">
+            <div :class="'bg-' + getColor(index) + '-500 text-white text-sm rounded p-4'">
               <div class="font-semibold mb-4 text-base">{{ room.name }} {{ index + 1 }}</div>
               <div>Players: <span class="float-right">{{ room.currentPlayers }}/{{ room.maxPlayers }}</span></div>
               <div>Spectators: <span class="float-right">{{ room.spectators }}</span></div>
@@ -87,8 +87,16 @@ export default {
   },
 
   methods: {
-    getRandomColor () {
-      let colors = [
+    getColor (index) {
+      let color = this.colors[index]
+      if (color) {
+        return color
+      }
+      return 'red'
+    },
+
+    getRandomColors (amount, inrow = 3, tries = 3) {
+      let availableColors = [
         'red',
         'orange',
         'yellow',
@@ -99,11 +107,30 @@ export default {
         'pink'
       ]
 
-      for (let i = 0; i < 5; i++) {
-        let out = colors[Math.floor(Math.random() * colors.length)]
-        if (out !== this.previous) {
-          this.previous = out
-          return out
+      let get = (x, y) => {
+        let index = x + (x * y)
+        if (index < 0 || index > this.colors.length) {
+          return null
+        }
+        return this.colors[index]
+      }
+
+      for (let i = 0; i < amount; i++) {
+        const x = i % inrow
+        const y = Math.floor(i / inrow)
+        const sides = [get(x, y - 1), get(x, y + 1), get(x - 1, y), get(x + 1, y)]
+        for (let j = 0; j < tries; j++) {
+          let accepted = true
+          const color = availableColors[Math.floor(Math.random() * availableColors.length)]
+          for (let k = 0; k < sides.length; k++) {
+            if (color === sides[k]) {
+              accepted = false
+            }
+          }
+          if (accepted) {
+            this.colors[i] = color
+            continue
+          }
         }
       }
     }
@@ -112,6 +139,7 @@ export default {
   data () {
     return {
       previous: '',
+      colors: [],
       rooms: [
         {
           name: 'Test room',
@@ -164,6 +192,10 @@ export default {
         }
       ]
     }
+  },
+
+  created () {
+    this.getRandomColors(this.rooms.length)
   },
 
   async mounted () {
