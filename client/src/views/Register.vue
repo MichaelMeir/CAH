@@ -194,7 +194,7 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}` + process.env.DEV ? '' : (':' + process.env.SERVER_PORT) + '/api/auth/register', {
+          let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/register', {
             username: this.username,
             email: this.email,
             password: this.password,

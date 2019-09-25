@@ -86,7 +86,7 @@ export default {
 
     async resendMail () {
       try {
-        let request = await await axios.post(`${location.protocol}//${location.hostname}` + process.env.DEV ? '' : (':' + process.env.SERVER_PORT) + '/api/auth/resendMail', [], {
+        let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/resendMail', [], {
           withCredentials: true
         })
 

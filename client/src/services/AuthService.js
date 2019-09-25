@@ -5,7 +5,7 @@ class AuthService {
     if (!document.cookie.includes('jwt=')) return false
 
     try {
-      let request = await axios.post(`${location.protocol}//${location.hostname}` + process.env.DEV ? '' : (':' + process.env.SERVER_PORT) + '/api/auth/check', [], {
+      let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/check', [], {
         withCredentials: true
       })
 
@@ -22,7 +22,7 @@ class AuthService {
   static async logout () {
     if (!this.isAuthenticated) return
 
-    let request = await axios.post(`${location.protocol}//${location.hostname}` + process.env.DEV ? '' : (':' + process.env.SERVER_PORT) + '/api/auth/logout', [], {
+    let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/logout', [], {
       withCredentials: true
     })
 
@@ -34,7 +34,7 @@ class AuthService {
   static async getUser () {
     if (!this.isAuthenticated) return
 
-    let request = await axios.post(`${location.protocol}//${location.hostname}` + process.env.DEV ? '' : (':' + process.env.SERVER_PORT) + '/api/auth/me', [], {
+    let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/me', [], {
       withCredentials: true
     })
 
