@@ -33,6 +33,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             password: String,
             email: String,
             verification: String,
+            reset_token: String,
             session_id: String,
             session_ip: String,
         })
@@ -126,6 +127,16 @@ app.post('/api/auth/deleteAccount', Controller("Auth@deleteAccount"))
  * @yields {Object} JSON response made by the response method
  */
 app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
+
+/**
+ * @callback /api/verification/{uuid}
+ * @description Verifies email, this link should only be available from email
+ *
+ * @param {String} uuid used to get the unverified user, if found it removes the uuid so that the user's email is verified
+ *
+ * @yields {Object} JSON response made by the response method
+ */
+app.get('/api/reset/:token([a-z0-9-]+)', Controller("PasswordReset@Reset"))
 
 /**
  * @callback /api/auth/resendMailMail
