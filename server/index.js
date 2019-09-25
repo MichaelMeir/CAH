@@ -124,7 +124,7 @@ app.post('/api/auth/deleteAccount', Controller("Auth@deleteAccount"))
  *
  * @yields {Object} JSON response made by the response method
  */
-app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
+app.post('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
 
 /**
  * @callback /api/reset/{token}
