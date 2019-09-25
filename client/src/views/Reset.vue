@@ -132,7 +132,7 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/reset', {
+          let request = await axios.post(`${location.protocol}//${location.hostname}` + process.env.DEV ? '' : (':' + process.env.SERVER_PORT) + '/api/reset', {
             token: this.$route.params.token,
             new_password: this.password,
             new_password_confirmation: this.password_confirmation
