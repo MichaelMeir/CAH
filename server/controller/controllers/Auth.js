@@ -45,6 +45,7 @@ module.exports = {
                                    password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)),
                                    email: req.body.email.toLowerCase(),
                                    verification: uuidv4(),
+                                   reset_token: null,
                                    session_id: "",
                                    session_ip: "",
                               }, (err, result) => {

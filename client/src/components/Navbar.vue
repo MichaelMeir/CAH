@@ -2,7 +2,7 @@
   <div>
     <nav class="bg-indigo-700 py-6 px-8 mt-5 rounded flex text-white max-w-4xl mx-auto items-center">
       <div class="text-sm leading-snug tracking-wider text-center">
-        <span class="uppercase text-sm font-bold block">Cards Against Me</span>
+        <span @click="$router.push('/')" class="uppercase text-sm font-bold block cursor-pointer">Cards Against Me</span>
       </div>
       <div class="flex flex-1 justify-end text-sm">
         <ul class="flex items-center">
