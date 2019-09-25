@@ -168,4 +168,4 @@ app.post('/api/sendResetLink', Controller("PasswordReset@sendResetLink"))
 
 console.log("Server listening on 9000")
 
-app.listen("9000")
+app.listen(9000)
