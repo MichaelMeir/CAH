@@ -129,10 +129,10 @@ app.post('/api/auth/deleteAccount', Controller("Auth@deleteAccount"))
 app.get('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
 
 /**
- * @callback /api/verification/{uuid}
- * @description Verifies email, this link should only be available from email
+ * @callback /api/reset/{token}
+ * @description Changes password, this link should only be available from email
  *
- * @param {String} uuid used to get the unverified user, if found it removes the uuid so that the user's email is verified
+ * @param {String} token used to get the token from user, if found it removes the token so that the user's password link disables.
  *
  * @yields {Object} JSON response made by the response method
  */
