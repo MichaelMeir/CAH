@@ -19,11 +19,11 @@
 
               <button
                 style="background: rgba(0, 0, 0, 0.2)"
-                class="shadow-inner rounded mt-6 mb-1 py-2 block w-full text-xs focus:outline-none font-semibold text-white"
+                class="rounded mt-6 mb-1 py-2 block w-full text-xs focus:outline-none font-semibold text-white"
               >Spectate</button>
               <button
                 style="background: rgba(0, 0, 0, 0.3)"
-                class="shadow-inner rounded py-2 block w-full text-xs focus:outline-none font-semibold text-white"
+                class="rounded py-2 block w-full text-xs focus:outline-none font-semibold text-white"
               >Join</button>
             </div>
           </div>
