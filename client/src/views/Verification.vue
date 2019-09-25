@@ -22,7 +22,7 @@ export default {
 
   async mounted () {
     try {
-      let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/verification/' + this.$route.params.uuid, [], {
+      let request = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/verification/' + this.$route.params.uuid, [], {
         withCredentials: true
       })
 
