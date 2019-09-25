@@ -146,6 +146,26 @@ app.get('/api/reset/:token([a-z0-9-]+)', Controller("PasswordReset@Reset"))
  */
 app.post('/api/auth/resendMail', Controller("Verification@resendMail"))
 
+/**
+ * @callback /api/reset
+ * @description Reset the password of the user
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/reset', Controller("PasswordReset@saveChanges"))
+
+/**
+ * @callback /api/sendResetLink
+ * @description Sends the verification link to the user to reset his password
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/sendResetLink', Controller("PasswordReset@sendResetLink"))
+
 console.log("Server listening on " + (process.env.DEV ? "9000" : "80"))
 
 app.listen(process.env.DEV ? "9000" : "80")

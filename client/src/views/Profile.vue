@@ -2,6 +2,12 @@
   <div>
     <Navbar ref="navbar" />
     <div
+      v-if="status !== null"
+      class="max-w-4xl mt-4 mx-auto bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
+    >
+      {{ status }}
+    </div>
+    <div
       @click="deleteModalOpen = false"
       v-if="deleteModalOpen"
       class="absolute z-10 left-0 top-0 bg-white opacity-50 h-full w-full"
@@ -169,6 +175,7 @@ export default {
         email: null
       },
       errors: [],
+      status: null,
 
       new_password: null,
       new_password_confirmation: null,
@@ -248,8 +255,8 @@ export default {
             withCredentials: true
           })
 
-          if (request.data.message === 'Email has been saved') {
-            this.$refs['navbar'].isVerified = false
+          if (request.status === 200) {
+            this.status = 'Your changes has been saved'
           }
         } catch (err) {
           err.response.data.errors.forEach(error => {

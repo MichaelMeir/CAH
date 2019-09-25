@@ -99,6 +99,12 @@
               class="cursor-pointer underline"
             >Login instead</span>
           </div>
+          <div class="text-center text-white text-xs mt-5">
+            In case you forgot your password, <span
+              @click="$router.push('/forgot-password')"
+              class="cursor-pointer underline"
+            >click here to reset it</span>
+          </div>
         </div>
       </div>
     </div>

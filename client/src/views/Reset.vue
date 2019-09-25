@@ -1,13 +1,22 @@
 <template>
-   <div>
-		<Navbar />
-		<div class="text-center mt-8 bg-indigo-700 rounded w-1/4 mx-auto text-white font-bold p-10" v-if="error">
-			<h1 class="text-red-500 text-3xl uppercase mb-3">Error</h1>
-			<h1>{{ status }}</h1>
-			<button @click="$router.push('/')" class="focus:outline-none w-full text-sm hover:bg-indigo-800 mt-10 bg-indigo-600 rounded py-2 px-4 font-semibold text-white hover:shadow">Go home</button>
+  <div>
+    <Navbar />
+    <div
+      class="text-center mt-8 bg-indigo-700 rounded w-1/4 mx-auto text-white font-bold p-10"
+      v-if="error"
+    >
+      <h1 class="text-red-500 text-3xl uppercase mb-3">Error</h1>
+      <h1>{{ status }}</h1>
+      <button
+        @click="$router.push('/')"
+        class="focus:outline-none w-full text-sm hover:bg-indigo-500 mt-10 bg-indigo-600 rounded py-2 px-4 font-semibold text-white hover:shadow"
+      >Go home</button>
 
-		</div>
-    <div class="max-w-md mx-auto flex mt-8 flex-col" v-if="verified">
+    </div>
+    <div
+      class="max-w-md mx-auto flex mt-8 flex-col"
+      v-if="verified"
+    >
       <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t">
         Change password
       </div>
@@ -64,17 +73,17 @@ import axios from 'axios'
 import Navbar from '../components/Navbar'
 
 export default {
-	components: {
+  components: {
     Navbar
   },
   data () {
     return {
-			verified: false,
-			error: false,
-			status: null,
-			password: null,
-			password_confirmation: null,
-			errors: [],
+      verified: false,
+      error: false,
+      status: null,
+      password: null,
+      password_confirmation: null,
+      errors: []
     }
   },
 
@@ -86,11 +95,11 @@ export default {
 
       if (request.status === 200) {
         this.status = 'Your token has been verified successfully'
-        this.verified = true;
+        this.verified = true
       }
     } catch (err) {
       this.status = err.response.data.message
-			this.error = true;
+      this.error = true
     }
   },
 
@@ -101,13 +110,6 @@ export default {
      * @return {Boolean}
      */
     async submit () {
-      if (!this.username) {
-        this.errors.push({
-          field: 'username',
-          error: 'Please fill in a username.'
-        })
-      }
-
       if (!this.password) {
         this.errors.push({
           field: 'password',
@@ -130,18 +132,17 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/register', {
-            username: this.username,
-            email: this.email,
-            password: this.password,
-            password_confirmation: this.password_confirmation
+          let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/reset', {
+            token: this.$route.params.token,
+            new_password: this.password,
+            new_password_confirmation: this.password_confirmation
           })
 
           if (request.status === 200) {
             this.$router.push({
               path: '/login',
               query: {
-                'accountCreated': true
+                'passwordChanged': true
               }
             })
           }
@@ -200,3 +201,22 @@ export default {
 }
 
 </script>
+<style lang="scss" scoped>
+input {
+  &::placeholder {
+    @apply .text-white;
+  }
+
+  &.has-error {
+    @apply .border .border-red-500 .text-red-500;
+
+    &::placeholder {
+      @apply .text-red-200 .font-semibold;
+    }
+  }
+}
+
+.error-message {
+  @apply .mt-1 .font-semibold .text-red-500 .text-xs;
+}
+</style>

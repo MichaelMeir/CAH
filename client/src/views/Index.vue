@@ -92,7 +92,7 @@ export default {
       if (color) {
         return color
       }
-      return 'red'
+      return 'indigo'
     },
 
     getRandomColors (amount, inrow = 3, tries = 3) {
@@ -104,6 +104,7 @@ export default {
         'teal',
         'blue',
         'purple',
+        'indigo',
         'pink'
       ]
 

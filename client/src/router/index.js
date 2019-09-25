@@ -5,11 +5,11 @@ import Index from '@/views/Index'
 import Profile from '@/views/Profile'
 import Verification from '@/views/Verification'
 import Reset from '@/views/Reset'
+import ForgotPassword from '@/views/ForgotPassword'
 
 import Register from '@/views/Register'
 import Login from '@/views/Login'
 import Logout from '@/views/Logout'
-
 
 Vue.use(Router)
 
@@ -40,6 +40,11 @@ export default new Router({
       path: '/profile',
       name: 'Profile',
       component: Profile
+    },
+    {
+      path: '/forgot-password',
+      name: 'ForgotPassword',
+      component: ForgotPassword
     },
     {
       path: '/verification/:uuid',
