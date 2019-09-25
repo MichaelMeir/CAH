@@ -12,6 +12,12 @@
         >
           Your account has been created successfully, you are now able to login.
         </div>
+        <div
+          class="bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
+          v-if="$route.query.passwordChanged"
+        >
+          Your password has been changed successfully, you are now able to login.
+        </div>
         <div class="mb-3">
           <input
             @keydown="clearErrors()"
@@ -58,6 +64,13 @@
               @click="$router.push('/register')"
               class="cursor-pointer underline"
             >Create one here</span>
+          </div>
+
+          <div class="text-center text-white text-xs mt-5">
+            In case you forgot your password, <span
+              @click="$router.push('/forgot-password')"
+              class="cursor-pointer underline"
+            >click here to reset it</span>
           </div>
         </div>
       </div>
