@@ -208,7 +208,7 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/deleteAccount', {
+          let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/deleteAccount', {
             deleteCurrentPassword: this.deleteCurrentPassword
           }, {
             withCredentials: true
@@ -246,7 +246,7 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}:` + process.env.SERVER_PORT + '/api/auth/profile', {
+          let request = await axios.post(`${location.protocol}//${location.hostname}` + (process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/profile', {
             email: this.user.email,
             new_password: this.new_password,
             new_password_confirmation: this.new_password_confirmation,
