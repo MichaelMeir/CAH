@@ -11,9 +11,7 @@ const orm = require('orm');
 const Controller = require('./controller')
 const app = express();
 
-const socketServer = require('./socket').start().setHandler((msg) => {
-    return msg + "test"
-})
+const socketServer = require('./socket')
 
 app.use(cors({
     origin: process.env.CLIENT_URL,
@@ -41,7 +39,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
     }
 }))
 
-app.use(socketServer);
+// app.use(socketServer);
 
 /**
  * @callback /api/auth/register
