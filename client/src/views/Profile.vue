@@ -180,8 +180,14 @@ export default {
   },
 
   async mounted () {
-    let user = await AuthService.getUser()
-    this.user = user.payload.user
+    let isAuthenticated = await AuthService.isAuthenticated()
+
+    if (!isAuthenticated) {
+      this.$router.push('/login')
+    } else {
+      let user = await AuthService.getUser()
+      this.user = user.payload.user
+    }
   },
 
   methods: {
