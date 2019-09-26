@@ -134,7 +134,7 @@ app.post('/api/verification/:verification([a-z0-9-]+)', Controller("Verification
  *
  * @yields {Object} JSON response made by the response method
  */
-app.get('/api/reset/:token([a-z0-9-]+)', Controller("PasswordReset@Reset"))
+app.post('/api/reset/:token([a-z0-9-]+)', Controller("PasswordReset@Reset"))
 
 /**
  * @callback /api/auth/resendMailMail
