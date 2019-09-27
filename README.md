@@ -2,11 +2,10 @@
 
 School project to recreate Cards Against Humanity as a web application
 
-[Trello](https://trello.com/b/OgEWE9v6/cah)
-
-[Project Document](https://docs.google.com/document/d/1kLjY055EVXxt8uHrTNBsvc903VmObTEjeBEUzurITAU/)
-
-[Documentation](https://github.com/MichaelMeir/CAH/wiki)
+ * [Trello](https://trello.com/b/OgEWE9v6/cah)
+ * [Project Document](https://docs.google.com/document/d/1kLjY055EVXxt8uHrTNBsvc903VmObTEjeBEUzurITAU/)
+ * [Documentation](https://github.com/MichaelMeir/CAH/wiki)
+ * [Usage Documentation (sprint #1)](https://docs.google.com/document/d/140VfEZmT8CUH6iFzybjzhuYkgIx_JdL6TPucEy5zs-k/edit?usp=sharing)
 
 ## Installation ⚙️
 1. Clone the repository and make sure to run a single `npm install` in the `client` and `server` directory.
