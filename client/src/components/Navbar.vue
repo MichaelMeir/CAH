@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isAuthenticated">
     <nav class="bg-indigo-700 py-6 px-8 mt-5 rounded flex text-white max-w-4xl mx-auto items-center">
       <div class="text-sm leading-snug tracking-wider text-center">
         <span
@@ -64,7 +64,7 @@ export default {
   data () {
     return {
       isAuthenticated: false,
-      isVerified: true
+      isVerified: true,
     }
   },
 
