@@ -17,10 +17,12 @@ function DefaultFunction (name) {
   return async function () {
     socket.send(JSON.stringify({
       type: name,
-      content: arguments
+      content: sanitizeInput(arguments)
     }))
+
     return new Promise((resolve, reject) => {
       awaiting[name] = {resolve, reject}
+
       setTimeout(function () {
         if (awaiting[name]) {
           awaiting[name].reject('timed out. no response was given.')
@@ -31,14 +33,23 @@ function DefaultFunction (name) {
   }
 }
 
+function sanitizeInput (data) {
+  let params = []
+  for (let i = 0; i < data.length; i++) {
+    params[i] = data[i.toString()]
+  }
+  return params
+}
+
 let awaiting = {}
 
 function Connect (port) {
   let protocol = location.protocol === 'https' ? 'wss' : 'ws'
-  socket = new WebSocket(`${protocol}//${location.hostname}:${port}`)
-  socket.onmessage((response) => {
+  socket = new WebSocket(`${protocol}://${location.hostname}:${port}`)
+  socket.onmessage = (response) => {
     try {
       let output = JSON.parse(response.data)
+
       if (output.type && output.content) {
         awaiting[output.type].resolve(output.content)
         awaiting[output.type] = undefined
@@ -48,6 +59,16 @@ function Connect (port) {
       }
     } catch (e) {
       console.log(e.toString())
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    socket.onopen = () => {
+      resolve()
+    }
+
+    socket.onerror = (err) => {
+      reject(err)
     }
   })
 }
