@@ -39,7 +39,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
     }
 }))
 
-// app.use(socketServer);
+app.use(socketServer.express);
 
 /**
  * @callback /api/auth/register
