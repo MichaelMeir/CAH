@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^6.4.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
@@ -21,6 +20,7 @@
     "express": "^4.17.1",
     "helmet": "^3.21.0",
     "jsonwebtoken": "^8.5.1",
+    "mailgun-js": "^0.22.0",
     "node-mysql": "^0.4.2",
     "orm": "^5.0.4",
     "uuid": "^3.3.3",
