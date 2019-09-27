@@ -107,8 +107,6 @@
 import Navbar from '../components/Navbar'
 import AuthService from '../services/AuthService'
 
-const Socket = require('../services/SocketService').default
-
 export default {
   components: {
     Navbar
@@ -249,17 +247,6 @@ export default {
   },
 
   async mounted () {
-    const methods = Socket.import([
-      'authenticate'
-    ])
-    let connected = await Socket.connect(8127)
-
-    if (!connected) {
-      methods.authenticate('test', 'message').then(result => {
-        console.log(result)
-      })
-    }
-
     let isAuthenticated = await AuthService.isAuthenticated()
 
     if (!isAuthenticated) {
