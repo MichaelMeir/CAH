@@ -1,5 +1,5 @@
 module.exports = {
-    authenticate: (utils, args) => {
-        return {test: args[0]}
+    authenticate: (meta, a, b, c) => {
+        return {test: a + b}
     }
 }

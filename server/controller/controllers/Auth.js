@@ -237,7 +237,7 @@ module.exports = {
                          const checkPassword = bcrypt.compareSync(req.body.current_password, user.password);
 
                          if (checkPassword) {
-                              user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+                              user.password = bcrypt.hashSync(req.body.new_password, bcrypt.genSaltSync(10))
                          } else {
                               err.push(errors.New("current_password", errors.code.Exists, "Please enter a correct current password"))
                          }
