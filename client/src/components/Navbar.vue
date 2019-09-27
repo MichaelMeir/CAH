@@ -12,7 +12,8 @@
           <li
             @click="$router.push('/')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item active ml-8"
+            class="cursor-pointer nav-item ml-8"
+            v-bind:class="{ 'active': isHome }"
           >Home</li>
           <li
             v-if="isAuthenticated"
@@ -22,6 +23,7 @@
             @click="$router.push('/profile')"
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
+            v-bind:class="{ 'active': isProfile }"
           >My profile</li>
           <li
             v-if="isAuthenticated"
@@ -64,18 +66,27 @@ export default {
   data () {
     return {
       isAuthenticated: false,
-      isVerified: true
+      isVerified: true,
+      isProfile: false,
+      isHome: false
     }
   },
 
   async mounted () {
     let isAuthenticated = await AuthService.isAuthenticated()
-
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
 
       if (!isVerified) this.isVerified = false
       this.isAuthenticated = true
+    }
+
+    if (this.$route.path === '/profile') {
+      this.isProfile = true
+    }
+
+    if (this.$route.path === '/') {
+      this.isHome = true
     }
   },
 
