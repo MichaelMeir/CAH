@@ -1,12 +1,14 @@
-module.exports = {
+export default {
   import: Import,
   connect: Connect
 }
 
 function Import (imports = []) {
+  let functions = {}
   for (let i = 0; i < imports.length; i++) {
-    module.exports[imports[i]] = DefaultFunction(imports[i])
+    functions[imports[i]] = DefaultFunction(imports[i])
   }
+  return functions
 }
 
 let socket = null
