@@ -1,7 +1,11 @@
+let rooms = {}
+//ABDGE
+
 module.exports = {
     import: [
-        "ping"
+        "ping",
     ],
+    
     ping: async (meta) => {
         const TIMEOUT = 1000 * 5
         if(meta.timeout) {
@@ -23,6 +27,9 @@ module.exports = {
     },
 
     authenticate: async (meta, a, b, c) => {
+        meta.emit(function(m) {
+            m.methods.addmessage()
+        })
         return {test: a + b}
     }
 }
