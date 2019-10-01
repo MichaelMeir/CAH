@@ -11,9 +11,11 @@ import Register from '@/views/Register'
 import Login from '@/views/Login'
 import Logout from '@/views/Logout'
 
+import AuthService from '../services/AuthService'
+
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -24,27 +26,42 @@ export default new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        guest: true
+      }
     },
     {
       path: '/logout',
       name: 'Logout',
-      component: Logout
+      component: Logout,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: {
+        guest: true
+      }
     },
     {
       path: '/profile',
       name: 'Profile',
-      component: Profile
+      component: Profile,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/forgot-password',
       name: 'ForgotPassword',
-      component: ForgotPassword
+      component: ForgotPassword,
+      meta: {
+        guest: true
+      }
     },
     {
       path: '/verification/:uuid',
@@ -58,3 +75,29 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  AuthService.isAuthenticated().then((response) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (!response) {
+        next({
+          path: '/login'
+        })
+      } else {
+        next()
+      }
+    } else if (to.matched.some(record => record.meta.guest)) {
+      if (response === false) {
+        next()
+      } else {
+        next({
+          path: '/'
+        })
+      }
+    } else {
+      next()
+    }
+  })
+})
+
+export default router
