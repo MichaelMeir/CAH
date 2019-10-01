@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loaded">
+  <div>
     <Navbar />
     <div class="max-w-md mx-auto flex mt-8 flex-col">
       <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t">
@@ -90,20 +90,9 @@ export default {
 
   data () {
     return {
-      loaded: false,
       email: null,
       password: null,
       errors: []
-    }
-  },
-
-  async mounted () {
-    let isAuthenticated = await AuthService.isAuthenticated()
-
-    if (isAuthenticated) {
-      this.$router.push('/')
-    } else {
-      this.loaded = true
     }
   },
 

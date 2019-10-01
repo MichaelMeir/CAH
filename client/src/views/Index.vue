@@ -245,14 +245,6 @@ export default {
   created () {
     this.getRandomColors(this.rooms.length)
   },
-
-  async mounted () {
-    let isAuthenticated = await AuthService.isAuthenticated()
-
-    if (!isAuthenticated) {
-      this.$router.push('/login')
-    }
-  }
 }
 </script>
 <style lang="scss" scoped>
