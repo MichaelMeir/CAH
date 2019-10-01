@@ -29,9 +29,21 @@ function Server(port = 8127) {
         }
         return this.clients.length
     }
+    function emit(func, filter = null) {
+        let users = this.clients
+        if(filter) {
+            for(let i = 0; i < Object.keys(filter).length; i++) {
+                const key = Object.keys(filter)[i]
+                const value = filter[key]
+                users = users.filter(k => k[key] === value)
+            } 
+        }
+        for(let i = 0; i < users.length; i++) {
+            func(users[i])
+        }
+    }
+    this.emit = emit
     this.socket.on('connection', (client, req) => {
-        let index = this.firstEmpty()
-        this.clients[index] = client
         let meta = {
             ip: req.connection.remoteAddress,
             db: this.db,
@@ -43,8 +55,12 @@ function Server(port = 8127) {
                 console.log("disconnected user")
                 this.clients[index] = undefined
             },
+            emit: emit,
             methods: {},
         }
+
+        let index = this.firstEmpty()
+        this.clients[index] = meta
 
         let awaiting = {}
         this.DefaultFunction = function(name) {
