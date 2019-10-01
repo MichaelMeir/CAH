@@ -1,5 +1,6 @@
 export default {
   import: Import,
+  export: Export,
   connect: Connect
 }
 
@@ -8,9 +9,26 @@ function Import (imports = []) {
   for (let i = 0; i < imports.length; i++) {
     functions[imports[i]] = DefaultFunction(imports[i])
   }
+  functions['ping'] = DefaultFunction('ping')
   return functions
 }
 
+function ping (socket) {
+  socket.send(JSON.stringify({
+    type: 'ping',
+    content: []
+  }))
+  return {ping: 1}
+}
+
+function Export (e) {
+  exportedMethods = {
+    ping,
+    ...e
+  }
+}
+
+let exportedMethods = {ping}
 let socket = null
 
 function DefaultFunction (name) {
@@ -51,8 +69,21 @@ function Connect (port) {
       let output = JSON.parse(response.data)
 
       if (output.type && output.content) {
-        awaiting[output.type].resolve(output.content)
-        awaiting[output.type] = undefined
+        if (awaiting[output.type]) {
+          awaiting[output.type].resolve(socket, ...output.content)
+          awaiting[output.type] = undefined
+        } else if (output.type.startsWith(':')) {
+          let methodName = output.type.replace(':', '', 1)
+          if (exportedMethods[methodName]) {
+            let result = exportedMethods[methodName](socket, ...output.content)
+            if (result) {
+              socket.send(JSON.stringify({
+                type: output.type,
+                content: sanitizeInput(result)
+              }))
+            }
+          }
+        }
       } else if (output.type) {
         awaiting[output.type].reject('No content field given!')
         awaiting[output.type] = undefined
