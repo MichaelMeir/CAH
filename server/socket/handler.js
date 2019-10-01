@@ -1,12 +1,14 @@
+
+const User = require('../user');
+
 let rooms = {}
-//ABDGE
 
 module.exports = {
     import: [
         "ping",
     ],
     
-    ping: async (meta) => {
+    ping: (meta) => {
         const TIMEOUT = 1000 * 5
         if(meta.timeout) {
             clearTimeout(meta.timeout)
@@ -23,13 +25,10 @@ module.exports = {
                 meta.disconnect()
             }, TIMEOUT)
         }, TIMEOUT)
-        return {ping: 1}
+        return [1]
     },
 
-    authenticate: async (meta, a, b, c) => {
-        meta.emit(function(m) {
-            m.methods.addmessage()
-        })
-        return {test: a + b}
+    retaart: (meta, a, b) => {
+        return [a+b]
     }
 }

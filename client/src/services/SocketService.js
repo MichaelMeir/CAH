@@ -70,7 +70,7 @@ function Connect (port) {
 
       if (output.type && output.content) {
         if (awaiting[output.type]) {
-          awaiting[output.type].resolve(socket, ...output.content)
+          awaiting[output.type].resolve(output.content)
           awaiting[output.type] = undefined
         } else if (output.type.startsWith(':')) {
           let methodName = output.type.replace(':', '', 1)

@@ -52,7 +52,6 @@ function Server(port = 8127) {
             disconnect: () => {
                 client.send(JSON.stringify({type: 'disconnected', content: {}}))
                 client.close()
-                console.log("disconnected user")
                 this.clients[index] = undefined
             },
             emit: emit,
@@ -101,20 +100,9 @@ function Server(port = 8127) {
                         }
                     }else if(this.handler[payload.type]) {
                         let response = this.handler[payload.type](meta, ...payload.content)
-
-                        let output = {}
-                        if(response && response instanceof Array) {
-                            let [out, updatedMeta] = response
-                            output = out
-                            if(updatedMeta) {
-                                meta = updatedMeta
-                            }
-                        }else if(response) {
-                            output = response
-                        }
                         client.send(JSON.stringify({
                             type: payload.type,
-                            content: output
+                            content: response
                         }))
                     }
                 }else{

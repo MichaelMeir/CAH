@@ -166,6 +166,14 @@ app.post('/api/reset', Controller("PasswordReset@saveChanges"))
  */
 app.post('/api/sendResetLink', Controller("PasswordReset@sendResetLink"))
 
+/**
+ * @callback /api/socket/port
+ * @description Retrieves the socket port
+ * 
+ * @yields {Number} JSON response made by the response method including the socket port
+ */
+app.post('/api/socket/port', Controller("Socket@port"))
+
 console.log("Server listening on 9000")
 
 app.listen(9000)
