@@ -30,19 +30,60 @@ function Server(port = 8127) {
         return this.clients.length
     }
     this.socket.on('connection', (client, req) => {
+        let index = this.firstEmpty()
+        this.clients[index] = client
         let meta = {
             ip: req.connection.remoteAddress,
             db: this.db,
             models: this.models,
-            socket: client
+            socket: client,
+            disconnect: () => {
+                client.send(JSON.stringify({type: 'disconnected', content: {}}))
+                client.close()
+                console.log("disconnected user")
+                this.clients[index] = undefined
+            },
+            methods: {},
         }
-        let index = this.firstEmpty()
-        this.clients[index] = client
+
+        let awaiting = {}
+        this.DefaultFunction = function(name) {
+            return async function() {
+                client.send(JSON.stringify({
+                    type: ":" + name,
+                    content: sanitizeInput(arguments)
+                }))
+                return new Promise((resolve, reject) => {
+                    awaiting[":"+name] = {resolve, reject}
+                    setTimeout(function () {
+                        if (awaiting[name]) {
+                          awaiting[name].reject('timed out. no response was given.')
+                          awaiting[name] = undefined
+                          meta.disconnect()
+                        }
+                      }, 1000 * 3)
+                })
+            }
+        }
+        meta.methods = {}
+        for(let i = 0; i < this.handler.import.length; i++) {
+            meta.methods[this.handler.import[i]] = this.DefaultFunction(this.handler.import[i])
+        }
+
+        client.send(JSON.stringify({
+            type: ':ping',
+            content: []
+        }))
+
         client.on('message', (msg) => {
             try{
                 let payload = JSON.parse(msg)
                 if(payload.type && payload.content) {
-                    if(this.handler[payload.type]) {
+                    if(payload.type.startsWith(':')) {
+                        if(awaiting[payload.type]) {
+                            awaiting[payload.type].resolve(payload)
+                        }
+                    }else if(this.handler[payload.type]) {
                         let response = this.handler[payload.type](meta, ...payload.content)
 
                         let output = {}
@@ -72,4 +113,12 @@ function Server(port = 8127) {
             }
         })
     })
+}
+
+function sanitizeInput (data) {
+    let params = []
+    for (let i = 0; i < data.length; i++) {
+      params[i] = data[i.toString()]
+    }
+    return params
 }
