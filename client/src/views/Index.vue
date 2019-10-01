@@ -17,7 +17,7 @@
           >
             <div
               v-for="(room, index) in filteredRooms"
-              :key="index"
+              :key="index + 1"
               class="w-1/3 p-2"
             >
               <div :class="'bg-' + getColor(room.id) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
