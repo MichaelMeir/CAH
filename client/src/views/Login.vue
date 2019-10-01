@@ -79,7 +79,6 @@
 </template>
 <script>
 import axios from 'axios'
-import AuthService from '../services/AuthService'
 
 import Navbar from '../components/Navbar'
 

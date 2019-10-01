@@ -118,7 +118,6 @@
 </template>
 <script>
 import Navbar from '../components/Navbar'
-import AuthService from '../services/AuthService'
 
 export default {
   components: {
@@ -266,7 +265,7 @@ export default {
 
   created () {
     this.getRandomColors(this.rooms.length)
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>

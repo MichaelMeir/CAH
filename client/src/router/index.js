@@ -62,7 +62,10 @@ const router = new Router({
     {
       path: '/cardpacks',
       name: 'Cardpacks',
-      component: Cardpacks
+      component: Cardpacks,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/forgot-password',
