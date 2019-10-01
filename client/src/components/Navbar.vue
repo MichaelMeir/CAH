@@ -54,7 +54,7 @@
         <button
           ref="resendButton"
           @click="resendMail()"
-          class="focus:outline-none hover:bg-orange-500 font-semibold rounded text-orange-100 bg-orange-400 px-4 py-2"
+          class="focus:outline-none hover:bg-orange-500 font-semibold rounded text-white bg-orange-400 px-4 py-2"
         >Resend mail</button>
       </div>
     </div>
