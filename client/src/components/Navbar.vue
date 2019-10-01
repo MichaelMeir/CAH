@@ -16,9 +16,11 @@
             v-bind:class="{ 'active': this.$route.path === '/' }"
           >Home</li>
           <li
+            @click="$router.push('/cardpacks')"
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
-          >Rooms</li>
+            v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
+          >Cardpacks</li>
           <li
             @click="$router.push('/profile')"
             v-if="isAuthenticated"

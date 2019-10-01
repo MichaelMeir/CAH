@@ -4,24 +4,25 @@
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
+          <div
+            class="font-semibold text-indigo-700"
+            v-if="!filteredRooms.length > 0"
+          >
+            There are no rooms available.
+          </div>
           <transition-group
             name="list"
             tag="div"
             class="flex flex-wrap -ml-2 -mt-2"
           >
             <div
-              v-for="(room, index) in rooms"
-              :key="room.id"
+              v-for="(room, index) in filteredRooms"
+              :key="index"
               class="w-1/3 p-2"
             >
-              <div
-                :class="'bg-' + getColor(index) + '-500 text-white text-sm rounded p-4 cursor-pointer'"
-                @click="rooms = rooms.filter(r => {
-        return r.id !== room.id
-      })"
-              >
+              <div :class="'bg-' + getColor(room.id) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
                 <div class="font-semibold mb-4 text-base flex">
-                  <div>{{ room.name }} {{ index + 1 }}</div>
+                  <div>{{ room.name }}</div>
                   <div class="flex flex-1 justify-end">
                     <i
                       v-if="room.type === 'public'"
@@ -36,7 +37,7 @@
                 <div>Players: <span class="float-right">{{ room.currentPlayers }}/{{ room.maxPlayers }}</span></div>
                 <div>Spectators: <span class="float-right">{{ room.spectators }}</span></div>
                 <div>Round: <span class="float-right">{{ room.currentRound }}/{{ room.maxRounds }}</span></div>
-                <div class="text-xs mt-4">Jantje, Pietje, Kees and 7 more..</div>
+                <div class="text-xs mt-4">{{ room.previewPlayers }}</div>
 
                 <button
                   style="background: rgba(0, 0, 0, 0.2)"
@@ -54,6 +55,18 @@
       <div class="ml-5 w-1/4">
         <div class="mb-5">
           <button class="text-sm w-full text-indigo-600 border border-indigo-300 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3">Create a room</button>
+        </div>
+        <div class="flex mb-2">
+          <i
+            style="margin-top: 17px"
+            class="opacity-75 ml-4 align-bottom text-white absolute text-xs mt-1 fas fa-search"
+          ></i>
+          <input
+            type="text"
+            class="search w-full rounded pl-10 pr-3 py-3 focus:outline-none cursor-pointer appearance-none text-white bg-indigo-700 font-semibold text-sm mb-3"
+            placeholder="Search rooms"
+            v-model="search"
+          />
         </div>
         <div class="mb-5">
           <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
@@ -105,11 +118,18 @@
 </template>
 <script>
 import Navbar from '../components/Navbar'
-import AuthService from '../services/AuthService'
 
 export default {
   components: {
     Navbar
+  },
+
+  computed: {
+    filteredRooms () {
+      return this.rooms.filter(room => {
+        return (room.name.toLowerCase().match(this.search.toLowerCase())) || (room.previewPlayers.toLowerCase().match(this.search.toLowerCase()))
+      })
+    }
   },
 
   methods: {
@@ -165,12 +185,13 @@ export default {
 
   data () {
     return {
+      search: '',
       previous: '',
       colors: [],
       rooms: [
         {
           id: 1,
-          name: 'Test room',
+          name: 'Test room 1',
           currentPlayers: 20,
           maxPlayers: 20,
           spectators: 3,
@@ -182,7 +203,7 @@ export default {
 
         {
           id: 2,
-          name: 'Test room',
+          name: 'Test room 2',
           currentPlayers: 20,
           maxPlayers: 20,
           spectators: 3,
@@ -194,19 +215,19 @@ export default {
 
         {
           id: 3,
-          name: 'Test room',
+          name: 'Test room 3',
           currentPlayers: 20,
           maxPlayers: 20,
           spectators: 3,
           currentRound: 3,
           maxRounds: 10,
-          previewPlayers: 'Jantje, Pietje, Kees and 5 more..',
+          previewPlayers: 'Jantje, Pietje, Gino and 5 more..',
           type: 'public'
         },
 
         {
           id: 4,
-          name: 'Test room',
+          name: 'Test room 4',
           currentPlayers: 20,
           maxPlayers: 20,
           spectators: 3,
@@ -218,7 +239,7 @@ export default {
 
         {
           id: 5,
-          name: 'Test room',
+          name: 'Test room 5',
           currentPlayers: 20,
           maxPlayers: 20,
           spectators: 3,
@@ -229,7 +250,7 @@ export default {
         },
         {
           id: 6,
-          name: 'Test room',
+          name: 'Test room 6',
           currentPlayers: 20,
           maxPlayers: 20,
           spectators: 3,
@@ -244,7 +265,7 @@ export default {
 
   created () {
     this.getRandomColors(this.rooms.length)
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -255,5 +276,11 @@ export default {
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(20px);
+}
+
+.search {
+  &::placeholder {
+    @apply .text-white;
+  }
 }
 </style>

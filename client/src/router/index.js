@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Index from '@/views/Index'
 import Profile from '@/views/Profile'
+import Cardpacks from '@/views/Cardpacks'
 import Verification from '@/views/Verification'
 import Reset from '@/views/Reset'
 import ForgotPassword from '@/views/ForgotPassword'
@@ -54,6 +55,14 @@ const router = new Router({
       path: '/profile',
       name: 'Profile',
       component: Profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/cardpacks',
+      name: 'Cardpacks',
+      component: Cardpacks,
       meta: {
         requiresAuth: true
       }
