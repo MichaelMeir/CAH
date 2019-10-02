@@ -3,18 +3,31 @@
     <Navbar />
     <div class="max-w-4xl mx-auto mt-5">
       <div class="flex mb-2">
-        <i
-          style="margin-top: 17px"
-          class="opacity-75 ml-4 align-bottom text-white absolute text-xs mt-1 fas fa-search"
-        ></i>
-        <input
-          type="text"
-          class="search w-full rounded pl-10 pr-3 py-3 focus:outline-none cursor-pointer appearance-none text-white bg-indigo-600 font-semibold text-sm mb-3"
-          placeholder="Search cardpacks"
-          v-model="search"
-        />
+        <div class="flex w-full">
+          <div class="w-3/4">
+            <i
+              style="margin-top: 17px"
+              class="opacity-75 ml-4 align-bottom text-white absolute text-xs mt-1 fas fa-search"
+            ></i>
+            <input
+              type="text"
+              class="search w-full rounded pl-10 pr-3 py-3 focus:outline-none cursor-pointer appearance-none text-white bg-indigo-600 font-semibold text-sm mb-3"
+              placeholder="Search cardpacks"
+              v-model="search"
+            />
+          </div>
+          <div class="w-1/4 ml-4">
+            <button class="text-sm w-full text-white bg-indigo-600 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3">
+              <i class="fas fa-plus-circle mr-2"></i> Create cardpack
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="flex flex-wrap -ml-2 -mr-2 -mt-2">
+      <transition-group
+        name="list"
+        tag="div"
+        class="flex flex-wrap -ml-2 -mr-2 -mt-2"
+      >
         <div
           v-for="(cardpack, index) in filteredCardpacks"
           :key="index"
@@ -48,7 +61,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -141,6 +154,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 .search {
   &::placeholder {
     @apply .text-white;
