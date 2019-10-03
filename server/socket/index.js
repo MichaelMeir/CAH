@@ -14,7 +14,8 @@ module.exports = {
         server.db = req.db
         server.models = req.models
         next()
-    }
+    },
+    emit: server.emit,
 }
 
 function Server(port = 8127) {
