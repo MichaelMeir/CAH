@@ -30,7 +30,7 @@
       >
         <div
           v-for="(cardpack, index) in filteredCardpacks"
-          :key="index"
+          :key="index + 1"
           class="w-1/3 p-2 stacked-parent"
         >
           <div class="bg-indigo-500 text-white text-sm rounded border-t-8 border-indigo-600 p-4 cursor-pointer">
