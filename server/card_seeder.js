@@ -6,6 +6,7 @@ const request = require("request");
 const brotli = require("brotli/decompress");
 const https = require("https");
 const fs = require('fs')
+const { TextDecoder } = require('util')
 const { decompressStream } = require('iltorb')
 
 orm.connect(
