@@ -122,7 +122,7 @@ const seed = (raw, models) => {
 					likes: 0,
 					name: details.name,
 					description: "Default pack: " + details.name,
-					tags: "[]"
+					tags: `["Default"]`
 				},
 				(err, result) => {
 					if (err) throw err;
