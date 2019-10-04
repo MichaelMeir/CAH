@@ -31,6 +31,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             password: String,
             email: String,
             verification: String,
+            liked_packs: String,
             reset_token: String,
             session_id: String,
             session_ip: String,
@@ -199,6 +200,14 @@ app.post('/api/socket/port', Controller("Socket@port"))
  * @yields {Number} JSON response made by the response method to fetch all cardpacks
  */
 app.post('/api/cardpacks', Controller("Cardpack@getCardpacks"))
+
+/**
+ * @callback /api/cardpacks/addlike
+ * @description Fetch all available cardpacks
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cardpacks
+ */
+app.post('/api/cardpacks/addlike', Controller("Cardpack@addLike"))
 
 /**
  * @callback /api/cardpacks/create
