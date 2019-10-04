@@ -109,7 +109,9 @@
           :key="index + 1"
           class="w-1/3 p-2 stacked-parent"
         >
-          <div class="bg-indigo-500 text-white text-sm rounded border-t-8 border-indigo-600 p-4 cursor-pointer">
+          <div class="border-t-10 border-indigo-600 rounded-t"></div>
+
+          <div class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer">
             <div class="relative">
               <div class="font-semibold mb-4 text-base">{{ cardpack.name }}</div>
               <div
@@ -152,6 +154,11 @@
           </div>
         </div>
       </transition-group>
+      <div v-if="(cardpacks.length - limit) > 0">
+        <div @click="limit = limit + 9" class="fixed bottom-0 z-50 mb-8 cursor-pointer bg-indigo-200 text-indigo-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-indigo-300">
+        Load {{ ((cardpacks.length - limit) > 9) ? '9' : (cardpacks.length - limit) }} of {{ cardpacks.length - limit }} more..
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -184,7 +191,7 @@ export default {
 
       return this.cardpacks.filter(cardpack => {
         return ((cardpack.name.toLowerCase()).match(this.search.toLowerCase()))
-      })
+      }).slice(0, this.limit)
     }
   },
 
@@ -281,6 +288,7 @@ export default {
   data () {
     return {
       createModalOpen: false,
+      limit: 9,
       search: '',
       cardpacks: null,
       user_id: null,
