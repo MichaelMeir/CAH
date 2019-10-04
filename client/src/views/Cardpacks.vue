@@ -109,7 +109,9 @@
           :key="index + 1"
           class="w-1/3 p-2 stacked-parent"
         >
-          <div class="bg-indigo-500 text-white text-sm rounded border-t-8 border-indigo-600 p-4 cursor-pointer">
+          <div class="border-t-10 border-indigo-600 rounded-t"></div>
+
+          <div class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer">
             <div class="relative">
               <div class="font-semibold mb-4 text-base">{{ cardpack.name }}</div>
               <div
@@ -144,7 +146,7 @@
                 </div>
               </div>
 
-              <div @click="addLikes(cardpack.id)" :class="((liked_packs.includes(cardpack.id)) ? 'bg-pink-600 text-pink-200 opacity-100' : '') +' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'">
+              <div @click="addLikes(cardpack.id)" :class="((liked_packs !== null && liked_packs.includes(cardpack.id)) ? 'bg-pink-600 text-pink-200 opacity-100' : '') +' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'">
                 <span class="font-semibold">{{ cardpack.likes }}</span>
                 <i class="ml-2 fa fa-heart text-xs"></i>
               </div>
@@ -152,6 +154,11 @@
           </div>
         </div>
       </transition-group>
+      <div v-if="cardpacks && ((cardpacks.length - limit) > 0)">
+        <div @click="limit = limit + 9" class="fixed bottom-0 z-50 mb-8 cursor-pointer bg-indigo-200 text-indigo-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-indigo-300">
+        Load {{ ((cardpacks.length - limit) > 9) ? '9' : (cardpacks.length - limit) }} of {{ cardpacks.length - limit }} more..
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -166,11 +173,11 @@ export default {
     Navbar
   },
 
-  async mounted() {
+  async mounted () {
     let user = await AuthService.getUser()
 
     this.user_id = user.payload.user.id
-    this.liked_packs = JSON.parse(user.payload.user.liked_packs)
+    this.liked_packs = JSON.parse(user.payload.user.liked_packs) || []
 
     let response = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/cardpacks', [], {
       withCredentials: true
@@ -180,23 +187,23 @@ export default {
   },
 
   computed: {
-    filteredCardpacks() {
+    filteredCardpacks () {
       if (!this.cardpacks) return []
 
       return this.cardpacks.filter(cardpack => {
         return ((cardpack.name.toLowerCase()).match(this.search.toLowerCase()))
-      })
+      }).slice(0, this.limit)
     }
   },
 
   methods: {
-    async addLikes(id) {
+    async addLikes (id) {
       var curPack = this.cardpacks.find(cardpack => {
         return cardpack.id === id
       })
 
       let request = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/cardpacks/addlike', {
-        currentPack: curPack.id,
+        currentPack: curPack.id
       }, {
         withCredentials: true
       })
@@ -216,7 +223,7 @@ export default {
       }
     },
 
-    async saveChanges() {
+    async saveChanges () {
       if (!this.cardpack.title) {
         this.errors.push({
           field: 'cardpack.title',
@@ -261,7 +268,7 @@ export default {
      *
      * @return {Boolean}
      */
-    hasError(field) {
+    hasError (field) {
       return (this.errors.find(e => {
         return e.field === field
       })) !== undefined
@@ -274,7 +281,7 @@ export default {
      *
      * @return {String}
      */
-    getError(field) {
+    getError (field) {
       return this.errors.find(e => {
         return e.field === field
       }).error
@@ -282,12 +289,12 @@ export default {
 
     /**
      * A helper function to clear the active error of a specified field
-  
+
      * @param {String} field
      *
      * @return {Boolean}
      */
-    clearError(field) {
+    clearError (field) {
       if (!this.hasError(field)) return
 
       this.errors = this.errors.filter(e => {
@@ -300,14 +307,15 @@ export default {
      *
      * @return {Boolean}
      */
-    clearErrors() {
+    clearErrors () {
       this.errors = []
     }
   },
 
-  data() {
+  data () {
     return {
       createModalOpen: false,
+      limit: 9,
       search: '',
       cardpacks: null,
       user_id: null,
