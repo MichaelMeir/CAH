@@ -7,6 +7,8 @@ import Cardpacks from '@/views/Cardpacks'
 import Verification from '@/views/Verification'
 import Reset from '@/views/Reset'
 import ForgotPassword from '@/views/ForgotPassword'
+import Room from '@/views/Room'
+import WaitingRoom from '@/views/WaitingRoom'
 
 import Register from '@/views/Register'
 import Login from '@/views/Login'
@@ -84,6 +86,16 @@ const router = new Router({
       path: '/reset/:token',
       name: 'Reset',
       component: Reset
+    },
+    {
+      path: '/room/:token',
+      name: 'Room',
+      component: Room
+    },
+    {
+      path: '/waitingroom/:token',
+      name: 'WaitingRoom',
+      component: WaitingRoom
     }
   ]
 })
