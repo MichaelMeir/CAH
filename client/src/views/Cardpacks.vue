@@ -113,10 +113,17 @@
             <div class="relative">
               <div class="font-semibold mb-4 text-base">{{ cardpack.name }}</div>
               <div
-                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-50"
+                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
                 v-if="cardpack.user_id === user_id"
               >
                 Created by you
+              </div>
+
+              <div
+                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
+                v-else
+              >
+                Created by Kees
               </div>
               <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
                 0 cards
@@ -137,8 +144,9 @@
                 </div>
               </div>
 
-              <div class="absolute right-0 flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200">
-                <i class="fa fa-heart text-xs"></i>
+              <div @click="cardpack.likes++" class="select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center">
+                <span class="font-semibold">{{ cardpack.likes }}</span>
+                <i class="ml-2 fa fa-heart text-xs"></i>
               </div>
             </div>
           </div>

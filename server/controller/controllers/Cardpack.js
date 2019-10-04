@@ -46,7 +46,8 @@ module.exports = {
                             user_id: user.id,
                             name: req.body.name,
                             description: req.body.description,
-                            tags: JSON.stringify(req.body.tags)
+                            tags: JSON.stringify(req.body.tags),
+                            likes: 0
                         }, (err, result) => {
                             if (err) {
                                  response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err])
