@@ -36,22 +36,28 @@
           <div class="bg-indigo-500 text-white text-sm rounded border-t-8 border-indigo-600 p-4 cursor-pointer">
             <div class="relative">
               <div class="font-semibold mb-4 text-base">{{ cardpack.name }}</div>
+              <div
+                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-50"
+                v-if="cardpack.user_id === user_id"
+              >
+                Created by you
+              </div>
               <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
-                {{ cardpack.cards }} <span>{{ ((cardpack.cards == 1) ? 'card' : 'cards') }}</span>
+                0 cards
               </div>
             </div>
             <div class="mb-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, tempora voluptas! Magni, modi temporibus provident nostrum autem dolore voluptate accusamus corrupti tempore, omnis explicabo ex. Modi sit natus facilis, numquam veritatis placeat omnis debitis est, veniam eum atque, libero iste.
+              {{ cardpack.description }}
             </div>
 
             <div class="flex relative items-center">
               <div>
                 <div
                   class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
-                  v-for="(category, index) in cardpack.categories"
+                  v-for="(tag, index) in JSON.parse(cardpack.tags)"
                   :key="index"
                 >
-                  {{ category.name }}
+                  {{ tag }}
                 </div>
               </div>
 
@@ -67,14 +73,31 @@
 </template>
 <script>
 import Navbar from '../components/Navbar'
+import AuthService from '../services/AuthService'
+
+import axios from 'axios'
 
 export default {
   components: {
     Navbar
   },
 
+  async mounted () {
+    let user = await AuthService.getUser()
+
+    this.user_id = user.payload.user.id
+
+    let response = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/cardpacks', [], {
+      withCredentials: true
+    })
+
+    this.cardpacks = response.data.payload
+  },
+
   computed: {
     filteredCardpacks () {
+      if (!this.cardpacks) return []
+
       return this.cardpacks.filter(cardpack => {
         return ((cardpack.name.toLowerCase()).match(this.search.toLowerCase()))
       })
@@ -84,71 +107,8 @@ export default {
   data () {
     return {
       search: '',
-      cardpacks: [
-        {
-          id: 1,
-          name: 'Cardpack 1',
-          cards: 4,
-          categories: [
-            {
-              name: 'Fantasy'
-            },
-            {
-              name: 'TV'
-            }
-          ]
-        },
-        {
-          id: 2,
-          name: 'Cardpack 2',
-          cards: 2,
-          categories: [
-            {
-              name: 'Technical'
-            }
-          ]
-        },
-        {
-          id: 3,
-          name: 'Cardpack 3',
-          cards: 1,
-          categories: [
-            {
-              name: 'Comedy'
-            }
-          ]
-        },
-        {
-          id: 4,
-          name: 'Cardpack 4',
-          cards: 1,
-          categories: [
-            {
-              name: 'TV'
-            }
-          ]
-        },
-        {
-          id: 4,
-          name: 'Cardpack 5',
-          cards: 1,
-          categories: [
-            {
-              name: 'Games'
-            }
-          ]
-        },
-        {
-          id: 4,
-          name: 'Cardpack 6',
-          cards: 2,
-          categories: [
-            {
-              name: 'Food'
-            }
-          ]
-        }
-      ]
+      cardpacks: null,
+      user_id: null
     }
   }
 }
