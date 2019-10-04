@@ -41,7 +41,16 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             user_id: Number,
             likes: Number,
             name: String,
+            description: { type: 'text', size: 255 },
             tags: String
+        })
+
+        models.card = db.define("cards", {
+            uuid: String,
+            text: { type: 'text', size: 255 },
+            white: Boolean,
+            picks: Number,
+            cardpack_id: Number
         })
 
         next();
@@ -182,6 +191,14 @@ app.post('/api/sendResetLink', Controller("PasswordReset@sendResetLink"))
  * @yields {Number} JSON response made by the response method including the socket port
  */
 app.post('/api/socket/port', Controller("Socket@port"))
+
+/**
+ * @callback /api/cardpacks
+ * @description Fetch all available cardpacks
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cardpacks
+ */
+app.post('/api/cardpacks', Controller("Cardpack@getCardpacks"))
 
 console.log("Server listening on 9000")
 
