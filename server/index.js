@@ -3,23 +3,43 @@ const express = require('express');
 const cors = require('cors')
 const helmet = require('helmet')
 const bodyparser = require('body-parser');
+const cookieParser = require('cookie-parser')
+const fs = require('fs')
 
 const orm = require('orm');
 
-const validator = require('./validator');
-const response = require('./response')
-
+const Controller = require('./controller')
 const app = express();
 
-app.use(cors());
+const socketServer = require('./socket')
+
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+}));
+
 app.use(helmet());
 app.use(bodyparser());
+app.use(cookieParser(fs.readFileSync('private.key').toString()));
 
-// app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`), {
-//     define: function(db, models, next) {
+app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_PASSWORD}@${process.env.MYSQL_HOST}/${process.env.MYSQL_DATABASE}`, {
+    define: function (db, models, next) {
+        models.user = db.define("users", {
+            uuid: String,
+            username: String,
+            username_withcase: String,
+            password: String,
+            email: String,
+            verification: String,
+            reset_token: String,
+            session_id: String,
+            session_ip: String,
+        })
+        next();
+    }
+}))
 
-//     }
-// })
+app.use(socketServer.express);
 
 /**
  * @callback /api/auth/register
@@ -33,51 +53,127 @@ app.use(bodyparser());
  * 
  * @yields {Object} JSON response made by the response method
  */
-app.post('/api/auth/register', (req, res) => {
-     let [success, errors] = validator(req.body, {
-          "username": "string min:3 max:16 word",
-          "email": "string email",
-          "password": "string min:5",
-          "password_confirmation": "string min:5"
-      })
-     if(success) {
-          db.sync(function(err) {
-          if (err) {
-                         response(res,req.body,{}, 500, "database error occured.", [err])
-                         return
-                    } 
+app.post('/api/auth/register', Controller("Auth@register"))
 
-          Person.find({ surname: "Doe" }, function (err, people) { //[{}, {}]
-               if (err) {
-                         response(res,req.body,{}, 500, "database error occured.", [err])
-                         return
-                    }
-               people.foreach() => {
-                    if(people.name != this.username) {
-                         response(res,req.body,{}, 500, "database error occured.", [err])
-                         return
-                    }
-               }
+/**
+ * @callback /api/auth/login
+ * @description Authenticates an existing user
+ * 
+ * @param {String} email Email that the user wants to authenticate and verify with
+ * @param {String} password The password the user wishes to use to authenticate
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/login', Controller("Auth@login"))
 
-               {    
-                    Person.create({ id: 1, name: "John", surname: "Doe", age: 27 }, function(err) {
-                         if (err) {
-                              response(res,req.body,{}, 500, "database error occured.", [err])
-                         } else {
-                              response(res,req.body, {}, 200, "user succesfully created.")
-                         }
-                    }
-               } else{
-                    response(res,req.body,{}, 500, "database error occured.", [err])
-                    return
-               }
+/**
+ * @callback /api/auth/check
+ * @description Checks if an user is authenticated
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/check', Controller("Auth@checkUser"))
 
-          }
-     }
+/**
+ * @callback /api/auth/logout
+ * @description Logs an authenticated user out
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/logout', Controller("Auth@logout"))
 
-     }else{
-          response(res, req.body, {}, 400, "Request did not validate to required parameters and its rules", errors)
-     }
-})
+/**
+ * @callback /api/auth/me
+ * @description Fetches data about logged in user
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/me', Controller("Auth@me"))
 
-app.listen(process.env.DEV? "9000" : "80")
+/**
+    * @callback /api/auth/profile
+    * @description The route to save modifications made to the profile of the authenticated user
+    * 
+    * @param {String} jwt The token that gets set when the user authenticates
+    * 
+    * @yields {Object} JSON response made by the response method
+    */
+app.post('/api/auth/profile', Controller("Auth@saveChanges"))
+
+/**
+* @callback /api/auth/deleteAccount
+* @description The route to delete an account
+* 
+* @param {String} jwt The token that gets set when the user authenticates
+* 
+* @yields {Object} JSON response made by the response method
+*/
+app.post('/api/auth/deleteAccount', Controller("Auth@deleteAccount"))
+
+/**
+ * @callback /api/verification/{uuid}
+ * @description Verifies email, this link should only be available from email
+ *
+ * @param {String} uuid used to get the unverified user, if found it removes the uuid so that the user's email is verified
+ *
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/verification/:verification([a-z0-9-]+)', Controller("Verification@Verify"))
+
+/**
+ * @callback /api/reset/{token}
+ * @description Changes password, this link should only be available from email
+ *
+ * @param {String} token used to get the token from user, if found it removes the token so that the user's password link disables.
+ *
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/reset/:token([a-z0-9-]+)', Controller("PasswordReset@Reset"))
+
+/**
+ * @callback /api/auth/resendMailMail
+ * @description Resend verification mail
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/auth/resendMail', Controller("Verification@resendMail"))
+
+/**
+ * @callback /api/reset
+ * @description Reset the password of the user
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/reset', Controller("PasswordReset@saveChanges"))
+
+/**
+ * @callback /api/sendResetLink
+ * @description Sends the verification link to the user to reset his password
+ * 
+ * @param {String} jwt The token that gets set when the user authenticates
+ * 
+ * @yields {Object} JSON response made by the response method
+ */
+app.post('/api/sendResetLink', Controller("PasswordReset@sendResetLink"))
+
+/**
+ * @callback /api/socket/port
+ * @description Retrieves the socket port
+ * 
+ * @yields {Number} JSON response made by the response method including the socket port
+ */
+app.post('/api/socket/port', Controller("Socket@port"))
+
+console.log("Server listening on 9000")
+
+app.listen(9000)

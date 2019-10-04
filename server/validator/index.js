@@ -24,6 +24,14 @@ const RULES = {
 
     "word": (value, args) => {
         return [/^[\w][^_]*$/gm.exec(value)]
+    },
+
+    "uuid": (value, args) => {
+        return [/[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/gm.exec(value)]
+    },
+
+    "jwt": (value, args) => {
+        return [/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/gm.exec(value)]
     }
 }
 
@@ -35,7 +43,7 @@ const RULES = {
  * @param {Object} data Data given from the request body
  * @param {Object} template template with keys and rules as values
  * 
- * @returns {Boolean} Returns true if data validates with the given template
+ * @returns {Array} Returns array with 0 as boolean of succeeded or not, 1 as array of errors/mismatches given
  */
 module.exports = (data, template) => {
     let keys = Object.keys(template)

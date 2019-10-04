@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: response/index.js</title>
+    <title>JSDoc: Source: errors/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: response/index.js</h1>
+    <h1 class="page-title">Source: errors/index.js</h1>
 
     
 
@@ -26,27 +26,46 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @method response
- * @description Used to keep the responses of the backend all the same to not cause any unexpected responses.
- * 
- * @param {ExpressResponse} res Express Response to send back a response
- * @param {Object} parameters Parameters given in the request
- * @param {Object} data Data to be returned after processing the request
- * @param {Number} status HTTP Status Code
- * @param {String} message Message to give more data
- * @param {Array} errors Array with more info about given errors
- * 
- * @yields {Object} Responds a JSON object to the request client
+            <pre class="prettyprint source linenums"><code>
+/**
+ * @public
+ * @description Error codes to be used in errors that are expected to be sent back to the requester
  */
-module.exports = (res, parameters = {}, data = {}, status = 200, message = "No errors have occurred", errors = []) => {
-    res.status(status).json({
-        message: message,
-        failure: !status.toString().startsWith("2"),
-        errors: errors,
-        parameters: parameters,
-        payload: data
-    })
+module.exports.code = {
+    NotFilledIn: {
+        id: 1,
+        msg: "value was not filled in."
+    },
+    NotValid: {
+        id: 2,
+        msg: "value was not valid."
+    },
+    Exists: {
+        id: 3,
+        msg: "value has already been used."
+    },
+    DatabaseError: {
+        id: 4,
+        msg: "Unexpected database error."
+    }
+}
+
+/**
+ * @method errors.New
+ * @description This function returns an object error, this prevents the requester to end up with unexpected data.
+ * 
+ * @param {String} field The data field given, if this isnt applicable, use empty string
+ * @param {Object} code Code is expected to be imported from errors.code.*, includes an id and a default message
+ * @param {String} message this message can be altered to get a custom error message, otherwise it will get the default message from the code
+ * 
+ * @returns {Object} Error Object 
+ */
+module.exports.New = (field, code, message = false) => {
+    return {
+        field: field,
+        code: code.id,
+        message: !message?code.msg:message
+    }
 }</code></pre>
         </article>
     </section>
