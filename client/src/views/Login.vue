@@ -7,6 +7,12 @@
       </div>
       <div class="px-4 py-4 bg-indigo-800 rounded-b">
         <div
+          class="bg-red-200 mb-2 border border-red-300 text-red-700 font-semibold text-sm rounded py-3 px-4 mb-8"
+          v-if="wrongCredentials"
+        >
+          You have entered the wrong credentials.
+        </div>
+        <div
           class="bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
           v-if="$route.query.accountCreated"
         >
@@ -91,7 +97,8 @@ export default {
     return {
       email: null,
       password: null,
-      errors: []
+      errors: [],
+      wrongCredentials: false
     }
   },
 
@@ -130,10 +137,14 @@ export default {
           }
         } catch (err) {
           err.response.data.errors.forEach(error => {
-            this.errors.push({
-              field: error.field,
-              error: error.message
-            })
+            if (error.message !== 'You have entered the wrong credentials.') {
+              this.errors.push({
+                field: error.field,
+                error: error.message
+              })
+            } else {
+              this.wrongCredentials = true
+            }
           })
         }
       }
@@ -173,6 +184,8 @@ export default {
      * @return {Boolean}
      */
     clearError (field) {
+      this.wrongCredentials = false
+
       if (!this.hasError(field)) return
 
       this.errors = this.errors.filter(e => {
@@ -186,6 +199,7 @@ export default {
      * @return {Boolean}
      */
     clearErrors () {
+      this.wrongCredentials = false
       this.errors = []
     }
   }

@@ -35,6 +35,15 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             session_id: String,
             session_ip: String,
         })
+
+        models.cardpack = db.define("cardpacks", {
+            uuid: String,
+            user_id: Number,
+            likes: Number,
+            name: String,
+            tags: String
+        })
+
         next();
     }
 }))
