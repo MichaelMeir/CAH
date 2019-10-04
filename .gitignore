@@ -65,3 +65,5 @@ private.key.pub
 *.pem
 *.cert
 server.crt
+
+.temp.json.br
