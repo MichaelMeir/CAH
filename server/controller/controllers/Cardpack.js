@@ -11,7 +11,7 @@ module.exports = {
                 return
             }
 
-            req.models.cardpack.all((err, cardpacks) => {
+            req.models.cardpack.find().order('-likes').all((err, cardpacks) => {
                 if (err) {
                     response(res, req.body, {}, 500, "Error while fetching cardpacks.", [])
                     return
