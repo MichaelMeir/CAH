@@ -200,6 +200,14 @@ app.post('/api/socket/port', Controller("Socket@port"))
  */
 app.post('/api/cardpacks', Controller("Cardpack@getCardpacks"))
 
+/**
+ * @callback /api/cardpacks/create
+ * @description Creates a new cardpack
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cardpacks
+ */
+app.post('/api/cardpacks/create', Controller("Cardpack@createCardpack"))
+
 console.log("Server listening on 9000")
 
 app.listen(9000)

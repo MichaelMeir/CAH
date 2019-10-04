@@ -51,11 +51,11 @@
                 </div>
               </div>
               <div class="mt-3 text-sm">
-                Please fill in all the fields to create your cardpack!.
+                Please fill in all the fields to create your cardpack
 
                 <div class="mt-4 border-t border-indigo-200 pt-4">
                   <div>
-                    <label>Cardpack name</label>
+                    <label>Name</label>
                     <input
                       v-model="cardpack.title"
                       @keydown="clearError('cardpack.title')"
@@ -69,7 +69,7 @@
                     </div>
                   </div>
                   <div class="my-4">
-                    <label class="mt-4">Cardpack Description</label>
+                    <label class="mt-4">Description</label>
                     <textarea
                       v-model="cardpack.description"
                       :class="(hasError('cardpack.description') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'"
@@ -82,7 +82,7 @@
                     </div>
                     </div>
                   <div>
-                    <label class="mt-4">Cardpack Tags</label>
+                    <label class="mt-4">Tags</label>
                     <select v-model="cardpack.tags" multiple class="focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700">
                         <option disabled selected>Select tags</option>
                         <option v-bind:key="category.id" :value="category" v-for="category in categories">{{ category }}</option>
@@ -194,6 +194,29 @@ export default {
           field: 'cardpack.description',
           error: 'Please enter a description'
         })
+      }
+
+      if (this.errors.length === 0) {
+        try {
+          let request = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/cardpacks/create', {
+            name: this.cardpack.title,
+            description: this.cardpack.description,
+            tags: this.cardpack.tags
+          }, {
+            withCredentials: true
+          })
+
+          this.createModalOpen = false
+
+          this.cardpacks.push(request.data.payload)
+        } catch (err) {
+          err.response.data.errors.forEach(error => {
+            this.errors.push({
+              field: error.field,
+              error: error.message
+            })
+          })
+        }
       }
     },
     /**
