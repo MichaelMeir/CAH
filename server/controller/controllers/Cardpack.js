@@ -82,6 +82,10 @@ module.exports = {
                         let liked_packs = JSON.parse(user.liked_packs)
                         let cardpack = results[0]
 
+                        if (liked_packs === null) {
+                            liked_packs = []
+                        }
+
                         if (liked_packs.includes(cardpack.id)) {
                             cardpack.likes -= 1
 
