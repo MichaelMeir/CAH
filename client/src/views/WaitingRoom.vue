@@ -3,24 +3,37 @@
     <navbar />
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="bg-indigo-700 text-black my-5 rounded w-2/3 pb-1 overflow-y-auto mr-3">
-      	<div class="bg-white text-black h-56 m-2 rounded">
-      	  <p></p>
-      	</div>
+        <div class="bg-white text-black h-56 m-2 rounded">
+          <p></p>
+        </div>
 
-      	<div class="flex">
-      		<input class="ml-2 mt-1 mb-1 p-1 w-4/5 rounded" type="text" placeholder="Say...">
-      	<button class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded ">Send</button>
-      	</div>
-  
+        <div class="flex">
+          <input
+            class="ml-2 mt-1 mb-1 p-1 w-4/5 rounded"
+            type="text"
+            placeholder="Say..."
+          >
+          <button class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded ">Send</button>
+        </div>
+
       </div>
-  	  <div class="bg-indigo-700 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
-	    <ul class="" style="height: 14rem">
-	  	  <p class="text-center pt-1">Playerlist</p>
-      	  <div class="text-white ">
-  	  	  <li v-bind:key="index" v-for="(user, index) in usernames" class="bg-indigo-700 m-2 rounded"><p class="mx-2">{{ user }}</p></li>
-  	  	  </div>
-  	    </ul>
-  	  </div>
+      <div class="bg-indigo-700 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
+        <ul
+          class=""
+          style="height: 14rem"
+        >
+          <p class="text-center pt-1">Playerlist</p>
+          <div class="text-white ">
+            <li
+              v-bind:key="index"
+              v-for="(user, index) in usernames"
+              class="bg-indigo-700 m-2 rounded"
+            >
+              <p class="mx-2">{{ user }}</p>
+            </li>
+          </div>
+        </ul>
+      </div>
     </div>
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="flex-1">
@@ -28,11 +41,14 @@
         <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">Cardpacks</button>
       </div>
       <div class="bg-indigo-700 text-white rounded w-1/3 pb-1">
-    	<ul class="" style="height: 14rem">
-    	  <p class="text-center pt-1">Settings</p>
-      	  <div class="text-white ">
-      	  </div>
-      	</ul>
+        <ul
+          class=""
+          style="height: 14rem"
+        >
+          <p class="text-center pt-1">Settings</p>
+          <div class="text-white ">
+          </div>
+        </ul>
       </div>
     </div>
     <div class="max-w-4xl mx-auto mt-1 flex">
@@ -46,20 +62,20 @@
 import Navbar from '../components/Navbar'
 
 export default {
-	components: {
-		Navbar
-	},
+  components: {
+    Navbar
+  },
 
-	data() {
-		return {
-			usernames: [
-				"dilano",
-				"michael",
-				"joey",
-				"gino",
-				"kees"
-			]
-		}
-	}
+  data () {
+    return {
+      usernames: [
+        'dilano',
+        'michael',
+        'joey',
+        'gino',
+        'kees'
+      ]
+    }
+  }
 }
 </script>

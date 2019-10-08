@@ -13,6 +13,17 @@ const app = express();
 
 const socketServer = require('./socket')
 
+if (process.env.DEV == 0) {
+    let bugsnag = require('@bugsnag/js')
+    let bugsnagExpress = require('@bugsnag/plugin-express')
+    let bugsnagClient = bugsnag(process.env.BUGSNAG_API)
+
+    bugsnagClient.use(bugsnagExpress)
+    
+    app.use(bugsnagClient.getPlugin('express').requestHandler)
+    app.use(bugsnagClient.getPlugin('express').errorHandler)
+}
+
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true
