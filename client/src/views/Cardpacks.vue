@@ -128,7 +128,7 @@
                 Created by Kees
               </div>
               <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
-                {{ cardpack.cardsAmount }} cards
+                {{ cardpack.cardAmount }} cards
               </div>
             </div>
             <div class="mb-4">

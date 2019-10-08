@@ -43,7 +43,8 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             likes: Number,
             name: String,
             description: { type: 'text', size: 255 },
-            tags: String
+            tags: String,
+            cardAmount: Number,
         })
 
         models.card = db.define("cards", {
@@ -54,7 +55,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             cardpack_id: Number
         })
 
-        models.card.hasOne('cardpack', models.cardpack, { reverse: 'cards', autoFetch: true })
+        models.card.hasOne('cardpack', models.cardpack, { reverse: 'cards', autoFetch: false })
 
         next();
     }

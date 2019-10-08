@@ -19,7 +19,8 @@ orm.connect(
 			likes: Number,
 			name: String,
 			description: { type: "text", size: 255 },
-			tags: String
+			tags: String,
+			cardAmount: Number,
 		});
 
 		const card = db.define("cards", {
@@ -107,11 +108,33 @@ const seed = (raw, models) => {
 				width: 20,
                 total: parsed.blackCards.length + parsed.whiteCards.length,
                 callback: () => {
-                    console.log('Removing ./.temp.json.br')
-                    fs.unlinkSync('./.temp.json.br')
-                    console.log('COMPLETED: successfully seeded default cards and cardpacks!')
-                    process.exit(0)
-                    return
+					console.log('Removing ./.temp.json.br')
+					fs.unlinkSync('./.temp.json.br')
+					const run = async () => {
+						console.log("counting cards...")
+						models.cardpack.find({}, (err, result) => {
+							if(err) {
+								throw err
+							}
+							console.log('test')
+							for(let i = 0; i < result.length; i++) {
+								let cardpack = result[i]
+								cardpack.getCards((err, result) => {
+									if(err) {
+										console.error(err)
+										return
+									}
+									console.log(result.length)
+									cardpack.cardAmount = result.length;
+									cardpack.save()
+								})
+							}
+						})
+					}
+					run().then(() => {
+						console.log('COMPLETED: successfully seeded default cards and cardpacks!')
+						process.exit(0)
+					})
                 }
 			}
 		);
@@ -124,7 +147,8 @@ const seed = (raw, models) => {
 					likes: 0,
 					name: details.name,
 					description: "Default pack: " + details.name,
-					tags: `["Default"]`
+					tags: `["Default"]`,
+					cardAmount: 0,
 				},
 				(err, result) => {
 					if (err) throw err;
@@ -135,11 +159,11 @@ const seed = (raw, models) => {
 						parsed.whiteCards,
 						details,
 						models,
-						bar
+						bar,
                     );
 				}
             );
-        }
+		}
 	}
 };
 
@@ -150,7 +174,7 @@ const seedCards = (
 	whiteCards,
 	details,
 	models,
-	bar
+	bar,
 ) => {
 	for (let i = 0; i < details.white.length; i++) {
 		const card = whiteCards[details.white[i]];
@@ -204,17 +228,18 @@ const seedCards = (
 	}
 };
 
-const addCard = (cardpack, card) => {
+const addCard = (cardpack, card, callback) => {
     cardpack.getCards((err, result) => {
         if(err) {
             console.error(err)
             return
         }
-        cardpack.setCards(...result, card, (err, result) => {
+        cardpack.setCards(...result, card, (err, res) => {
             if(err) {
                 console.error(err)
                 return
-            }
-        })
+			}
+			callback()
+		})
     })
 } 

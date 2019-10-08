@@ -17,11 +17,6 @@ module.exports = {
                     return
                 }
 
-                cardpacks.forEach(cardpack => {
-                    cardpack.cardsAmount = cardpack.cards.length;
-                    cardpack.cards = undefined;
-                });
-
                 response(res, req.body, cardpacks, 200, "Fetched all cardpacks", [])
             })
         })
