@@ -16,6 +16,7 @@ module.exports = {
                     response(res, req.body, {}, 500, "Error while fetching cardpacks.", [])
                     return
                 }
+                console.log(cardpacks[0].cards.length)
 
                 response(res, req.body, cardpacks, 200, "Fetched all cardpacks", [])
             })

@@ -54,6 +54,8 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             cardpack_id: Number
         })
 
+        models.card.hasOne('cardpack', models.cardpack, { reverse: 'cards', autoFetch: true })
+
         next();
     }
 }))

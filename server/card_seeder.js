@@ -28,7 +28,9 @@ orm.connect(
 			white: Boolean,
 			picks: Number,
 			cardpack_id: Number
-		});
+        });
+        
+        card.hasOne('cardpack', cardpack, { reverse: 'cards', autoFetch: true })
 
 		db.sync(err => {
             if (err) throw err;
@@ -127,6 +129,7 @@ const seed = (raw, models) => {
 				(err, result) => {
 					if (err) throw err;
 					seedCards(
+                        result,
 						result.id,
 						parsed.blackCards,
 						parsed.whiteCards,
@@ -141,6 +144,7 @@ const seed = (raw, models) => {
 };
 
 const seedCards = (
+    cardpack,
 	cardpackId,
 	blackCards,
 	whiteCards,
@@ -158,7 +162,7 @@ const seedCards = (
 				picks: 0,
 				cardpack_id: cardpackId
 			},
-			err => {
+			(err, result) => {
 				bar.tick(1);
 				if (err) {
 					console.log(
@@ -167,7 +171,9 @@ const seedCards = (
 							'" in pack: #' +
 							cardpackId
 					);
-				}
+				}else{
+                    addCard(cardpack, result)
+                }
 			}
 		);
 	}
@@ -181,7 +187,7 @@ const seedCards = (
 				picks: card.pick,
 				cardpack_id: cardpackId
 			},
-			err => {
+			(err, result) => {
 				bar.tick(1);
 				if (err) {
 					console.log(
@@ -190,8 +196,25 @@ const seedCards = (
 							'" in pack: #' +
 							cardpackId
 					);
-				}
+				}else{
+                    addCard(cardpack, result)
+                }
 			}
 		);
 	}
 };
+
+const addCard = (cardpack, card) => {
+    cardpack.getCards((err, result) => {
+        if(err) {
+            console.error(err)
+            return
+        }
+        cardpack.setCards(...result, card, (err, result) => {
+            if(err) {
+                console.error(err)
+                return
+            }
+        })
+    })
+} 
