@@ -55,16 +55,18 @@ module.exports = {
      * @yields {Object} with 'room' containing roomId, if null then joining a room failed
      */
     joinRoom(meta, jwt, roomId) {
-        return User(jwt, () => {
+        return User(jwt, (user, err) => {
             if(err || !user) {
                 return {room: null, err: err, authenticated: false}
             }
             roomId = roomId.toLowerCase()
             if(user && rooms[roomId]) {
-                if(rooms[roomId].users.length < rooms[roomId].maxUsers) {
+                if(rooms[roomId].users.length < rooms[roomId].maxPlayers) {
                     meta.room = roomId
+                    rooms[roomId].currentPlayers += 1
                     rooms[roomId].users.push(user.uuid)
                     rooms[roomId].usernames.push(user.username_withcase)
+                    rooms[roomId].previewPlayers = `${rooms[roomId].usernames[0]}, ${rooms[roomId].usernames[1]} ${rooms[roomId].usernames[2] ? ',' + rooms[roomId].usernames[2] : ''} and ${rooms[roomId].usernames[2] ? rooms[roomId].users.length - 3 : rooms[roomId].users.length - 2 } more...`,
                     meta.emit((emitMeta) => {
                         emitMeta.methods.sendMessage(user.username_withcase + " joined the game room!") // chat when user joins room
                     })
@@ -117,8 +119,9 @@ module.exports = {
      * @yields {Object} with 'room' containing roomId, if null then joining a room failed
      */
     createRoom(meta, jwt) {
-        return User(jwt, () => {
+        return User(jwt, (user, err) => {
             if(err || !user) {
+                if(err) console.error(err)
                 return {room: null, err: err, authenticated: false}
             }
             //create room with random code
@@ -135,9 +138,16 @@ module.exports = {
                 }else{
                     rooms[code] = {
                         owner: user.uuid,
+                        name: "Room " + code,
+                        currentPlayers: 1,
+                        maxPlayers: 10,
+                        spectators: 0,
+                        currentRound: 0,
+                        maxRounds: 10,
+                        type: 'public',
+                        previewPlayers: `${user.username_withcase} and 0 more...`,
                         users: [user.uuid],
                         usernames: [user.username_withcase],
-                        maxUsers: 10,
                     }
                     return {room: code}
                 }
@@ -159,4 +169,19 @@ module.exports = {
         }
         return []
     },
+
+    checkRoom(meta, roomId) {
+        return {room: (rooms[roomId] ? roomId : null)}
+    },
+
+    getRooms(meta) {
+        let out = []
+        for(let i = 0; i < Object.keys(rooms).length; i++) {
+            const code = Object.keys(rooms)[i]
+            var room = rooms[code]
+            room.id = code
+            out.push(room)
+        }
+        return out
+    }
 }

@@ -76,6 +76,16 @@ export default {
         'kees'
       ]
     }
+  },
+
+  async mounted () {
+    const methods = window.socket.import([
+      'checkRoom'
+    ])
+    const response = await methods.checkRoom(this.$route.params.token)
+    if (!response.room) {
+      this.$router.push('/')
+    }
   }
 }
 </script>

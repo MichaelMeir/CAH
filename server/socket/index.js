@@ -21,17 +21,17 @@ module.exports = {
 function Server(port = 8127) {
     this.socket = new WebSocket.Server({port})
     this.handler = require('./handler.js')
-    this.clients = []
+    let clients = []
     this.firstEmpty = () => {
-        for(let i = 0; i < this.clients.length; i++) {
-            if(!this.clients[i]) {
+        for(let i = 0; i < clients.length; i++) {
+            if(!clients[i]) {
                 return i
             }
         }
-        return this.clients.length
+        return clients.length
     }
-    function emit(func, filter = null) {
-        let users = this.clients
+    this.emit = (func, filter = null) => {
+        let users = clients
         if(filter) {
             for(let i = 0; i < Object.keys(filter).length; i++) {
                 const key = Object.keys(filter)[i]
@@ -43,7 +43,6 @@ function Server(port = 8127) {
             func(users[i])
         }
     }
-    this.emit = emit
     this.socket.on('connection', (client, req) => {
         let meta = {
             ip: req.connection.remoteAddress,
@@ -53,14 +52,14 @@ function Server(port = 8127) {
             disconnect: () => {
                 client.send(JSON.stringify({type: 'disconnected', content: {}}))
                 client.close()
-                this.clients[index] = undefined
+                clients[index] = undefined
             },
-            emit: emit,
+            emit: this.emit,
             methods: {},
         }
 
         let index = this.firstEmpty()
-        this.clients[index] = meta
+        clients[index] = meta
 
         let awaiting = {}
         this.DefaultFunction = function(name) {
@@ -91,7 +90,7 @@ function Server(port = 8127) {
             content: []
         }))
 
-        client.on('message', (msg) => {
+        client.on('message', async (msg) => {
             try{
                 let payload = JSON.parse(msg)
                 if(payload.type && payload.content) {
@@ -100,7 +99,7 @@ function Server(port = 8127) {
                             awaiting[payload.type].resolve(payload)
                         }
                     }else if(this.handler[payload.type]) {
-                        let response = this.handler[payload.type](meta, ...payload.content)
+                        let response = await this.handler[payload.type](meta, ...payload.content)
                         client.send(JSON.stringify({
                             type: payload.type,
                             content: response
@@ -115,6 +114,7 @@ function Server(port = 8127) {
                     type: "error",
                     content: e.toString()
                 }))
+                console.error(e)
             }
         })
     })
