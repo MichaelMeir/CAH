@@ -32,6 +32,7 @@ module.exports = {
                 let [success, err] = validator(req.body, {
                     "name": "string",
                     "description": "string",
+                    "tags": "arrayMax:3 arrayMin:1"
                 })
 
                 if (success) {

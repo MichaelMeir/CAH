@@ -27,10 +27,10 @@
           <div
             @click="createModalOpen = false"
             v-if="createModalOpen"
-            class="absolute z-10 left-0 top-0 bg-white opacity-50 h-full w-full"
+            class="absolute z-20 left-0 top-0 bg-white opacity-50 h-full w-full"
           ></div>
           <div
-            class="absolute left-0 right-0 top-0 z-20"
+            class="absolute left-0 right-0 top-0 z-50"
             v-if="createModalOpen"
           >
             <div class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4">
@@ -83,10 +83,16 @@
                     </div>
                   <div>
                     <label class="mt-4">Tags</label>
-                    <select v-model="cardpack.tags" multiple class="focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700">
+                    <select @change="clearError('cardpack.tags')" v-model="cardpack.tags" multiple :class="(hasError('cardpack.tags') ? 'has-error' : '') +' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'">
                         <option disabled selected>Select tags</option>
                         <option v-bind:key="category.id" :value="category" v-for="category in categories">{{ category }}</option>
                     </select>
+                    <div
+                      v-if="hasError('cardpack.tags')"
+                      class="error-message"
+                    >
+                      {{ getError('cardpack.tags') }}
+                    </div>
                   </div>
                   <button
                     class="mt-8 focus:outline-none hover:bg-indigo-600 mt-2 bg-indigo-500 rounded py-2 px-4 font-semibold text-white"
@@ -154,8 +160,8 @@
           </div>
         </div>
       </transition-group>
-      <div v-if="cardpacks && ((cardpacks.length - limit) > 0)">
-        <div @click="limit = limit + 9" class="fixed bottom-0 z-50 mb-8 cursor-pointer bg-indigo-200 text-indigo-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-indigo-300">
+      <div v-if="cardpacks && ((cardpacks.length - limit) > 0) && !search">
+        <div @click="loadMoreCardpacks()" class="select-none fixed bottom-0 z-10 mb-8 cursor-pointer bg-indigo-200 text-indigo-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-indigo-300">
         Load {{ ((cardpacks.length - limit) > 9) ? '9' : (cardpacks.length - limit) }} of {{ cardpacks.length - limit }} more..
         </div>
       </div>
@@ -197,6 +203,12 @@ export default {
   },
 
   methods: {
+    loadMoreCardpacks () {
+      this.limit = this.limit + 9
+
+      window.scrollTo(0, document.body.scrollHeight)
+    },
+
     async addLikes (id) {
       var curPack = this.cardpacks.find(cardpack => {
         return cardpack.id === id
@@ -235,6 +247,20 @@ export default {
         this.errors.push({
           field: 'cardpack.description',
           error: 'Please enter a description'
+        })
+      }
+
+      if (!this.cardpack.tags.length > 0) {
+        this.errors.push({
+          field: 'cardpack.tags',
+          error: 'Please select atleast one tag'
+        })
+      }
+
+      if (this.cardpack.tags.length > 3) {
+        this.errors.push({
+          field: 'cardpack.tags',
+          error: 'Please limit your selection to three tags'
         })
       }
 
@@ -348,7 +374,8 @@ export default {
 }
 
 input,
-textarea {
+textarea,
+select {
   &.has-error {
     @apply .border .border-red-300 .text-red-500;
 

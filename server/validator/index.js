@@ -13,6 +13,14 @@ const RULES = {
         return [value.length >= Number(args[0]), `The value requires a length of minimal ${args[0]} characters`]
     },
 
+    "arrayMin": (array, args) => {
+        return [array.length >= Number(args[0]), `The value requires a length of minimal ${args[0]} items`]
+    },
+
+    "arrayMax": (array, args) => {
+        return [array.length <= Number(args[0]), `The value requires a length of maximal ${args[0]} items`]
+    },
+
     "max": (value, args) => {
         return [value.length <= Number(args[0]), `The value requires a length of maximal ${args[0]} characters`]
     },
