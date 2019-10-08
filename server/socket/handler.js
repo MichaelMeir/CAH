@@ -61,10 +61,12 @@ module.exports = {
             }
             roomId = roomId.toLowerCase()
             if(user && rooms[roomId]) {
-                if(rooms[roomId].users.length < rooms[roomId].maxUsers) {
+                if(rooms[roomId].users.length < rooms[roomId].maxPlayers) {
                     meta.room = roomId
+                    rooms[roomId].currentPlayers += 1
                     rooms[roomId].users.push(user.uuid)
                     rooms[roomId].usernames.push(user.username_withcase)
+                    rooms[roomId].previewPlayers = `${rooms[roomId].usernames[0]}, ${rooms[roomId].usernames[1]} ${rooms[roomId].usernames[2] ? ',' + rooms[roomId].usernames[2] : ''} and ${rooms[roomId].usernames[2] ? rooms[roomId].users.length - 3 : rooms[roomId].users.length - 2 } more...`,
                     meta.emit((emitMeta) => {
                         emitMeta.methods.sendMessage(user.username_withcase + " joined the game room!") // chat when user joins room
                     })
@@ -136,9 +138,16 @@ module.exports = {
                 }else{
                     rooms[code] = {
                         owner: user.uuid,
+                        name: "Room " + code,
+                        currentPlayers: 1,
+                        maxPlayers: 10,
+                        spectators: 0,
+                        currentRound: 0,
+                        maxRounds: 10,
+                        type: 'public',
+                        previewPlayers: `${user.username_withcase} and 0 more...`,
                         users: [user.uuid],
                         usernames: [user.username_withcase],
-                        maxUsers: 10,
                     }
                     return {room: code}
                 }
@@ -163,5 +172,16 @@ module.exports = {
 
     checkRoom(meta, roomId) {
         return {room: (rooms[roomId] ? roomId : null)}
+    },
+
+    getRooms(meta) {
+        let out = []
+        for(let i = 0; i < Object.keys(rooms).length; i++) {
+            const code = Object.keys(rooms)[i]
+            var room = rooms[code]
+            room.id = code
+            out.push(room)
+        }
+        return out
     }
 }

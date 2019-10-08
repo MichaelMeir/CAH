@@ -200,22 +200,20 @@ export default {
       }
     },
 
-    joinRoom (roomId) {
-      return async () => {
-        const jwt = this.$cookies.get('jwt')
-        if (!jwt) {
-          console.error('could not get jwt token')
-          return
-        }
-        const methods = window.socket.import([
-          'joinRoom'
-        ])
-        const response = await methods.joinRoom(jwt, roomId)
-        if (response.room) {
+    async joinRoom (roomId) {
+      const jwt = this.$cookies.get('jwt')
+      if (!jwt) {
+        console.error('could not get jwt token')
+        return
+      }
+      const methods = window.socket.import([
+        'joinRoom'
+      ])
+      const response = await methods.joinRoom(jwt, roomId)
+      if (response.room) {
 
-        } else {
-          console.error('Room is full')
-        }
+      } else {
+        console.error('Room is full')
       }
     }
   },
@@ -225,82 +223,15 @@ export default {
       search: '',
       previous: '',
       colors: [],
-      rooms: [
-        {
-          id: 1,
-          name: 'Test room 1',
-          currentPlayers: 20,
-          maxPlayers: 20,
-          spectators: 3,
-          currentRound: 3,
-          maxRounds: 10,
-          previewPlayers: 'Jantje, Pietje, Kees and 5 more..',
-          type: 'public'
-        },
-
-        {
-          id: 2,
-          name: 'Test room 2',
-          currentPlayers: 20,
-          maxPlayers: 20,
-          spectators: 3,
-          currentRound: 3,
-          maxRounds: 10,
-          previewPlayers: 'Jantje, Pietje, Kees and 5 more..',
-          type: 'password'
-        },
-
-        {
-          id: 3,
-          name: 'Test room 3',
-          currentPlayers: 20,
-          maxPlayers: 20,
-          spectators: 3,
-          currentRound: 3,
-          maxRounds: 10,
-          previewPlayers: 'Jantje, Pietje, Gino and 5 more..',
-          type: 'public'
-        },
-
-        {
-          id: 4,
-          name: 'Test room 4',
-          currentPlayers: 20,
-          maxPlayers: 20,
-          spectators: 3,
-          currentRound: 3,
-          maxRounds: 10,
-          previewPlayers: 'Jantje, Pietje, Kees and 5 more..',
-          type: 'public'
-        },
-
-        {
-          id: 5,
-          name: 'Test room 5',
-          currentPlayers: 20,
-          maxPlayers: 20,
-          spectators: 3,
-          currentRound: 3,
-          maxRounds: 10,
-          previewPlayers: 'Jantje, Pietje, Kees and 5 more..',
-          type: 'password'
-        },
-        {
-          id: 6,
-          name: 'Test room 6',
-          currentPlayers: 20,
-          maxPlayers: 20,
-          spectators: 3,
-          currentRound: 3,
-          maxRounds: 10,
-          previewPlayers: 'Jantje, Pietje, Kees and 5 more..',
-          type: 'password'
-        }
-      ]
+      rooms: []
     }
   },
 
-  created () {
+  async created () {
+    const methods = window.socket.import([
+      'getRooms'
+    ])
+    this.rooms = await methods.getRooms()
     this.getRandomColors(this.rooms.length)
   }
 }
