@@ -55,7 +55,7 @@ module.exports = {
      * @yields {Object} with 'room' containing roomId, if null then joining a room failed
      */
     joinRoom(meta, jwt, roomId) {
-        return User(jwt, () => {
+        return User(jwt, (user, err) => {
             if(err || !user) {
                 return {room: null, err: err, authenticated: false}
             }
@@ -117,8 +117,9 @@ module.exports = {
      * @yields {Object} with 'room' containing roomId, if null then joining a room failed
      */
     createRoom(meta, jwt) {
-        return User(jwt, () => {
+        return User(jwt, (user, err) => {
             if(err || !user) {
+                if(err) console.error(err)
                 return {room: null, err: err, authenticated: false}
             }
             //create room with random code
@@ -159,4 +160,8 @@ module.exports = {
         }
         return []
     },
+
+    checkRoom(meta, roomId) {
+        return {room: (rooms[roomId] ? roomId : null)}
+    }
 }

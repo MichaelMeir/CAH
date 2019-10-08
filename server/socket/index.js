@@ -91,7 +91,7 @@ function Server(port = 8127) {
             content: []
         }))
 
-        client.on('message', (msg) => {
+        client.on('message', async (msg) => {
             try{
                 let payload = JSON.parse(msg)
                 if(payload.type && payload.content) {
@@ -100,7 +100,7 @@ function Server(port = 8127) {
                             awaiting[payload.type].resolve(payload)
                         }
                     }else if(this.handler[payload.type]) {
-                        let response = this.handler[payload.type](meta, ...payload.content)
+                        let response = await this.handler[payload.type](meta, ...payload.content)
                         client.send(JSON.stringify({
                             type: payload.type,
                             content: response
@@ -115,6 +115,7 @@ function Server(port = 8127) {
                     type: "error",
                     content: e.toString()
                 }))
+                console.error(e)
             }
         })
     })

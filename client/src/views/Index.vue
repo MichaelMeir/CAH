@@ -44,6 +44,7 @@
                   class="rounded mt-6 mb-1 py-2 block w-full text-xs focus:outline-none font-semibold text-white"
                 >Spectate</button>
                 <button
+                  @click="joinRoom(room.id)"
                   style="background: rgba(0, 0, 0, 0.3)"
                   class="rounded py-2 block w-full text-xs focus:outline-none font-semibold text-white"
                 >Join</button>
@@ -54,7 +55,7 @@
       </div>
       <div class="ml-5 w-1/4">
         <div class="mb-5">
-          <button class="text-sm w-full text-indigo-600 border border-indigo-300 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3">Create a room</button>
+          <button @click="createRoom()" class="text-sm w-full text-indigo-600 border border-indigo-300 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3">Create a room</button>
         </div>
         <div class="flex mb-2">
           <i
@@ -178,6 +179,42 @@ export default {
             this.colors[i] = color
             continue
           }
+        }
+      }
+    },
+
+    async createRoom () {
+      const jwt = this.$cookies.get('jwt')
+      if (!jwt) {
+        console.error('could not get jwt token')
+        return
+      }
+      const methods = window.socket.import([
+        'createRoom'
+      ])
+      const response = await methods.createRoom(jwt)
+      if (response.room) {
+        this.$router.push('/waitingroom/' + response.room)
+      } else {
+        console.error('Server failed to supply game room code')
+      }
+    },
+
+    joinRoom (roomId) {
+      return async () => {
+        const jwt = this.$cookies.get('jwt')
+        if (!jwt) {
+          console.error('could not get jwt token')
+          return
+        }
+        const methods = window.socket.import([
+          'joinRoom'
+        ])
+        const response = await methods.joinRoom(jwt, roomId)
+        if (response.room) {
+
+        } else {
+          console.error('Room is full')
         }
       }
     }
