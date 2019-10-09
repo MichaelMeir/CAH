@@ -37,7 +37,7 @@
     </div>
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="flex-1">
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 mr-2 rounded">Leave</button>
+        <button @click="leaveRoom" class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 mr-2 rounded">Leave</button>
         <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">Cardpacks</button>
       </div>
       <div class="bg-indigo-700 text-white rounded w-1/3 pb-1">
@@ -80,8 +80,18 @@ export default {
   },
 
   methods: {
-    sendMessage (message) {
+    sendMessage (socket, message) {
       window.socket.emit('message', this.message)
+    },
+
+    async leaveRoom () {
+      const methods = window.socket.import([
+        'leaveRoom'
+      ])
+      const response = await methods.leaveRoom(this.$cookies.get('jwt'))
+      if (!response.room) {
+        this.$router.push('/')
+      }
     }
   },
 
