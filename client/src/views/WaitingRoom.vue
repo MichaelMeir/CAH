@@ -78,7 +78,6 @@ export default {
     }
   },
 
-<<<<<<< HEAD
   methods: {
     socket.export({ sendMessage })
     
@@ -97,12 +96,8 @@ export default {
 				"kees"
 			]
 		}
-	}
-}
-// $cookies.get("jwt")
-</script>
+	},
 
-=======
   async mounted () {
     const methods = window.socket.import([
       'checkRoom'
@@ -113,5 +108,5 @@ export default {
     }
   }
 }
+// $cookies.get("jwt")
 </script>
->>>>>>> cfbbbe66fa79c8c44a8a00fdf9aa5b9e49a485d2
