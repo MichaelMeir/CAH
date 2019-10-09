@@ -110,31 +110,8 @@ const seed = (raw, models) => {
                 callback: () => {
 					console.log('Removing ./.temp.json.br')
 					fs.unlinkSync('./.temp.json.br')
-					const run = async () => {
-						console.log("counting cards...")
-						models.cardpack.find({}, (err, result) => {
-							if(err) {
-								throw err
-							}
-							console.log('test')
-							for(let i = 0; i < result.length; i++) {
-								let cardpack = result[i]
-								cardpack.getCards((err, result) => {
-									if(err) {
-										console.error(err)
-										return
-									}
-									console.log(result.length)
-									cardpack.cardAmount = result.length;
-									cardpack.save()
-								})
-							}
-						})
-					}
-					run().then(() => {
-						console.log('COMPLETED: successfully seeded default cards and cardpacks!')
-						process.exit(0)
-					})
+					console.log('COMPLETED: successfully seeded default cards and cardpacks!')
+					process.exit(0)
                 }
 			}
 		);
@@ -148,7 +125,7 @@ const seed = (raw, models) => {
 					name: details.name,
 					description: "Default pack: " + details.name,
 					tags: `["Default"]`,
-					cardAmount: 0,
+					cardAmount: details.black.length + details.white.length,
 				},
 				(err, result) => {
 					if (err) throw err;
@@ -162,7 +139,8 @@ const seed = (raw, models) => {
 						bar,
                     );
 				}
-            );
+			);
+			wait
 		}
 	}
 };
