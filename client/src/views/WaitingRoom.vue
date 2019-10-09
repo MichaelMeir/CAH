@@ -78,6 +78,26 @@ export default {
     }
   },
 
+  methods: {
+    socket.export({ sendMessage })
+    
+    sendMessage: function(message){
+      socket.emit('message', this.message);
+    }
+  },
+
+	data() {
+		return {
+			usernames: [
+				"dilano",
+				"michael",
+				"joey",
+				"gino",
+				"kees"
+			]
+		}
+	},
+
   async mounted () {
     const methods = window.socket.import([
       'checkRoom'
@@ -88,4 +108,5 @@ export default {
     }
   }
 }
+// $cookies.get("jwt")
 </script>

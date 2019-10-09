@@ -170,6 +170,23 @@ module.exports = {
         return []
     },
 
+    sendMessage(meta, jwt, message) {
+        User(jwt, function(error, user){
+            if(err || !user) {
+                return false;
+            }
+            if(meta.room != null) {
+                meta.emit(function(emitMeta){
+                    meta.methods.sendMessage(user.username_withcase + message)
+                }, {
+                    room: meta.room
+                })
+                return true
+            }
+            return false;
+        }, meta.db, meta.models, meta.ip)
+    },
+
     checkRoom(meta, roomId) {
         return {room: (rooms[roomId] ? roomId : null)}
     },
