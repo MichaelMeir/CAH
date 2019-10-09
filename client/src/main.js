@@ -5,8 +5,6 @@ import App from './App'
 import router from './router'
 import VueCookies from 'vue-cookies'
 
-<<<<<<< HEAD
-=======
 import axios from 'axios'
 import Socket from './services/SocketService'
 
@@ -18,7 +16,6 @@ axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? ''
   console.error(e)
 })
 
->>>>>>> cfbbbe66fa79c8c44a8a00fdf9aa5b9e49a485d2
 Vue.use(VueCookies)
 Vue.config.productionTip = false
 
