@@ -62,7 +62,7 @@ function sanitizeInput (data) {
 let awaiting = {}
 
 function Connect (port) {
-  let protocol = location.protocol === 'https' ? 'wss' : 'ws'
+  let protocol = location.protocol === 'https:' ? 'wss' : 'ws'
   socket = new WebSocket(`${protocol}://${location.hostname}:${port}`)
   socket.onmessage = (response) => {
     try {
