@@ -15,11 +15,24 @@ module.exports = {
         server.models = req.models
         next()
     },
-    emit: server.emit,
+    emit: server.emit
 }
 
-function Server(port = 8127) {
-    this.socket = new WebSocket.Server({port})
+function Server(port = 2083) {
+    const fs = require('fs');
+    const https = require('https')
+
+
+    const options = {
+       key: fs.readFileSync('/etc/letsencrypt/live/cardsagainst.me/privkey.pem'),
+       cert: fs.readFileSync('/etc/letsencrypt/live/cardsagainst.me/fullchain.pem')
+    };
+
+    const httpsServer = https.createServer(options)
+
+    this.socket = new WebSocket.Server({ server: httpsServer })
+    httpsServer.listen(port)
+
     this.handler = require('./handler.js')
     let clients = []
     this.firstEmpty = () => {
