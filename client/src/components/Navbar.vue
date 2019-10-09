@@ -12,16 +12,20 @@
           <li
             @click="$router.push('/')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item active ml-8"
+            class="cursor-pointer nav-item ml-8"
+            v-bind:class="{ 'active': this.$route.path === '/' }"
           >Home</li>
           <li
+            @click="$router.push('/cardpacks')"
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
-          >Rooms</li>
+            v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
+          >Cardpacks</li>
           <li
             @click="$router.push('/profile')"
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
+            v-bind:class="{ 'active': this.$route.path === '/profile' }"
           >My profile</li>
           <li
             v-if="isAuthenticated"
@@ -50,7 +54,7 @@
         <button
           ref="resendButton"
           @click="resendMail()"
-          class="focus:outline-none hover:bg-orange-500 font-semibold rounded text-orange-100 bg-orange-400 px-4 py-2"
+          class="focus:outline-none hover:bg-orange-500 font-semibold rounded text-white bg-orange-400 px-4 py-2"
         >Resend mail</button>
       </div>
     </div>
@@ -70,7 +74,6 @@ export default {
 
   async mounted () {
     let isAuthenticated = await AuthService.isAuthenticated()
-
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
 

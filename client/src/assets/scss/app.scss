@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://rsms.me/inter/inter.css");
+
 body {
   @apply .font-sans .antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 .transition {
