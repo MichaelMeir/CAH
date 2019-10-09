@@ -6,9 +6,9 @@ const cookieSecret = fs.readFileSync('private.key').toString()
 const publicKey = fs.readFileSync('server.cert', 'utf8').toString()
 
 module.exports = async (req, callback, db = null, models = null, ip = null) => {
-    if(req.signedCookies && req.signedCookies.jwt) {
+    if(req && req.signedCookies && req.signedCookies.jwt) {
         return validate(req.connection.remoteAddress, req.db, req.models, req.signedCookies.jwt, callback)
-    }else{
+    }else if(req) {
         if(typeof req == "string") {
             if(!/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/gm.exec(req)) {
                 req = signedCookie(req, cookieSecret)
@@ -18,6 +18,8 @@ module.exports = async (req, callback, db = null, models = null, ip = null) => {
         }else{
             return callback(false)
         }
+    } else {
+        return callback(false)
     }
 }
 

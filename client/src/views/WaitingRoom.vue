@@ -50,7 +50,7 @@
           </div>
         </ul>
       </div>
-    </div>
+    </div>  
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="w-full flex-1 flex justify-end">
         <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</button>
