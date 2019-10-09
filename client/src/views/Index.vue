@@ -1,6 +1,7 @@
 <template>
   <div>
     <Navbar />
+    <Snackbar ref="snackbar" />
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
@@ -55,7 +56,10 @@
       </div>
       <div class="ml-5 w-1/4">
         <div class="mb-5">
-          <button @click="createRoom()" class="text-sm w-full text-indigo-600 border border-indigo-300 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3">Create a room</button>
+          <button
+            @click="createRoom()"
+            class="text-sm w-full text-indigo-600 border border-indigo-300 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
+          >Create a room</button>
         </div>
         <div class="flex mb-2">
           <i
@@ -119,10 +123,12 @@
 </template>
 <script>
 import Navbar from '../components/Navbar'
+import Snackbar from '../components/Snackbar'
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    Snackbar
   },
 
   computed: {
@@ -131,6 +137,10 @@ export default {
         return (room.name.toLowerCase().match(this.search.toLowerCase())) || (room.previewPlayers.toLowerCase().match(this.search.toLowerCase()))
       })
     }
+  },
+
+  mounted () {
+    this.$refs.snackbar.openSnackbar('error', 5, 'This is a test snackbar message')
   },
 
   methods: {
