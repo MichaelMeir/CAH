@@ -139,10 +139,6 @@ export default {
     }
   },
 
-  mounted () {
-    this.$refs.snackbar.openSnackbar('error', 5, 'This is a test snackbar message')
-  },
-
   methods: {
     getColor (index) {
       let color = this.colors[index]
@@ -196,7 +192,7 @@ export default {
     async createRoom () {
       const jwt = this.$cookies.get('jwt')
       if (!jwt) {
-        console.error('could not get jwt token')
+        this.$refs.snackbar.openSnackbar('error', 5, 'Could not get authentication token.')
         return
       }
       const methods = window.socket.import([
@@ -206,7 +202,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        console.error('Server failed to supply game room code')
+        this.$refs.snackbar.openSnackbar('error', 5, 'Server failed to supply a game room code.')
       }
     },
 
@@ -223,7 +219,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        console.error(response.message)
+        this.$refs.snackbar.openSnackbar('error', 5, response.message)
         this.updateRooms()
       }
     },
@@ -234,6 +230,10 @@ export default {
       ])
       this.rooms = await methods.getRooms()
       this.getRandomColors(this.rooms.length)
+    },
+
+    async leaveRoom (socket, reason) {
+      this.$refs.snackbar.openSnackbar('error', 5, reason)
     }
   },
 
@@ -247,6 +247,7 @@ export default {
   },
 
   async created () {
+    window.socket.export({ leaveRoom: this.leaveRoom })
     this.updateRooms()
   }
 }
