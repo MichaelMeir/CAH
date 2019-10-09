@@ -40,7 +40,7 @@ function Server(port = 8127) {
             } 
         }
         for(let i = 0; i < users.length; i++) {
-            func(users[i])
+            if(users[i]) func(users[i])
         }
     }
     this.socket.on('connection', (client, req) => {

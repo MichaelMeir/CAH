@@ -211,7 +211,7 @@ export default {
       ])
       const response = await methods.joinRoom(jwt, roomId)
       if (response.room) {
-
+        this.$router.push('/waitingroom/' + response.room)
       } else {
         console.error('Room is full')
       }

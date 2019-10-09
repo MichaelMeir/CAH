@@ -90,18 +90,33 @@ const router = new Router({
     {
       path: '/room/:token',
       name: 'Room',
-      component: Room
+      component: Room,
+      meta: {
+        requiresAuth: true,
+        keepRoomConnection: true
+      }
     },
     {
       path: '/waitingroom/:token',
       name: 'WaitingRoom',
-      component: WaitingRoom
+      component: WaitingRoom,
+      meta: {
+        requiresAuth: true,
+        keepRoomConnection: true
+      }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   AuthService.isAuthenticated().then((response) => {
+    if (!to.matched.some(record => record.meta.keepRoomConnection)) {
+      const jwt = require('cookie').parse(document.cookie).jwt
+      const methods = window.socket.import([
+        'leaveRoom'
+      ])
+      methods.leaveRoom(jwt)
+    }
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!response) {
         next({
