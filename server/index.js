@@ -13,6 +13,17 @@ const app = express();
 
 const socketServer = require('./socket')
 
+if (process.env.DEV == 0) {
+    let bugsnag = require('@bugsnag/js')
+    let bugsnagExpress = require('@bugsnag/plugin-express')
+    let bugsnagClient = bugsnag(process.env.BUGSNAG_API)
+
+    bugsnagClient.use(bugsnagExpress)
+    
+    app.use(bugsnagClient.getPlugin('express').requestHandler)
+    app.use(bugsnagClient.getPlugin('express').errorHandler)
+}
+
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true
@@ -31,10 +42,32 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             password: String,
             email: String,
             verification: String,
+            liked_packs: String,
             reset_token: String,
             session_id: String,
             session_ip: String,
         })
+
+        models.cardpack = db.define("cardpacks", {
+            uuid: String,
+            user_id: Number,
+            likes: Number,
+            name: String,
+            description: { type: 'text', size: 255 },
+            tags: String,
+            cardAmount: Number,
+        })
+
+        models.card = db.define("cards", {
+            uuid: String,
+            text: { type: 'text', size: 255 },
+            white: Boolean,
+            picks: Number,
+            cardpack_id: Number
+        })
+
+        models.card.hasOne('cardpack', models.cardpack, { reverse: 'cards', autoFetch: false })
+
         next();
     }
 }))
@@ -173,6 +206,30 @@ app.post('/api/sendResetLink', Controller("PasswordReset@sendResetLink"))
  * @yields {Number} JSON response made by the response method including the socket port
  */
 app.post('/api/socket/port', Controller("Socket@port"))
+
+/**
+ * @callback /api/cardpacks
+ * @description Fetch all available cardpacks
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cardpacks
+ */
+app.post('/api/cardpacks', Controller("Cardpack@getCardpacks"))
+
+/**
+ * @callback /api/cardpacks/addlike
+ * @description Fetch all available cardpacks
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cardpacks
+ */
+app.post('/api/cardpacks/addlike', Controller("Cardpack@addLike"))
+
+/**
+ * @callback /api/cardpacks/create
+ * @description Creates a new cardpack
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cardpacks
+ */
+app.post('/api/cardpacks/create', Controller("Cardpack@createCardpack"))
 
 console.log("Server listening on 9000")
 

@@ -180,7 +180,8 @@ module.exports = {
       '0': '0',
       '2': '2px',
       '4': '4px',
-      '8': '8px'
+      '8': '8px',
+      '10': '10px'
     },
     boxShadow: {
       default: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
@@ -252,6 +253,7 @@ module.exports = {
       ]
     },
     fontSize: {
+      xxs: '0.65rem',
       xs: '0.75rem',
       sm: '0.875rem',
       base: '1rem',
