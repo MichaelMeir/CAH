@@ -140,7 +140,6 @@ const seed = (raw, models) => {
                     );
 				}
 			);
-			wait
 		}
 	}
 };
