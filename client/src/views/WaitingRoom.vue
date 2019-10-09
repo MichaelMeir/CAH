@@ -74,35 +74,28 @@ export default {
         'joey',
         'gino',
         'kees'
-      ]
+      ],
+      methods: {}
     }
   },
 
   methods: {
-    socket.export({ sendMessage })
-    
-    sendMessage: function(message){
-      socket.emit('message', this.message);
+    sendMessage (message) {
+      window.socket.emit('message', this.message)
     }
   },
 
-	data() {
-		return {
-			usernames: [
-				"dilano",
-				"michael",
-				"joey",
-				"gino",
-				"kees"
-			]
-		}
-	},
-
   async mounted () {
-    const methods = window.socket.import([
-      'checkRoom'
+    this.methods = window.socket.import([
+      'checkRoom',
+      'sendMessage'
     ])
-    const response = await methods.checkRoom(this.$route.params.token)
+
+    window.socket.export({
+      sendMessage: this.sendMessage
+    })
+
+    const response = await this.methods.checkRoom(this.$route.params.token)
     if (!response.room) {
       this.$router.push('/')
     }

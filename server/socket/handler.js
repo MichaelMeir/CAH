@@ -96,6 +96,7 @@ module.exports = {
                     meta.emit((emitMeta) => {
                         emitMeta.methods.leaveRoom("Room owner disconnected.")
                     })
+                    rooms[meta.room] = undefined
                     delete rooms[meta.room]
                     return {rooms: null}
                 }
