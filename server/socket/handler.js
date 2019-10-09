@@ -170,23 +170,23 @@ module.exports = {
         return []
     },
 
-<<<<<<< HEAD
-sendMessage(meta, jwt, message) {
-    User(jwt, function(error, user){
-        if(err || !user) {
+    sendMessage(meta, jwt, message) {
+        User(jwt, function(error, user){
+            if(err || !user) {
                 return false;
             }
-        if(meta.room != null) {
-            meta.emit(function(emitMeta){
-                meta.methods.sendMessage(user.username_withcase + message)
-            }, {
-                room: meta.room
-            })
-            return true
-        }
-        return false;
-    }, meta.db, meta.models, meta.ip)
-=======
+            if(meta.room != null) {
+                meta.emit(function(emitMeta){
+                    meta.methods.sendMessage(user.username_withcase + message)
+                }, {
+                    room: meta.room
+                })
+                return true
+            }
+            return false;
+        }, meta.db, meta.models, meta.ip)
+    },
+
     checkRoom(meta, roomId) {
         return {room: (rooms[roomId] ? roomId : null)}
     },
@@ -201,5 +201,4 @@ sendMessage(meta, jwt, message) {
         }
         return out
     }
->>>>>>> cfbbbe66fa79c8c44a8a00fdf9aa5b9e49a485d2
 }
