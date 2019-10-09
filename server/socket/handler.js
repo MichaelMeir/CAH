@@ -95,9 +95,11 @@ module.exports = {
             }
             if(user && meta.room && rooms[meta.room]) {
                 if(rooms[meta.room].owner == user.uuid) {
-                    meta.emit((emitMeta) => {
-                        emitMeta.methods.leaveRoom("Room owner disconnected.")
-                    })
+                    setTimeout(() => {
+                        meta.emit((emitMeta) => {
+                            emitMeta.methods.leaveRoom("The room you were in has been disbanded.")
+                        })
+                    }, 100)
                     rooms[meta.room] = undefined
                     delete rooms[meta.room]
                     return {rooms: null, deleted: true}
