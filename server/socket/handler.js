@@ -71,9 +71,11 @@ module.exports = {
                         emitMeta.methods.sendMessage(user.username_withcase + " joined the game room!") // chat when user joins room
                     })
                     return {room: roomId}
+                }else{
+                    return {room: null, message: "Room is full"}
                 }
             }
-            return {room: null}
+            return {room: null, message: "Room does not exist (anymore)"}
         }, meta.db, meta.models, meta.ip)
     },
 
@@ -98,7 +100,7 @@ module.exports = {
                     })
                     rooms[meta.room] = undefined
                     delete rooms[meta.room]
-                    return {rooms: null}
+                    return {rooms: null, deleted: true}
                 }
                 meta.emit((emitMeta) => {
                     emitMeta.methods.sendMessage(user.username_withcase + " Left the game room!") // chat when user leaves room
@@ -106,7 +108,7 @@ module.exports = {
                 rooms[meta.room].users.filter(i => i !== user.uuid)
                 rooms[meta.room].usernames.filter(i => i !== user.username_withcase)
             }
-            return {room: null}
+            return {room: null, deleted: false}
         }, meta.db, meta.models, meta.ip)
     },
 
@@ -150,6 +152,7 @@ module.exports = {
                         users: [user.uuid],
                         usernames: [user.username_withcase],
                     }
+                    meta.room = code
                     return {room: code}
                 }
             }

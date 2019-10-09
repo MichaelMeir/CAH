@@ -109,13 +109,13 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  AuthService.isAuthenticated().then((response) => {
+  AuthService.isAuthenticated().then(async (response) => {
     if (!to.matched.some(record => record.meta.keepRoomConnection) && window.socket) {
       const jwt = require('cookie').parse(document.cookie).jwt
       const methods = window.socket.import([
         'leaveRoom'
       ])
-      methods.leaveRoom(jwt)
+      await methods.leaveRoom(jwt)
     }
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!response) {

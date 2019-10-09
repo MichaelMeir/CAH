@@ -223,8 +223,17 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        console.error('Room is full')
+        console.error(response.message)
+        this.updateRooms()
       }
+    },
+
+    async updateRooms () {
+      const methods = window.socket.import([
+        'getRooms'
+      ])
+      this.rooms = await methods.getRooms()
+      this.getRandomColors(this.rooms.length)
     }
   },
 
@@ -238,11 +247,7 @@ export default {
   },
 
   async created () {
-    const methods = window.socket.import([
-      'getRooms'
-    ])
-    this.rooms = await methods.getRooms()
-    this.getRandomColors(this.rooms.length)
+    this.updateRooms()
   }
 }
 </script>
