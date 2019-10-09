@@ -115,7 +115,7 @@ router.beforeEach((to, from, next) => {
       const methods = window.socket.import([
         'leaveRoom'
       ])
-      console.log(await methods.leaveRoom(jwt))
+      await methods.leaveRoom(jwt)
     }
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!response) {
