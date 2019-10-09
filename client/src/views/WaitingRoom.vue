@@ -50,6 +50,14 @@ export default {
 		Navbar
 	},
 
+  methods: {
+    socket.export({ sendMessage })
+    
+    sendMessage: function(message){
+      socket.emit('message', this.message);
+    }
+  },
+
 	data() {
 		return {
 			usernames: [
@@ -62,4 +70,6 @@ export default {
 		}
 	}
 }
+// $cookies.get("jwt")
 </script>
+
