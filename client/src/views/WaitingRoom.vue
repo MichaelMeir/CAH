@@ -4,16 +4,18 @@
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="bg-indigo-700 text-black my-5 rounded w-2/3 pb-1 overflow-y-auto mr-3">
         <div class="bg-white text-black h-56 m-2 rounded">
-          <p></p>
+          <p v-bind:key="index" v-for="(message, index) in messages">{{ message }}</p>
         </div>
 
         <div class="flex">
           <input
+            v-on:keyup.enter="sendMessage"
+            v-model="message"
             class="ml-2 mt-1 mb-1 p-1 w-4/5 rounded"
             type="text"
             placeholder="Say..."
           >
-          <button class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded ">Send</button>
+          <button v-on:click="sendMessage" class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded ">Send</button>
         </div>
 
       </div>
@@ -75,13 +77,23 @@ export default {
         'gino',
         'kees'
       ],
+      message: '',
+      messages: [],
       methods: {}
     }
   },
 
   methods: {
-    sendMessage (socket, message) {
-      window.socket.emit('message', this.message)
+    sendMessage () {
+      const methods = window.socket.import([
+        'sendMessage'
+      ])
+      methods.sendMessage(this.$cookies.get('jwt'), this.message)
+      this.message = ''
+    },
+
+    addMessage (socket, message) {
+      this.messages.push(message)
     },
 
     async leaveRoom () {
@@ -102,7 +114,7 @@ export default {
     ])
 
     window.socket.export({
-      sendMessage: this.sendMessage
+      addMessage: this.addMessage
     })
 
     const response = await this.methods.checkRoom(this.$route.params.token)
