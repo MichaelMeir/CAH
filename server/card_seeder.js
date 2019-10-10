@@ -205,18 +205,15 @@ const seedCards = (
 	}
 };
 
-const addCard = (cardpack, card, callback) => {
+const addCard = (cardpack, card) => {
     cardpack.getCards((err, result) => {
         if(err) {
-            console.error(err)
-            return
+            throw err
         }
         cardpack.setCards(...result, card, (err, res) => {
             if(err) {
-                console.error(err)
-                return
+                throw err
 			}
-			callback()
 		})
     })
 } 
