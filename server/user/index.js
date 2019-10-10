@@ -32,7 +32,7 @@ function validate(ip, db, models, token, callback) {
                 if (err) {
                      resolve(callback(false, err))
                 }
-                return models.user.find({ session_id: uuid, session_ip: ip }, (err, results) => {
+                return models.user.find({ session_id: uuid/*, session_ip: ip */}, (err, results) => {
                     if (err) {
                         resolve(callback(false, err))
                     }
