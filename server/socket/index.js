@@ -1,7 +1,5 @@
 const WebSocket = require('ws');
 
-const server = new Server(module.exports.port)
-
 module.exports = {
     port: process.env.SOCKET_PORT,
     start: () =>  {
@@ -15,11 +13,30 @@ module.exports = {
         server.models = req.models
         next()
     },
-    emit: server.emit,
 }
 
-function Server(port = 8127) {
-    this.socket = new WebSocket.Server({port})
+const server = new Server(module.exports.port)
+module.exports.emit = server.emit
+
+function Server(port = 2083) {
+    if(!process.env.DEV && process.env.PRIVATE_KEY && process.env.CERTIFICATE) {
+        const fs = require('fs');
+        const https = require('https')
+
+        const options = {
+           key: fs.readFileSync(process.env.PRIVATE_KEY),
+           cert: fs.readFileSync(process.env.CERTIFICATE)
+        };
+
+        const httpsServer = https.createServer(options)
+        this.socket = new WebSocket.Server({ server: httpsServer })
+        httpsServer.listen(port)
+        console.log("Started wss server on :" + port)
+    }else{
+        this.socket = new WebSocket.Server({ port: port })
+        console.log("Started ws server on :" + port)
+    }
+
     this.handler = require('./handler.js')
     let clients = []
     this.firstEmpty = () => {
