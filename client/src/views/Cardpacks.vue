@@ -131,7 +131,7 @@
                 class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
                 v-else
               >
-                Created by Kees
+                Created by another user
               </div>
               <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
                 {{ cardpack.cardAmount }} cards
