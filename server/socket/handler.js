@@ -7,7 +7,7 @@ module.exports = {
     import: [
         "ping",
         "leaveRoom",
-        "sendMessage"
+        "addMessage"
     ],
     
     /**
@@ -68,7 +68,7 @@ module.exports = {
                     rooms[roomId].usernames.push(user.username_withcase)
                     rooms[roomId].previewPlayers = `${rooms[roomId].usernames[0]}, ${rooms[roomId].usernames[1]} ${rooms[roomId].usernames[2] ? ',' + rooms[roomId].usernames[2] : ''} and ${rooms[roomId].usernames[2] ? rooms[roomId].users.length - 3 : rooms[roomId].users.length - 2 } more...`,
                     meta.emit((emitMeta) => {
-                        emitMeta.methods.sendMessage(user.username_withcase + " joined the game room!") // chat when user joins room
+                        emitMeta.methods.addMessage(user.username_withcase + " joined the game room!") // chat when user joins room
                     })
                     return {room: roomId}
                 }else{
@@ -105,7 +105,7 @@ module.exports = {
                     return {rooms: null, deleted: true}
                 }
                 meta.emit((emitMeta) => {
-                    emitMeta.methods.sendMessage(user.username_withcase + " Left the game room!") // chat when user leaves room
+                    emitMeta.methods.addMessage(user.username_withcase + " Left the game room!") // chat when user leaves room
                 })
                 rooms[meta.room].users.filter(i => i !== user.uuid)
                 rooms[meta.room].usernames.filter(i => i !== user.username_withcase)
@@ -177,19 +177,19 @@ module.exports = {
     },
 
     sendMessage(meta, jwt, message) {
-        User(jwt, function(error, user){
+        return User(jwt, function(user, err){
             if(err || !user) {
-                return false;
+                return {sent: false, error: err};
             }
             if(meta.room != null) {
-                meta.emit(function(emitMeta){
-                    meta.methods.sendMessage(user.username_withcase + message)
+                meta.emit((emitMeta) => {
+                    emitMeta.methods.addMessage(user.username_withcase + ': ' + message)
                 }, {
                     room: meta.room
                 })
-                return true
+                return {sent: true}
             }
-            return false;
+            return {sent: false, error: "You're not in a room?"};
         }, meta.db, meta.models, meta.ip)
     },
 
