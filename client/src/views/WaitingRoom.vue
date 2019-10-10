@@ -9,11 +9,12 @@
 
         <div class="flex">
           <input
+            v-on:keyup.enter="sendMessage"
             class="ml-2 mt-1 mb-1 p-1 w-4/5 rounded"
             type="text"
             placeholder="Say..."
           >
-          <button class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded ">Send</button>
+          <button v-on:click="sendMessage" class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded ">Send</button>
         </div>
 
       </div>
@@ -50,7 +51,7 @@
           </div>
         </ul>
       </div>
-    </div>  
+    </div>
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="w-full flex-1 flex justify-end">
         <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</button>
@@ -82,6 +83,7 @@ export default {
   methods: {
     sendMessage (socket, message) {
       window.socket.emit('message', this.message)
+      this.message = ''
     },
 
     async leaveRoom () {
