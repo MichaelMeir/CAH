@@ -31,8 +31,28 @@ function Export (e) {
 let exportedMethods = {ping}
 let socket = null
 
+const isSocketOpen = async (socket) => {
+  const wait = (resolve) => {
+    if (socket.readyState === WebSocket.OPEN) {
+      resolve(true)
+    } else if (socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+      resolve(false)
+    } else {
+      setTimeout(wait, 100, resolve)
+    }
+  }
+  return new Promise((resolve) => {
+    setTimeout(wait, 100, resolve)
+  })
+}
+
 function DefaultFunction (name) {
   return async function () {
+    const result = await isSocketOpen(socket)
+    if (!result) {
+      console.error('WebSocket closed too soon!')
+      return
+    }
     socket.send(JSON.stringify({
       type: name,
       content: sanitizeInput(arguments)
