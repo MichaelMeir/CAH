@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <Snackbar ref="snackbar" />
+    <Toast ref="toast" />
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
@@ -123,12 +123,12 @@
 </template>
 <script>
 import Navbar from '../components/Navbar'
-import Snackbar from '../components/Snackbar'
+import Toast from '../components/Toast'
 
 export default {
   components: {
     Navbar,
-    Snackbar
+    Toast
   },
 
   computed: {
@@ -192,7 +192,7 @@ export default {
     async createRoom () {
       const jwt = this.$cookies.get('jwt')
       if (!jwt) {
-        this.$refs.snackbar.openSnackbar('error', 5, 'Could not get authentication token.')
+        this.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
         return
       }
       const methods = window.socket.import([
@@ -202,7 +202,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        this.$refs.snackbar.openSnackbar('error', 5, 'Server failed to supply a game room code.')
+        this.$refs.toast.openToast('danger', 5, 'Server failed to supply a game room code.')
       }
     },
 
@@ -219,7 +219,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        this.$refs.snackbar.openSnackbar('error', 5, response.message)
+        this.$refs.toast.openToast('danger', 5, response.message)
         this.updateRooms()
       }
     },
@@ -233,7 +233,7 @@ export default {
     },
 
     async leaveRoom (socket, reason) {
-      this.$refs.snackbar.openSnackbar('error', 5, reason)
+      this.$refs.toast.openToast('danger', 5, reason)
     }
   },
 
