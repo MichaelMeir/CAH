@@ -94,14 +94,8 @@ export default {
 
   data () {
     return {
+      usernames: [],
       leaveModal: false,
-      usernames: [
-        'dilano',
-        'michael',
-        'joey',
-        'gino',
-        'kees'
-      ],
       message: '',
       messages: [],
       methods: {}
@@ -117,18 +111,17 @@ export default {
       this.message = ''
     },
 
+    updateUserList (socket, list) {
+      this.usernames = list
+      return true
+    },
+
     addMessage (socket, message) {
       this.messages.push(message)
     },
 
-    async leaveRoom () {
-      const methods = window.socket.import([
-        'leaveRoom'
-      ])
-      const response = await methods.leaveRoom(this.$cookies.get('jwt'))
-      if (!response.room) {
-        this.$router.push('/')
-      }
+    async leaveRoom (socket, payload) {
+      this.$router.push('/')
     }
   },
 
@@ -139,7 +132,9 @@ export default {
     ])
 
     window.socket.export({
-      addMessage: this.addMessage
+      addMessage: this.addMessage,
+      updateUserList: this.updateUserList,
+      leaveRoom: this.leaveRoom
     })
 
     const response = await this.methods.checkRoom(this.$route.params.token)

@@ -233,4 +233,4 @@ app.post('/api/cardpacks/create', Controller("Cardpack@createCardpack"))
 
 console.log("Server listening on 9000")
 
-app.listen(9000)
+app.listen(process.env.SERVER_PORT || 9000)
