@@ -7,7 +7,8 @@ module.exports = {
     import: [
         "ping",
         "leaveRoom",
-        "addMessage"
+        "addMessage",
+        "updateUserList"
     ],
     
     /**
@@ -67,9 +68,12 @@ module.exports = {
                     rooms[roomId].users.push(user.uuid)
                     rooms[roomId].usernames.push(user.username_withcase)
                     rooms[roomId].previewPlayers = `${rooms[roomId].usernames[0]}, ${rooms[roomId].usernames[1]} ${rooms[roomId].usernames[2] ? ',' + rooms[roomId].usernames[2] : ''} and ${rooms[roomId].usernames[2] ? rooms[roomId].users.length - 3 : rooms[roomId].users.length - 2 } more...`,
-                    meta.emit((emitMeta) => {
-                        emitMeta.methods.addMessage(user.username_withcase + " joined the game room!") // chat when user joins room
-                    })
+                    setTimeout(() => {
+                        meta.emit((emitMeta) => {
+                            emitMeta.methods.addMessage(user.username_withcase + " joined the game room!") // chat when user joins room
+                            emitMeta.methods.updateUserList(rooms[roomId].usernames)
+                        })
+                    }, 100)
                     return {room: roomId}
                 }else{
                     return {room: null, message: "Room is full"}
@@ -104,11 +108,12 @@ module.exports = {
                     delete rooms[meta.room]
                     return {rooms: null, deleted: true}
                 }
+                rooms[meta.room].users = rooms[meta.room].users.filter(i => i !== user.uuid)
+                rooms[meta.room].usernames = rooms[meta.room].usernames.filter(i => i !== user.username_withcase)
                 meta.emit((emitMeta) => {
                     emitMeta.methods.addMessage(user.username_withcase + " Left the game room!") // chat when user leaves room
+                    emitMeta.methods.updateUserList(rooms[meta.room].usernames)
                 })
-                rooms[meta.room].users.filter(i => i !== user.uuid)
-                rooms[meta.room].usernames.filter(i => i !== user.username_withcase)
             }
             return {room: null, deleted: false}
         }, meta.db, meta.models, meta.ip)
@@ -154,6 +159,9 @@ module.exports = {
                         users: [user.uuid],
                         usernames: [user.username_withcase],
                     }
+                    setTimeout(() => {
+                        meta.methods.updateUserList(rooms[code].usernames)
+                    }, 100)
                     meta.room = code
                     return {room: code}
                 }
