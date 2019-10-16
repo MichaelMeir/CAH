@@ -38,7 +38,7 @@ module.exports = {
                                    return
 
                               } else {
-                                   let user = req.models.user.create({
+                                   req.models.user.create({
                                         uuid: uuidv4(),
                                         username: req.body.username.toLowerCase(),
                                         username_withcase: req.body.username,
@@ -48,7 +48,8 @@ module.exports = {
                                         reset_token: null,
                                         session_id: "",
                                         session_ip: "",
-                                        liked_packs: JSON.stringify([])
+                                        liked_packs: JSON.stringify([]),
+                                        created: Date.now()
                                    }, (err, result) => {
                                         if (err) {
                                              response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err])
