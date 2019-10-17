@@ -22,6 +22,7 @@ const time = minute*process.env.CRONJOB_TIME
 
 let JobRepeater = () => {
     for(let i = 0; i < jobs.length; i++) {
+        if(!db && !models) return
         jobs[i]({
             db, models
         })

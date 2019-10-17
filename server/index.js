@@ -9,6 +9,7 @@ const fs = require('fs')
 const orm = require('orm');
 
 const Controller = require('./controller')
+const Cronjobs = require('./cronjobs')
 const app = express();
 
 const socketServer = require('./socket')
@@ -74,6 +75,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
 }))
 
 app.use(socketServer.express);
+app.use(Cronjobs.express)
 
 /**
  * @callback /api/auth/register
@@ -232,6 +234,6 @@ app.post('/api/cardpacks/addlike', Controller("Cardpack@addLike"))
  */
 app.post('/api/cardpacks/create', Controller("Cardpack@createCardpack"))
 
-console.log("Server listening on 9000")
+console.log("Server listening on :" + (process.env.SERVER_PORT || 9000))
 
 app.listen(process.env.SERVER_PORT || 9000)
