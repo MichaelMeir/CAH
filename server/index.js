@@ -42,6 +42,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             username_withcase: String,
             password: String,
             email: String,
+            avatar: String,
             verification: String,
             liked_packs: String,
             reset_token: String,

@@ -284,8 +284,6 @@ export default {
     ownCardpacks () {
       if (!this.cardpacks) return []
 
-      console.log(this.user_id)
-
       return this.cardpacks.filter(cardpack => {
         return (cardpack.user_id === this.user_id)
       })
