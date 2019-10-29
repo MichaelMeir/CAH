@@ -2,6 +2,9 @@
 let db = null
 let models = null
 
+const fs = require('fs')
+const folder = './cronjobs/'
+
 module.exports = {
     express: (req, res, next) => {
         db = req.db
