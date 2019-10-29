@@ -196,7 +196,6 @@ module.exports = {
                }
 
                user.password = undefined
-               user.id = undefined
                user.session_id = undefined
                user.session_ip = undefined
                user.verification = (user.verification) ? true : false

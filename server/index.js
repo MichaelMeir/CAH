@@ -234,6 +234,14 @@ app.post('/api/cardpacks/addlike', Controller("Cardpack@addLike"))
  */
 app.post('/api/cardpacks/create', Controller("Cardpack@createCardpack"))
 
+/**
+ * @callback /api/cards/create
+ * @description Creates a new card
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cards
+ */
+app.post('/api/cards/create', Controller("Card@createCard"))
+
 console.log("Server listening on :" + (process.env.SERVER_PORT || 9000))
 
 app.listen(process.env.SERVER_PORT || 9000)
