@@ -9,6 +9,7 @@ const fs = require('fs')
 const orm = require('orm');
 
 const Controller = require('./controller')
+const Cronjobs = require('./cronjobs')
 const app = express();
 
 const socketServer = require('./socket')
@@ -41,11 +42,13 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             username_withcase: String,
             password: String,
             email: String,
+            avatar: String,
             verification: String,
             liked_packs: String,
             reset_token: String,
             session_id: String,
             session_ip: String,
+            created: Number,
         })
 
         models.cardpack = db.define("cardpacks", {
@@ -63,7 +66,11 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             text: { type: 'text', size: 255 },
             white: Boolean,
             picks: Number,
-            cardpack_id: Number
+            cardpack_id: String
+        })
+
+        db.sync(err => {
+            if (err) throw err
         })
 
         models.card.hasOne('cardpack', models.cardpack, { reverse: 'cards', autoFetch: false })
@@ -73,6 +80,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
 }))
 
 app.use(socketServer.express);
+app.use(Cronjobs.express)
 
 /**
  * @callback /api/auth/register
@@ -231,6 +239,14 @@ app.post('/api/cardpacks/addlike', Controller("Cardpack@addLike"))
  */
 app.post('/api/cardpacks/create', Controller("Cardpack@createCardpack"))
 
-console.log("Server listening on 9000")
+/**
+ * @callback /api/cards/create
+ * @description Creates a new card
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cards
+ */
+app.post('/api/cards/create', Controller("Card@createCard"))
 
-app.listen(9000)
+console.log("Server listening on :" + (process.env.SERVER_PORT || 9000))
+
+app.listen(process.env.SERVER_PORT || 9000)

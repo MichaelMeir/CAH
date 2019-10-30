@@ -3,26 +3,26 @@
     <nav class="bg-indigo-700 py-6 px-8 mt-5 rounded flex text-white max-w-4xl mx-auto items-center">
       <div class="text-sm leading-snug tracking-wider text-center">
         <span
-          @click="$router.push('/')"
+          @click="redirect('/')"
           class="uppercase text-sm font-bold block cursor-pointer"
         >Cards Against Me</span>
       </div>
       <div class="flex flex-1 justify-end text-sm">
         <ul class="flex items-center">
           <li
-            @click="$router.push('/')"
+            @click="redirect('/')"
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
             v-bind:class="{ 'active': this.$route.path === '/' }"
           >Home</li>
           <li
-            @click="$router.push('/cardpacks')"
+            @click="redirect('/cardpacks')"
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
             v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
           >Cardpacks</li>
           <li
-            @click="$router.push('/profile')"
+            @click="redirect('/profile')"
             v-if="isAuthenticated"
             class="cursor-pointer nav-item ml-8"
             v-bind:class="{ 'active': this.$route.path === '/profile' }"
@@ -34,15 +34,29 @@
           >Logout</li>
           <li
             v-if="!isAuthenticated"
-            @click="$router.push('/register')"
+            @click="redirect('/register')"
             class="cursor-pointer nav-item ml-8"
           >Create account</li>
           <li
             v-if="!isAuthenticated"
-            @click="$router.push('/login')"
+            @click="redirect('/login')"
             class="cursor-pointer nav-item ml-8"
           >Login</li>
         </ul>
+
+        <div
+          class="flex items-center ml-8"
+          v-if="isAuthenticated"
+        >
+          <!-- <div
+            :style="(user.avatar !== null) ? `background-image: url(data:image/jpeg;base64,${user.avatar})` : `background-image: url(https://clinicforspecialchildren.org/wp-content/uploads/2016/08/avatar-placeholder.gif)`"
+            class="bg-cover bg-center rounded-full h-8 w-8"
+          >
+          </div> -->
+          <div>
+
+          </div>
+        </div>
       </div>
     </nav>
     <div
@@ -65,10 +79,14 @@ import axios from 'axios'
 import AuthService from '../services/AuthService'
 
 export default {
+
+  props: ['onredirect'],
+
   data () {
     return {
       isAuthenticated: false,
-      isVerified: true
+      isVerified: true,
+      user: null
     }
   },
 
@@ -77,12 +95,21 @@ export default {
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
 
+      let user = await AuthService.getUser()
+      this.user = user.payload.user
+
       if (!isVerified) this.isVerified = false
       this.isAuthenticated = true
     }
   },
 
   methods: {
+
+    redirect (url) {
+      if (this.onredirect) this.onredirect(url)
+      this.$router.push(url)
+    },
+
     logout () {
       AuthService.logout()
     },

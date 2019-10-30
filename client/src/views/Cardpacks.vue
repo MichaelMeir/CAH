@@ -1,10 +1,15 @@
 <template>
   <div>
     <Navbar />
+    <Toast ref="toast" />
+    <CreateCardModal
+      ref="createCardModal"
+      :cardpacks="ownCardpacks"
+    />
     <div class="max-w-4xl mx-auto mt-5">
       <div class="flex mb-2">
         <div class="flex w-full">
-          <div class="w-3/4">
+          <div class="w-2/4">
             <i
               style="margin-top: 17px"
               class="opacity-75 ml-4 align-bottom text-white absolute text-xs mt-1 fas fa-search"
@@ -22,6 +27,14 @@
               @click="createModalOpen = !createModalOpen"
             >
               <i class="fas fa-plus-circle mr-2"></i> Create cardpack
+            </button>
+          </div>
+          <div class="w-1/4 ml-4">
+            <button
+              class="text-sm w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
+              @click="$refs.createCardModal.toggleModal()"
+            >
+              <i class="fas fa-plus-circle mr-2"></i> Create card
             </button>
           </div>
           <div
@@ -105,10 +118,73 @@
           </div>
         </div>
       </div>
+      <div v-if="ownCardpacks.length > 0" class="mb-4 font-semibold text-indigo-700">
+        Your own cardpacks
+      </div>
+      <transition-group
+        v-if="ownCardpacks.length > 0"
+        name="list"
+        tag="div"
+        class="flex flex-no-wrap overflow-x-auto -ml-2 -mr-2 -mt-2"
+      >
+        <div
+          v-for="(cardpack, index) in ownCardpacks"
+          :key="index + 1"
+          class="w-1/3 p-2 flex-none stacked-parent"
+        >
+          <div class="border-t-10 border-indigo-600 rounded-t"></div>
+
+          <div class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer">
+            <div class="relative">
+              <div class="font-semibold mb-4 text-base">{{ cardpack.name }}</div>
+              <div
+                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
+                v-if="cardpack.user_id === user_id"
+              >
+                Created by you
+              </div>
+
+              <div
+                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
+                v-else
+              >
+                Created by someone else
+              </div>
+              <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
+                {{ cardpack.cardAmount ? cardpack.cardAmount :  0 }} cards
+              </div>
+            </div>
+            <div class="mb-4">
+              {{ cardpack.description }}
+            </div>
+
+            <div class="flex relative items-center">
+              <div>
+                <div
+                  class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
+                  v-for="(tag, index) in JSON.parse(cardpack.tags)"
+                  :key="index"
+                >
+                  {{ tag }}
+                </div>
+              </div>
+
+              <div @click="addLikes(cardpack.id)" :class="((liked_packs !== null && liked_packs.includes(cardpack.id)) ? 'bg-pink-600 text-pink-200 opacity-100' : '') +' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'">
+                <span class="font-semibold">{{ cardpack.likes }}</span>
+                <i class="ml-2 fa fa-heart text-xs"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition-group>
+      <div v-if="ownCardpacks.length > 3" class="font-semibold text-sm text-gray-600 mt-1 flex flex-1 justify-end items-center">
+        Scroll for more <i class="fas fa-long-arrow-alt-right ml-4"></i>
+      </div>
+      <div v-if="ownCardpacks.length > 0" class="border-b border-indigo-100 pt-3"></div>
       <transition-group
         name="list"
         tag="div"
-        class="flex flex-wrap -ml-2 -mr-2 -mt-2"
+        class="flex flex-wrap -ml-2 -mr-2 mt-4"
       >
         <div
           v-for="(cardpack, index) in filteredCardpacks"
@@ -134,7 +210,7 @@
                 Created by another user
               </div>
               <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
-                {{ cardpack.cardAmount }} cards
+                {{ cardpack.cardAmount ? cardpack.cardAmount :  0 }} cards
               </div>
             </div>
             <div class="mb-4">
@@ -170,13 +246,17 @@
 </template>
 <script>
 import Navbar from '../components/Navbar'
+import Toast from '../components/Toast'
+import CreateCardModal from '../components/modals/CreateCardModal'
 import AuthService from '../services/AuthService'
 
 import axios from 'axios'
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    Toast,
+    CreateCardModal
   },
 
   async mounted () {
@@ -199,6 +279,14 @@ export default {
       return this.cardpacks.filter(cardpack => {
         return ((cardpack.name.toLowerCase()).match(this.search.toLowerCase()))
       }).slice(0, this.limit)
+    },
+
+    ownCardpacks () {
+      if (!this.cardpacks) return []
+
+      return this.cardpacks.filter(cardpack => {
+        return (cardpack.user_id === this.user_id)
+      })
     }
   },
 
@@ -274,9 +362,11 @@ export default {
             withCredentials: true
           })
 
-          this.createModalOpen = false
-
-          this.cardpacks.push(request.data.payload)
+          if (request.status === 200) {
+            this.createModalOpen = false
+            this.cardpacks.push(request.data.payload)
+            this.$refs.toast.openToast('success', 5, 'Your cardpack has been created successfully')
+          }
         } catch (err) {
           err.response.data.errors.forEach(error => {
             this.errors.push({

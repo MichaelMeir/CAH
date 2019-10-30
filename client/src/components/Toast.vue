@@ -1,11 +1,8 @@
 <template>
   <transition name="list">
     <div
-      v-if="open"
-      :class="
-        'flex items-center fixed mr-6 mb-6 rounded shadow px-4 py-3 font-semibold text-white text-sm bottom-0 right-0 ' +
-          (error.color)
-      "
+      v-show="open"
+      :class="`flex items-center fixed z-50 mr-6 mb-6 rounded shadow px-4 py-3 font-semibold text-white text-sm bottom-0 right-0 border-l-6 border-${getType()}-600 bg-${getType()}-500`"
     >
       <div>
         {{ message }}
@@ -13,7 +10,7 @@
 
       <div
         @click="open = false"
-        class="cursor-pointer flex flex-1 justify-end ml-4"
+        class="cursor-pointer flex flex-1 justify-end ml-8"
       >
         <svg
           class="h-3 w-3 cursor-pointer"
@@ -25,43 +22,68 @@
             d="M10 8.586L2.929 1.515 1.515 2.929 8.585 10l-7.07 7.071 1.414 1.414L10 11.415l7.071 7.07 1.414-1.414L11.415 10l7.07-7.071-1.414-1.414L10 8.585z"
             fill="#fff"
             fill-rule="evenodd"
-          />
-        </svg>
+          /></svg>
       </div>
     </div>
   </transition>
 </template>
 <script>
 export default {
+  computed: {
+    types () {
+      return [
+        {
+          type: 'error',
+          className: 'red'
+        }
+      ]
+    }
+  },
+
   data () {
     return {
       open: false,
       message: null,
-      error: {
-        color: ''
-      },
+      type: 'danger',
       interval: 5
     }
   },
 
   methods: {
-    openSnackbar (type, interval, message) {
+    getType () {
+      const types = [
+        {
+          type: 'primary',
+          className: 'indigo'
+        },
+        {
+          type: 'danger',
+          className: 'red'
+        },
+        {
+          type: 'success',
+          className: 'green'
+        },
+        {
+          type: 'warning',
+          className: 'orange'
+        }
+      ]
+
+      return types.find(type => {
+        return type.type === this.type
+      }).className
+    },
+
+    openToast (type, interval, message) {
       this.open = true
       this.type = type
       this.interval = interval
       this.message = message
-      this.setColor(type)
+
       setInterval(() => {
         this.open = false
-      }, this.interval * 1000)
-    },
-    setColor (type) {
-      const colors = {
-        'error': 'bg-red-500',
-        'success': 'bg-green-500',
-        'warning': 'bg-orange-500'
-      }
-      this.error.color = colors[type]
+      }, (this.interval * 1000))
     }
   }
 }
