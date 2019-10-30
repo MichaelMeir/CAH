@@ -2,7 +2,7 @@
   <transition name="list">
     <div
       v-show="open"
-      :class="'flex items-center fixed mr-6 mb-6 rounded shadow px-4 py-3 font-semibold text-white text-sm bottom-0 right-0 ' + (type === 'error' ? 'bg-red-500' : 'bg-green-500')"
+      :class="`flex items-center fixed z-50 mr-6 mb-6 rounded shadow px-4 py-3 font-semibold text-white text-sm bottom-0 right-0 border-l-6 border-${getType()}-600 bg-${getType()}-500`"
     >
       <div>
         {{ message }}
@@ -10,7 +10,7 @@
 
       <div
         @click="open = false"
-        class="cursor-pointer flex flex-1 justify-end ml-4"
+        class="cursor-pointer flex flex-1 justify-end ml-8"
       >
         <svg
           class="h-3 w-3 cursor-pointer"
@@ -29,17 +29,53 @@
 </template>
 <script>
 export default {
+  computed: {
+    types () {
+      return [
+        {
+          type: 'error',
+          className: 'red'
+        }
+      ]
+    }
+  },
+
   data () {
     return {
       open: false,
       message: null,
-      type: 'error',
+      type: 'danger',
       interval: 5
     }
   },
 
   methods: {
-    openSnackbar (type, interval, message) {
+    getType () {
+      const types = [
+        {
+          type: 'primary',
+          className: 'indigo'
+        },
+        {
+          type: 'danger',
+          className: 'red'
+        },
+        {
+          type: 'success',
+          className: 'green'
+        },
+        {
+          type: 'warning',
+          className: 'orange'
+        }
+      ]
+
+      return types.find(type => {
+        return type.type === this.type
+      }).className
+    },
+
+    openToast (type, interval, message) {
       this.open = true
       this.type = type
       this.interval = interval

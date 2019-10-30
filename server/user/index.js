@@ -16,10 +16,10 @@ module.exports = async (req, callback, db = null, models = null, ip = null) => {
             const result = await validate(ip, db, models, req, callback)
             return result
         }else{
-            return callback(false)
+            return callback(false, "jwt cookie was expected to be a string")
         }
     } else {
-        return callback(false)
+        return callback(false, "no jwt cookie has been supplied")
     }
 }
 
@@ -32,19 +32,19 @@ function validate(ip, db, models, token, callback) {
                 if (err) {
                      resolve(callback(false, err))
                 }
-                return models.user.find({ session_id: uuid, session_ip: ip }, (err, results) => {
+                return models.user.find({ session_id: uuid/*, session_ip: ip */}, (err, results) => {
                     if (err) {
                         resolve(callback(false, err))
                     }
                     if(results.length > 0) {
                         resolve(callback(results[0]))
                     }else{
-                        resolve(callback(false))
+                        resolve(callback(false, "no matching user found"))
                     }
                 });
             });
         })
     }else{
-        return callback(false)
+        return callback(false, "could not verify jwt cookie")
     }
 }
