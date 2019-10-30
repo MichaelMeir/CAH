@@ -48,10 +48,13 @@
           class="flex items-center ml-8"
           v-if="isAuthenticated"
         >
-          <div
+          <!-- <div
             :style="(user.avatar !== null) ? `background-image: url(data:image/jpeg;base64,${user.avatar})` : `background-image: url(https://clinicforspecialchildren.org/wp-content/uploads/2016/08/avatar-placeholder.gif)`"
             class="bg-cover bg-center rounded-full h-8 w-8"
           >
+          </div> -->
+          <div>
+
           </div>
         </div>
       </div>
