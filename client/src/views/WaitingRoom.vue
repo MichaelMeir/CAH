@@ -4,12 +4,13 @@
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="bg-indigo-700 text-black my-5 rounded w-2/3 pb-1 overflow-y-auto mr-3">
         <div class="bg-white text-black h-56 m-2 rounded">
-          <p></p>
+          <p v-bind:key="index" v-for="(message, index) in messages">{{ message }}</p>
         </div>
 
         <div class="flex">
           <input
             v-on:keyup.enter="sendMessage"
+            v-model="message"
             class="ml-2 mt-1 mb-1 p-1 w-4/5 rounded"
             type="text"
             placeholder="Say..."
@@ -24,13 +25,15 @@
           style="height: 14rem"
         >
           <p class="text-center pt-1">Playerlist</p>
-          <div class="text-white ">
+          <div class="text-white">
             <li
               v-bind:key="index"
               v-for="(user, index) in usernames"
               class="bg-indigo-700 m-2 rounded"
             >
-              <p class="mx-2">{{ user }}</p>
+            <div>
+              <Interface :user="user" />
+            </div>
             </li>
           </div>
         </ul>
@@ -47,43 +50,62 @@
           style="height: 14rem"
         >
           <p class="text-center pt-1">Settings</p>
-          <div class="text-white ">
+          <div class="text-white">
           </div>
         </ul>
       </div>
     </div>
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="w-full flex-1 flex justify-end">
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</button>
+        <a class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</a>
       </div>
     </div>
   </div>
 </template>
 <script>
 import Navbar from '../components/Navbar'
+import Interface from '../components/Interface'
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    Interface
   },
 
   data () {
     return {
       usernames: [
-        'dilano',
-        'michael',
-        'joey',
-        'gino',
-        'kees'
+        'Dilano',
+        'Michael',
+        'Joey',
+        'Gino',
       ],
-      methods: {}
+      message: '',
+      messages: [],
+      methods: {},
+      visible: false
     }
   },
 
   methods: {
-    sendMessage (socket, message) {
-      window.socket.emit('message', this.message)
+    openInterface() {
+      this.visible = true
+    },
+
+    closeInterface() {
+      this.visible = false
+    },
+
+    sendMessage () {
+      const methods = window.socket.import([
+        'sendMessage'
+      ])
+      methods.sendMessage(this.$cookies.get('jwt'), this.message)
       this.message = ''
+    },
+
+    addMessage (socket, message) {
+      this.messages.push(message)
     },
 
     async leaveRoom () {
@@ -104,14 +126,14 @@ export default {
     ])
 
     window.socket.export({
-      sendMessage: this.sendMessage
+      addMessage: this.addMessage
     })
 
     const response = await this.methods.checkRoom(this.$route.params.token)
     if (!response.room) {
       this.$router.push('/')
     }
+  },
   }
-}
 // $cookies.get("jwt")
 </script>
