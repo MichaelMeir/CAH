@@ -66,7 +66,11 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             text: { type: 'text', size: 255 },
             white: Boolean,
             picks: Number,
-            cardpack_id: Number
+            cardpack_id: String
+        })
+
+        db.sync(err => {
+            if (err) throw err
         })
 
         models.card.hasOne('cardpack', models.cardpack, { reverse: 'cards', autoFetch: false })
