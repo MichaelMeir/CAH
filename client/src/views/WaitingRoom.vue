@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar />
+    <navbar :onredirect="onredirect"/>
     <transition name="fade">
       <div v-if="leaveModal">
         <div class="fixed z-20 left-0 top-0 bg-black opacity-75 h-full w-full"></div>
@@ -98,11 +98,17 @@ export default {
       leaveModal: false,
       message: '',
       messages: [],
-      methods: {}
+      methods: {},
+      redirected: false
     }
   },
 
   methods: {
+
+    onredirect () {
+      this.redirected = true
+    },
+
     sendMessage () {
       const methods = window.socket.import([
         'sendMessage'
@@ -121,7 +127,9 @@ export default {
     },
 
     async leaveRoom (socket, payload) {
-      this.$router.push('/')
+      if (!this.redirected) {
+        this.$router.push('/')
+      }
     }
   },
 
