@@ -42,6 +42,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             username_withcase: String,
             password: String,
             email: String,
+            avatar: String,
             verification: String,
             liked_packs: String,
             reset_token: String,
@@ -233,6 +234,14 @@ app.post('/api/cardpacks/addlike', Controller("Cardpack@addLike"))
  * @yields {Number} JSON response made by the response method to fetch all cardpacks
  */
 app.post('/api/cardpacks/create', Controller("Cardpack@createCardpack"))
+
+/**
+ * @callback /api/cards/create
+ * @description Creates a new card
+ * 
+ * @yields {Number} JSON response made by the response method to fetch all cards
+ */
+app.post('/api/cards/create', Controller("Card@createCard"))
 
 console.log("Server listening on :" + (process.env.SERVER_PORT || 9000))
 

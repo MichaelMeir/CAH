@@ -43,6 +43,17 @@
             class="cursor-pointer nav-item ml-8"
           >Login</li>
         </ul>
+
+        <div
+          class="flex items-center ml-8"
+          v-if="isAuthenticated"
+        >
+          <div
+            :style="(user.avatar !== null) ? `background-image: url(data:image/jpeg;base64,${user.avatar})` : `background-image: url(https://clinicforspecialchildren.org/wp-content/uploads/2016/08/avatar-placeholder.gif)`"
+            class="bg-cover bg-center rounded-full h-8 w-8"
+          >
+          </div>
+        </div>
       </div>
     </nav>
     <div
@@ -68,7 +79,8 @@ export default {
   data () {
     return {
       isAuthenticated: false,
-      isVerified: true
+      isVerified: true,
+      user: null
     }
   },
 
@@ -76,6 +88,9 @@ export default {
     let isAuthenticated = await AuthService.isAuthenticated()
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
+
+      let user = await AuthService.getUser()
+      this.user = user.payload.user
 
       if (!isVerified) this.isVerified = false
       this.isAuthenticated = true

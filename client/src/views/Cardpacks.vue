@@ -2,10 +2,14 @@
   <div>
     <Navbar />
     <Toast ref="toast" />
+    <CreateCardModal
+      ref="createCardModal"
+      :cardpacks="ownCardpacks"
+    />
     <div class="max-w-4xl mx-auto mt-5">
       <div class="flex mb-2">
         <div class="flex w-full">
-          <div class="w-3/4">
+          <div class="w-2/4">
             <i
               style="margin-top: 17px"
               class="opacity-75 ml-4 align-bottom text-white absolute text-xs mt-1 fas fa-search"
@@ -23,6 +27,14 @@
               @click="createModalOpen = !createModalOpen"
             >
               <i class="fas fa-plus-circle mr-2"></i> Create cardpack
+            </button>
+          </div>
+          <div class="w-1/4 ml-4">
+            <button
+              class="text-sm w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
+              @click="$refs.createCardModal.toggleModal()"
+            >
+              <i class="fas fa-plus-circle mr-2"></i> Create card
             </button>
           </div>
           <div
@@ -235,6 +247,7 @@
 <script>
 import Navbar from '../components/Navbar'
 import Toast from '../components/Toast'
+import CreateCardModal from '../components/modals/CreateCardModal'
 import AuthService from '../services/AuthService'
 
 import axios from 'axios'
@@ -242,7 +255,8 @@ import axios from 'axios'
 export default {
   components: {
     Navbar,
-    Toast
+    Toast,
+    CreateCardModal
   },
 
   async mounted () {

@@ -44,7 +44,7 @@ export default {
     return {
       open: false,
       message: null,
-      type: 'error',
+      type: 'danger',
       interval: 5
     }
   },
