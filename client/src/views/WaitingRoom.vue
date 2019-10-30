@@ -103,7 +103,7 @@ export default {
       message: '',
       messages: [],
       methods: {},
-      redirected: false
+      redirected: false,
       visible: false
     }
   },
