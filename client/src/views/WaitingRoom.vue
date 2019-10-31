@@ -49,13 +49,15 @@
           style="height: 14rem"
         >
           <p class="text-center pt-1">Playerlist</p>
-          <div class="text-white ">
+          <div class="text-white">
             <li
               v-bind:key="index"
               v-for="(user, index) in usernames"
               class="bg-indigo-700 m-2 rounded"
             >
-              <p class="mx-2">{{ user }}</p>
+            <div>
+              <Interface :user="user" />
+            </div>
             </li>
           </div>
         </ul>
@@ -72,24 +74,26 @@
           style="height: 14rem"
         >
           <p class="text-center pt-1">Settings</p>
-          <div class="text-white ">
+          <div class="text-white">
           </div>
         </ul>
       </div>
     </div>
     <div class="max-w-4xl mx-auto mt-1 flex">
       <div class="w-full flex-1 flex justify-end">
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</button>
+        <a class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</a>
       </div>
     </div>
   </div>
 </template>
 <script>
 import Navbar from '../components/Navbar'
+import Interface from '../components/Interface'
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    Interface
   },
 
   data () {
@@ -99,11 +103,19 @@ export default {
       message: '',
       messages: [],
       methods: {},
-      redirected: false
+      redirected: false,
+      visible: false
     }
   },
 
   methods: {
+    openInterface() {
+      this.visible = true
+    },
+
+    closeInterface() {
+      this.visible = false
+    },
 
     onredirect () {
       this.redirected = true
@@ -149,8 +161,8 @@ export default {
     if (!response.room) {
       this.$router.push('/')
     }
+  },
   }
-}
 // $cookies.get("jwt")
 </script>
 
