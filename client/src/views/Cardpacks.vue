@@ -366,6 +366,11 @@ export default {
             this.createModalOpen = false
             this.cardpacks.push(request.data.payload)
             this.$refs.toast.openToast('success', 5, 'Your cardpack has been created successfully')
+            this.cardpack = {
+              title: '',
+              description: '',
+              tags: []
+            }
           }
         } catch (err) {
           err.response.data.errors.forEach(error => {
