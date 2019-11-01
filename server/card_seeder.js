@@ -28,7 +28,7 @@ orm.connect(
 			text: { type: "text", size: 255 },
 			white: Boolean,
 			picks: Number,
-			cardpack_id: Number
+			cardpack_id: String
         });
         
         card.hasOne('cardpack', cardpack, { reverse: 'cards', autoFetch: true })
