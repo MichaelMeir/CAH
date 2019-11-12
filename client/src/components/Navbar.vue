@@ -21,6 +21,7 @@
             class="cursor-pointer nav-item ml-8"
             v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
           >Cardpacks</li>
+          <div class="flex" v-if="loaded">
           <li
             @click="redirect('/profile')"
             v-if="isAuthenticated"
@@ -42,6 +43,7 @@
             @click="redirect('/login')"
             class="cursor-pointer nav-item ml-8"
           >Login</li>
+          </div>
         </ul>
 
         <div
@@ -86,7 +88,8 @@ export default {
     return {
       isAuthenticated: false,
       isVerified: true,
-      user: null
+      user: null,
+      loaded: false
     }
   },
 
@@ -97,9 +100,11 @@ export default {
 
       let user = await AuthService.getUser()
       this.user = user.payload.user
-
       if (!isVerified) this.isVerified = false
       this.isAuthenticated = true
+      this.loaded = true
+    } else {
+      this.loaded = true
     }
   },
 
