@@ -161,7 +161,7 @@ const seedCards = (
 				text: card,
 				white: true,
 				picks: 0,
-				cardpack_id: cardpackId
+				cardpack_id: JSON.stringify([cardpackId])
 			},
 			(err, result) => {
 				bar.tick(1);
