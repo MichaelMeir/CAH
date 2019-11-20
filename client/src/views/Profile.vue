@@ -263,7 +263,7 @@ export default {
         } else {
           // no error
           this.status = `Your avatar has been uploaded successfully.`
-          this.$parent.navbar.user.avatar = image
+          this.$parent.$refs.navbar.user.avatar = image
           // todo: crop image to maximum
           // todo: save image var in avatar column in db (api call)
           // todo: show success/error message

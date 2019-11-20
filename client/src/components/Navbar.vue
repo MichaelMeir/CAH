@@ -8,7 +8,10 @@
         >Cards Against Me</span>
       </div>
       <div class="flex flex-1 justify-end text-sm">
-        <ul class="flex items-center">
+        <ul
+          class="flex items-center"
+          v-if="loaded"
+        >
           <li
             @click="redirect('/')"
             v-if="isAuthenticated"
@@ -21,32 +24,27 @@
             class="cursor-pointer nav-item ml-8"
             v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
           >Cardpacks</li>
-          <div
-            class="flex"
-            v-if="loaded"
-          >
-            <li
-              @click="redirect('/profile')"
-              v-if="isAuthenticated"
-              class="cursor-pointer nav-item ml-8"
-              v-bind:class="{ 'active': this.$route.path === '/profile' }"
-            >My profile</li>
-            <li
-              v-if="isAuthenticated"
-              @click="logout()"
-              class="cursor-pointer nav-item ml-8"
-            >Logout</li>
-            <li
-              v-if="!isAuthenticated"
-              @click="redirect('/register')"
-              class="cursor-pointer nav-item ml-8"
-            >Create account</li>
-            <li
-              v-if="!isAuthenticated"
-              @click="redirect('/login')"
-              class="cursor-pointer nav-item ml-8"
-            >Login</li>
-          </div>
+          <li
+            @click="redirect('/profile')"
+            v-if="isAuthenticated"
+            class="cursor-pointer nav-item ml-8"
+            v-bind:class="{ 'active': this.$route.path === '/profile' }"
+          >My profile</li>
+          <li
+            v-if="isAuthenticated"
+            @click="logout()"
+            class="cursor-pointer nav-item ml-8"
+          >Logout</li>
+          <li
+            v-if="!isAuthenticated"
+            @click="redirect('/register')"
+            class="cursor-pointer nav-item ml-8"
+          >Create account</li>
+          <li
+            v-if="!isAuthenticated"
+            @click="redirect('/login')"
+            class="cursor-pointer nav-item ml-8"
+          >Login</li>
         </ul>
 
         <div
@@ -97,9 +95,9 @@ export default {
     let isAuthenticated = await AuthService.isAuthenticated()
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
-
       let user = await AuthService.getUser()
       this.user = user.payload.user
+
       if (!isVerified) this.isVerified = false
       this.isAuthenticated = true
       this.loaded = true
