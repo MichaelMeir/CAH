@@ -5,14 +5,13 @@
       class="absolute z-20 left-0 top-0 bg-white opacity-50 h-full w-full"
       v-if="open"
     ></div>
-    <div class="absolute left-0 right-0 top-0 z-50" v-if="open">
-      <div
-        class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4"
-      >
+    <div
+      class="absolute left-0 right-0 top-0 z-50"
+      v-if="open"
+    >
+      <div class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4">
         <div class="text-base font-semibold">
-          <div
-            class="text-base font-semibold flex items-center text-indigo-800"
-          >
+          <div class="text-base font-semibold flex items-center text-indigo-800">
             <div>Creating a card</div>
             <div class="flex flex-1 justify-end">
               <svg
@@ -44,7 +43,10 @@
                         ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded h-24 border border-indigo-200'
                     "
                   ></textarea>
-                  <div v-if="hasError('card.text')" class="error-message">
+                  <div
+                    v-if="hasError('card.text')"
+                    class="error-message"
+                  >
                     {{ getError("card.text") }}
                   </div>
                 </div>
@@ -60,17 +62,22 @@
                         ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'
                     "
                   >
-                    <option disabled selected>Select cardpack(s)</option>
+                    <option
+                      disabled
+                      selected
+                    >Select cardpack(s)</option>
                     <option
                       v-bind:key="cardpack.id"
                       :value="cardpack.id"
                       v-for="cardpack in cardpacks"
-                      >{{ cardpack.name }} ({{
+                    >{{ cardpack.name }} ({{
                         JSON.parse(cardpack.tags).join(", ")
-                      }}) - {{ cardpack.likes }} likes</option
-                    >
+                      }}) - {{ cardpack.likes }} likes</option>
                   </select>
-                  <div v-if="hasError('card.cardpacks')" class="error-message">
+                  <div
+                    v-if="hasError('card.cardpacks')"
+                    class="error-message"
+                  >
                     {{ getError("card.cardpacks") }}
                   </div>
                 </div>
@@ -152,6 +159,8 @@ export default {
           })
 
           this.card = {
+            text: '',
+            isWhite: false,
             cardpacks: []
           }
 

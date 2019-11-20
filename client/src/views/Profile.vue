@@ -8,6 +8,12 @@
       {{ status }}
     </div>
     <div
+      v-if="statusError !== null"
+      class="max-w-4xl mt-4 mx-auto bg-red-200 mb-2 border border-red-300 text-red-700 font-semibold text-sm rounded py-3 px-4"
+    >
+      {{ statusError }}
+    </div>
+    <div
       @click="deleteModalOpen = false"
       v-if="deleteModalOpen"
       class="absolute z-10 left-0 top-0 bg-white opacity-50 h-full w-full"
@@ -188,6 +194,7 @@ export default {
       },
       errors: [],
       status: null,
+      statusError: null,
 
       new_password: null,
       new_password_confirmation: null,
@@ -197,8 +204,8 @@ export default {
       deleteCurrentPassword: null,
 
       required: {
-        avatarHeight: 128,
-        avatarWidth: 128
+        avatarHeight: 300,
+        avatarWidth: 300
       }
     }
   },
@@ -242,6 +249,8 @@ export default {
 
     async handleAvatarChange () {
       this.clearError('avatar')
+      this.statusError = null
+      this.status = null
 
       const file = document.querySelector('[type=file]').files[0]
       let image = await new Promise((resolve, reject) => {
@@ -251,7 +260,20 @@ export default {
         reader.onerror = error => reject(error)
       })
 
-      console.log(image)
+      let img = new Image()
+      img.src = image
+      img.onload = () => {
+        if ((img.naturalWidth > this.required.avatarWidth) || (img.naturalHeight > this.required.avatarHeight)) {
+          this.statusError = `The maximum dimensions of an avatar are: ${this.required.avatarWidth} x ${this.required.avatarHeight}, please try again.`
+        } else {
+          // no error
+          this.status = `Your avatar has been uploaded successfully.`
+          this.$refs.navbar.user.avatar = image
+          // todo: save image var in avatar column in db (api call)
+          // todo: show success/error message
+          // todo: make dimensions check (max 128x128)
+        }
+      }
     },
 
     async saveChanges () {

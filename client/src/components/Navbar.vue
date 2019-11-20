@@ -54,7 +54,7 @@
           v-if="isAuthenticated && user.avatar !== null"
         >
           <div
-            :style="`background-image: url(data:image/jpeg;base64,${user.avatar})`"
+            :style="`background-image: url(${user.avatar})`"
             class="bg-cover bg-center rounded-full h-8 w-8"
           >
           </div>
