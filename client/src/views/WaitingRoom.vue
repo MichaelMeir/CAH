@@ -1,6 +1,5 @@
 <template>
   <div>
-    <navbar :onredirect="onredirect" />
     <transition name="fade">
       <div v-if="leaveModal">
         <div class="fixed z-20 left-0 top-0 bg-black opacity-75 h-full w-full"></div>
@@ -130,12 +129,10 @@
   </div>
 </template>
 <script>
-import Navbar from '../components/Navbar'
 import Interface from '../components/Interface'
 
 export default {
   components: {
-    Navbar,
     Interface
   },
 
@@ -179,7 +176,7 @@ export default {
       this.messages.push(message)
     },
 
-    async leaveRoom (socket, payload) {
+    async leaveRoom (socket, reason) {
       if (!this.redirected) {
         this.$router.push('/')
       }
@@ -192,7 +189,7 @@ export default {
     window.socket.export({
       addMessage: this.addMessage,
       updateUserList: this.updateUserList,
-      leaveRoom: this.leaveRoom
+      leaveRoom: this.leaveRoomClient
     })
 
     const response = await this.methods.checkRoom(this.$route.params.token)

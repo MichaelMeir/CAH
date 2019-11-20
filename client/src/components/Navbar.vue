@@ -8,7 +8,7 @@
         >Cards Against Me</span>
       </div>
       <div class="flex flex-1 justify-end text-sm">
-        <ul class="flex items-center">
+        <ul class="flex items-center" v-if="loaded">
           <li
             @click="redirect('/')"
             v-if="isAuthenticated"
@@ -86,7 +86,8 @@ export default {
     return {
       isAuthenticated: false,
       isVerified: true,
-      user: null
+      user: null,
+      loaded: false
     }
   },
 
@@ -94,12 +95,14 @@ export default {
     let isAuthenticated = await AuthService.isAuthenticated()
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
-
       let user = await AuthService.getUser()
       this.user = user.payload.user
 
       if (!isVerified) this.isVerified = false
       this.isAuthenticated = true
+      this.loaded = true
+    } else {
+      this.loaded = true
     }
   },
 

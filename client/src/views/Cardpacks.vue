@@ -1,7 +1,5 @@
 <template>
   <div>
-    <Navbar />
-    <Toast ref="toast" />
     <CreateCardModal
       ref="createCardModal"
       :cardpacks="ownCardpacks"
@@ -245,8 +243,6 @@
   </div>
 </template>
 <script>
-import Navbar from '../components/Navbar'
-import Toast from '../components/Toast'
 import CreateCardModal from '../components/modals/CreateCardModal'
 import AuthService from '../services/AuthService'
 
@@ -254,8 +250,6 @@ import axios from 'axios'
 
 export default {
   components: {
-    Navbar,
-    Toast,
     CreateCardModal
   },
 
@@ -365,7 +359,7 @@ export default {
           if (request.status === 200) {
             this.createModalOpen = false
             this.cardpacks.push(request.data.payload)
-            this.$refs.toast.openToast('success', 5, 'Your cardpack has been created successfully')
+            this.$parent.$refs.toast.openToast('success', 5, 'Your cardpack has been created successfully')
             this.cardpack = {
               title: '',
               description: '',
