@@ -1,7 +1,5 @@
 <template>
   <div>
-    <Navbar />
-    <Toast ref="toast" />
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
@@ -122,15 +120,8 @@
   </div>
 </template>
 <script>
-import Navbar from '../components/Navbar'
-import Toast from '../components/Toast'
 
 export default {
-  components: {
-    Navbar,
-    Toast
-  },
-
   computed: {
     filteredRooms () {
       return this.rooms.filter(room => {
@@ -192,7 +183,7 @@ export default {
     async createRoom () {
       const jwt = this.$cookies.get('jwt')
       if (!jwt) {
-        this.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
+        this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
         return
       }
       const methods = window.socket.import([
@@ -202,7 +193,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        this.$refs.toast.openToast('danger', 5, 'Server failed to supply a game room code.')
+        this.$parent.$refs.toast.openToast('danger', 5, 'Server failed to supply a game room code.')
       }
     },
 
@@ -219,7 +210,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        this.$refs.toast.openToast('danger', 5, response.message)
+        this.$parent.$refs.toast.openToast('danger', 5, response.message)
         this.updateRooms()
       }
     },
@@ -232,8 +223,8 @@ export default {
       this.getRandomColors(this.rooms.length)
     },
 
-    async leaveRoom (socket, reason) {
-      this.$refs.toast.openToast('danger', 5, reason)
+    async leaveRoomClient (socket, reason) {
+      this.$parent.$refs.toast.openToast('danger', 5, reason)
     }
   },
 
@@ -247,7 +238,7 @@ export default {
   },
 
   async created () {
-    window.socket.export({ leaveRoom: this.leaveRoom })
+    window.socket.export({ leaveRoom: this.leaveRoomClient })
     this.updateRooms()
   }
 }

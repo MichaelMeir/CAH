@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Navbar ref="navbar" />
     <div
       v-if="status !== null"
       class="max-w-4xl mt-4 mx-auto bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
@@ -169,16 +168,11 @@
   </div>
 </template>
 <script>
-import Navbar from '../components/Navbar'
 import AuthService from '../services/AuthService'
 
 import axios from 'axios'
 
 export default {
-  components: {
-    Navbar
-  },
-
   data () {
     return {
       user: {

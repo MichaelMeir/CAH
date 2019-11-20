@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Navbar />
     <div class="max-w-4xl mx-auto flex mt-8 flex-row">
       <div class="w-3/4 mr-2">
         <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t">
@@ -47,12 +46,3 @@
     </div>
   </div>
 </template>
-<script>
-import Navbar from '../components/Navbar'
-
-export default {
-  components: {
-    Navbar
-  }
-}
-</script>
