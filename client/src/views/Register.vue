@@ -74,7 +74,7 @@
           </div>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 flex items-center">
           <label :class="(hasError('tos') ? 'error-message underline' : '') + ' flex text-xs items-center cursor-pointer text-white'">
             <input
               @change="clearError('tos')"
@@ -82,8 +82,12 @@
               type="checkbox"
               v-model="tos"
             >
-            I agree to the terms &amp; conditions
+            I agree to the
           </label>
+          <span
+            @click="$router.push('/terms-and-conditions')"
+            class="underline ml-1 text-xs text-white cursor-pointer hover:text-indigo-200"
+          >terms &amp; conditions</span>
         </div>
 
         <div>
