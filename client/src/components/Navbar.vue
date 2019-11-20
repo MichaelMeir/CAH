@@ -21,42 +21,42 @@
             class="cursor-pointer nav-item ml-8"
             v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
           >Cardpacks</li>
-          <div class="flex" v-if="loaded">
-          <li
-            @click="redirect('/profile')"
-            v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8"
-            v-bind:class="{ 'active': this.$route.path === '/profile' }"
-          >My profile</li>
-          <li
-            v-if="isAuthenticated"
-            @click="logout()"
-            class="cursor-pointer nav-item ml-8"
-          >Logout</li>
-          <li
-            v-if="!isAuthenticated"
-            @click="redirect('/register')"
-            class="cursor-pointer nav-item ml-8"
-          >Create account</li>
-          <li
-            v-if="!isAuthenticated"
-            @click="redirect('/login')"
-            class="cursor-pointer nav-item ml-8"
-          >Login</li>
+          <div
+            class="flex"
+            v-if="loaded"
+          >
+            <li
+              @click="redirect('/profile')"
+              v-if="isAuthenticated"
+              class="cursor-pointer nav-item ml-8"
+              v-bind:class="{ 'active': this.$route.path === '/profile' }"
+            >My profile</li>
+            <li
+              v-if="isAuthenticated"
+              @click="logout()"
+              class="cursor-pointer nav-item ml-8"
+            >Logout</li>
+            <li
+              v-if="!isAuthenticated"
+              @click="redirect('/register')"
+              class="cursor-pointer nav-item ml-8"
+            >Create account</li>
+            <li
+              v-if="!isAuthenticated"
+              @click="redirect('/login')"
+              class="cursor-pointer nav-item ml-8"
+            >Login</li>
           </div>
         </ul>
 
         <div
           class="flex items-center ml-8"
-          v-if="isAuthenticated"
+          v-if="isAuthenticated && user.avatar !== null"
         >
-          <!-- <div
-            :style="(user.avatar !== null) ? `background-image: url(data:image/jpeg;base64,${user.avatar})` : `background-image: url(https://clinicforspecialchildren.org/wp-content/uploads/2016/08/avatar-placeholder.gif)`"
+          <div
+            :style="`background-image: url(data:image/jpeg;base64,${user.avatar})`"
             class="bg-cover bg-center rounded-full h-8 w-8"
           >
-          </div> -->
-          <div>
-
           </div>
         </div>
       </div>

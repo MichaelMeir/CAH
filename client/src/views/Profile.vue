@@ -76,6 +76,17 @@
         </div>
 
         <div class="mb-3">
+          <label for="avatar">Avatar</label>
+          <input
+            @change="handleAvatarChange()"
+            :class="(hasError('avatar') ? 'has-error' : '') + ' p-3 bg-indigo-600 rounded text-white focus:outline-none mt-1 block w-1/3 mb-1'"
+            type="file"
+            accept="image/*"
+          >
+          <small>The maximum dimensions (in pixels) are: {{ required.avatarHeight }} x {{ required.avatarWidth }}</small>
+        </div>
+
+        <div class="mb-3">
           <label for="username">Email address</label>
           <input
             @keydown="clearError('email')"
@@ -172,7 +183,8 @@ export default {
     return {
       user: {
         username: null,
-        email: null
+        email: null,
+        avatar: null
       },
       errors: [],
       status: null,
@@ -182,7 +194,12 @@ export default {
       current_password: null,
 
       deleteModalOpen: false,
-      deleteCurrentPassword: null
+      deleteCurrentPassword: null,
+
+      required: {
+        avatarHeight: 128,
+        avatarWidth: 128
+      }
     }
   },
 
@@ -221,6 +238,20 @@ export default {
           })
         }
       }
+    },
+
+    async handleAvatarChange () {
+      this.clearError('avatar')
+
+      const file = document.querySelector('[type=file]').files[0]
+      let image = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
+
+      console.log(image)
     },
 
     async saveChanges () {
