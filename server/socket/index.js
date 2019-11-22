@@ -53,7 +53,7 @@ function Server(port = 2083) {
             for(let i = 0; i < Object.keys(filter).length; i++) {
                 const key = Object.keys(filter)[i]
                 const value = filter[key]
-                users = users.filter(k => k[key] === value)
+                users = users.filter(k => k != undefined && k[key] === value)
             } 
         }
         for(let i = 0; i < users.length; i++) {
