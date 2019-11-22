@@ -48,6 +48,7 @@ app.use(orm.express(`mysql://${process.env.MYSQL_USERNAME}:${process.env.MYSQL_P
             reset_token: String,
             session_id: String,
             session_ip: String,
+            expire_date: String,
             created: Number,
         })
 

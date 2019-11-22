@@ -86,6 +86,7 @@ module.exports = {
                     session_id: "",
                     session_ip: "",
                     liked_packs: JSON.stringify([]),
+                    expire_date: "",
                     created: Date.now()
                   },
                   (err, result) => {
