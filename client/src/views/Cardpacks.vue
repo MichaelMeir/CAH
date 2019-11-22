@@ -156,7 +156,7 @@
               {{ cardpack.description }}
             </div>
 
-            <div class="flex relative items-center">
+            <div class="flex relative items-center border-b pb-6 border-indigo-400">
               <div>
                 <div
                   class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
@@ -172,6 +172,23 @@
                 <i class="ml-2 fa fa-heart text-xs"></i>
               </div>
             </div>
+
+            <!-- List cards -->
+            <button @click="$set(cardpack, 'open', !cardpack.open)" :class="!cardpack.open ? 'rounded-lg' : 'rounded-t-lg'" class="focus:outline-none hover:bg-indigo-700 mt-4 relative bg-indigo-600 p-3 text-xs flex justify-between w-full items-center font-semibold relative z-20">
+                <div>Show all cards</div>
+                <div class="opacity-50">
+                  {{ !cardpack.open ? '&#9660;' : '&#9650;'}}
+                </div>
+            </button>
+            <transition name="list-secondary">
+              <div class="z-10 relative bg-indigo-700 text-xs rounded-b-lg p-3" v-if="cardpack.open">
+                <ul>
+                  <li class="list-disc ml-4">
+                    <a class="no-underline hover:underline" href="">Test card 1</a>
+                  </li>
+                </ul>
+              </div>
+            </transition>
           </div>
         </div>
       </transition-group>
@@ -203,9 +220,9 @@
 
               <div
                 class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
-                v-else
+                v-if="(cardpack.user_id !== user_id) && cardpack.user_id !== null"
               >
-                Created by another user
+                Created by {{ cardpack.username }}
               </div>
               <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
                 {{ cardpack.cardAmount ? cardpack.cardAmount :  0 }} cards
@@ -454,6 +471,15 @@ export default {
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(20px);
+}
+
+.list-secondary-enter-active,
+.list-secondary-leave-active {
+  transition: all 0.5s;
+}
+.list-secondary-enter, .list-secondary-leave-to /* .list-secondary-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 
 .search {

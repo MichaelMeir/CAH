@@ -19,7 +19,7 @@
               :key="index + 1"
               class="w-1/3 p-2"
             >
-              <div :class="'bg-' + getColor(room.id) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
+              <div :class="'bg-' + getColor(index) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
                 <div class="font-semibold mb-4 text-base flex">
                   <div>{{ room.name }}</div>
                   <div class="flex flex-1 justify-end">
@@ -79,7 +79,7 @@
             </div>
           </div>
           <div class="bg-indigo-800 text-indigo-100 py-3 px-4 rounded-b text-sm leading-loose">
-            <div><span class="text-white font-bold">0</span> active games</div>
+            <div><span class="text-white font-bold">{{ rooms.length }}</span> active games</div>
             <div><span class="text-white font-bold">0</span> online users</div>
           </div>
         </div>
