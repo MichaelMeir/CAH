@@ -21,8 +21,13 @@ module.exports = {
                     response(res, req.body, {}, 400, "No users found with given reset code.", [])
                     return
                 } else {
-                    response(res, req.body, {}, 200, "User found", [])
-                    return
+                    if (Date.now() <= result[0].expire_date) {
+                        response(res, req.body, {}, 200, "User found", [])
+                        return
+                    } else {
+                        response(res, req.body, {}, 400, "Reset token expired", [])
+                        return
+                    }
                 }
             })
         })
@@ -38,7 +43,8 @@ module.exports = {
             req.models.user.find({ email: req.body.email }, (err, results) => {
                 if (results.length === 1) {
                     let user = results[0]
-
+                    var minutes = 30 * 60000
+                    user.expire_date = Date.now() + minutes
                     user.reset_token = uuidv4()
                     user.save()
 
@@ -75,22 +81,22 @@ module.exports = {
             }
 
             req.models.user.find({ reset_token: req.body.token }, (err, results) => {
+                let user = results[0]
+
                 if (err) {
                     response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [errors.New("", errors.code.DatabaseError, err)])
                     return
                 }
 
-                if (results.length === 1) {
-                    let user = results[0]
-
+                if (results.length === 1 && (Date.now() <= result[0].expire_date)) {
+                    user.expire_date = null
                     user.reset_token = null
                     user.password = bcrypt.hashSync(req.body.new_password, bcrypt.genSaltSync(10))
                     user.save()
-
                     response(res, req.body, {}, 200, "Password changed", [])
                     return
                 } else {
-                    response(res, req.body, {}, 500, "User not found", [])
+                    response(res, req.body, {}, 500, "User not found or expired", [])
                     return
                 }
             })

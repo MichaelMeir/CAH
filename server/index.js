@@ -42,19 +42,20 @@ app.use(
     {
       define: function(db, models, next) {
         models.user = db.define("users", {
-          uuid: String,
-          username: String,
-          username_withcase: String,
-          password: String,
-          email: String,
-          avatar: String,
-          verification: String,
-          liked_packs: String,
-          reset_token: String,
-          session_id: String,
-          session_ip: String,
-          created: Number
-        });
+            uuid: String,
+            username: String,
+            username_withcase: String,
+            password: String,
+            email: String,
+            avatar: String,
+            verification: String,
+            liked_packs: String,
+            reset_token: String,
+            session_id: String,
+            session_ip: String,
+            expire_date: String,
+            created: Number,
+        })
 
         models.cardpack = db.define("cardpacks", {
           uuid: String,
