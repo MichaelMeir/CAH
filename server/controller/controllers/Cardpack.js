@@ -21,7 +21,19 @@ module.exports = {
       req.models.cardpack
         .find()
         .order("-likes")
-        .all((err, cardpacks) => {
+        .all(async (err, cardpacks) => {
+          // todo: fix
+          // for (let i = 0; i < cardpacks.length; i++) {
+          //   if (cardpacks[i].user_id !== null) {
+          //     await req.models.user.get(cardpacks[i].user_id, (err, user) => {
+          //       cardpacks[i].username = user.username;
+
+          //       console.log(`${i} - ${cardpacks[i].username}`);
+          //     });
+          //     console.log(`${i} - ${cardpacks[i].username}`);
+          //   }
+          // }
+
           if (err) {
             response(
               res,
@@ -35,6 +47,7 @@ module.exports = {
           }
 
           response(res, req.body, cardpacks, 200, "Fetched all cardpacks", []);
+          return;
         });
     });
   },

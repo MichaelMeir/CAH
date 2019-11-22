@@ -8,7 +8,10 @@
         >Cards Against Me</span>
       </div>
       <div class="flex flex-1 justify-end text-sm">
-        <ul class="flex items-center" v-if="loaded">
+        <ul
+          class="flex items-center"
+          v-if="loaded"
+        >
           <li
             @click="redirect('/')"
             v-if="isAuthenticated"
@@ -46,15 +49,12 @@
 
         <div
           class="flex items-center ml-8"
-          v-if="isAuthenticated"
+          v-if="isAuthenticated && user.avatar !== null"
         >
-          <!-- <div
-            :style="(user.avatar !== null) ? `background-image: url(data:image/jpeg;base64,${user.avatar})` : `background-image: url(https://clinicforspecialchildren.org/wp-content/uploads/2016/08/avatar-placeholder.gif)`"
+          <div
+            :style="`background-image: url(${user.avatar})`"
             class="bg-cover bg-center rounded-full h-8 w-8"
           >
-          </div> -->
-          <div>
-
           </div>
         </div>
       </div>
