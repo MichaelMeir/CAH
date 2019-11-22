@@ -155,7 +155,7 @@ export default {
             cardpacks: []
           }
 
-          this.$parent.$refs.toast.openToast('success', 5, 'Your card has been created successfully')
+          this.$parent.$parent.$refs.toast.openToast('success', 5, 'Your card has been created successfully')
         }
       }
     },
