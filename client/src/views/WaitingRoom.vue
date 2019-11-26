@@ -52,54 +52,66 @@
         </div>
       </div>
     </transition>
-    <div class="max-w-4xl mx-auto mt-1 flex">
+    <div class="max-w-4xl mx-auto mt-1 flex flex-1">
       <div class="bg-indigo-700 text-black my-5 rounded w-2/3 pb-1 overflow-y-auto mr-3">
-        <div class="bg-white text-black h-56 m-2 rounded">
-          <p
+        <div
+          ref="chat"
+          class="bg-white text-black h-56 break-words overflow-y-auto m-2 p-2 text-sm leading-relaxed rounded"
+        >
+          <div
             v-bind:key="index"
             v-for="(message, index) in messages"
           >
             {{ message }}
-          </p>
+          </div>
         </div>
 
         <div class="flex">
           <input
             v-on:keyup.enter="sendMessage"
             v-model="message"
-            class="ml-2 mt-1 mb-1 p-1 w-4/5 rounded"
+            class="ml-2 mt-1 mb-1 px-2 py-1 focus:outline-none w-4/5 rounded"
             type="text"
+            autofocus
             placeholder="Say..."
           />
           <button
             v-on:click="sendMessage"
-            class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded "
+            class="bg-indigo-200 focus:outline-none hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded "
           >
             Send
           </button>
         </div>
       </div>
-      <div class="bg-indigo-700 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
+      <div class="bg-indigo-800 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
         <ul
           class=""
           style="height: 14rem"
         >
-          <p class="text-center pt-1">Playerlist</p>
-          <div class="text-white">
+          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+            <div>Playerlist</div>
+            <div class="flex flex-1 justify-end">
+              <i class="text-xs mt-1 fas fa-users"></i>
+            </div>
+          </div>
+          <div class="text-white text-sm">
             <li
               v-bind:key="index"
               v-for="(user, index) in usernames"
-              class="bg-indigo-700 m-2 rounded"
+              class="bg-indigo-700 px-3 py-2 m-3 rounded cursor-pointer font-semibold"
             >
               <div>
-                <Interface :user="user" />
+                <Interface
+                  :avatar="$parent.$refs.navbar.user.avatar"
+                  :user="user"
+                />
               </div>
             </li>
           </div>
         </ul>
       </div>
     </div>
-    <div class="max-w-4xl mx-auto mt-1 flex">
+    <div class="max-w-4xl mx-auto mt-1 flex flex-1">
       <div class="flex-1">
         <button
           @click="leaveModal = true"
@@ -111,19 +123,20 @@
           Cardpacks
         </button>
       </div>
-      <div class="bg-indigo-700 text-white rounded w-1/3 pb-1">
+      <div class="w-1/3">
         <ul
-          class=""
+          class="bg-indigo-800 text-white rounded mb-5"
           style="height: 14rem"
         >
-          <p class="text-center pt-1">Settings</p>
+          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+            <div>Room settings</div>
+            <div class="flex flex-1 justify-end">
+              <i class="text-xs mt-1 fas fa-cog"></i>
+            </div>
+          </div>
           <div class="text-white"></div>
         </ul>
-      </div>
-    </div>
-    <div class="max-w-4xl mx-auto mt-1 flex">
-      <div class="w-full flex-1 flex justify-end">
-        <a class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</a>
+        <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game</button>
       </div>
     </div>
   </div>
@@ -162,9 +175,14 @@ export default {
     },
 
     sendMessage () {
-      const methods = window.socket.import(['sendMessage'])
-      methods.sendMessage(this.$cookies.get('jwt'), this.message)
-      this.message = ''
+      if (this.message) {
+        var elem = this.$refs.chat
+        elem.scrollTop = elem.scrollHeight + 100
+
+        const methods = window.socket.import(['sendMessage'])
+        methods.sendMessage(this.$cookies.get('jwt'), this.message)
+        this.message = ''
+      }
     },
 
     updateUserList (socket, list) {

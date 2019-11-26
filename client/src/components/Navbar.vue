@@ -107,6 +107,9 @@ export default {
   },
 
   methods: {
+    getAvatarFromBuffer (buffer) {
+      return Buffer.from(buffer).toString('base64')
+    },
 
     redirect (url) {
       if (this.onredirect) this.onredirect(url)
