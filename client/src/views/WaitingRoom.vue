@@ -52,7 +52,7 @@
         </div>
       </div>
     </transition>
-    <div class="max-w-4xl mx-auto mt-1 flex">
+    <div class="max-w-4xl mx-auto mt-1 flex flex-1">
       <div class="bg-indigo-700 text-black my-5 rounded w-2/3 pb-1 overflow-y-auto mr-3">
         <div
           ref="chat"
@@ -83,27 +83,35 @@
           </button>
         </div>
       </div>
-      <div class="bg-indigo-700 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
+      <div class="bg-indigo-800 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
         <ul
           class=""
           style="height: 14rem"
         >
-          <p class="text-center pt-1">Playerlist</p>
-          <div class="text-white">
+          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+            <div>Playerlist</div>
+            <div class="flex flex-1 justify-end">
+              <i class="text-xs mt-1 fas fa-users"></i>
+            </div>
+          </div>
+          <div class="text-white text-sm">
             <li
               v-bind:key="index"
               v-for="(user, index) in usernames"
-              class="bg-indigo-700 m-2 rounded"
+              class="bg-indigo-700 px-3 py-2 m-3 rounded cursor-pointer font-semibold"
             >
               <div>
-                <Interface :user="user" />
+                <Interface
+                  :avatar="$parent.$refs.navbar.user.avatar"
+                  :user="user"
+                />
               </div>
             </li>
           </div>
         </ul>
       </div>
     </div>
-    <div class="max-w-4xl mx-auto mt-1 flex">
+    <div class="max-w-4xl mx-auto mt-1 flex flex-1">
       <div class="flex-1">
         <button
           @click="leaveModal = true"
@@ -115,19 +123,20 @@
           Cardpacks
         </button>
       </div>
-      <div class="bg-indigo-700 text-white rounded w-1/3 pb-1">
+      <div class="w-1/3">
         <ul
-          class=""
+          class="bg-indigo-800 text-white rounded mb-5"
           style="height: 14rem"
         >
-          <p class="text-center pt-1">Settings</p>
+          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+            <div>Room settings</div>
+            <div class="flex flex-1 justify-end">
+              <i class="text-xs mt-1 fas fa-cog"></i>
+            </div>
+          </div>
           <div class="text-white"></div>
         </ul>
-      </div>
-    </div>
-    <div class="max-w-4xl mx-auto mt-1 flex">
-      <div class="w-full flex-1 flex justify-end">
-        <a class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</a>
+        <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game</button>
       </div>
     </div>
   </div>
