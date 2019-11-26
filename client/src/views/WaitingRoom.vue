@@ -25,21 +25,21 @@
                     ></path>
                   </svg>
                 </div>
-                <h1 class="mt-6 text-3xl">Are you sure you want to leave?</h1>
-                <p class="font-thin">
+                <h1 class="mt-6 font-bold text-lg uppercase">Are you sure you want to leave?</h1>
+                <p class="text-sm">
                   You are about to leave your room. If you leave you will lose
                   all your points
                 </p>
                 <div class="flex border-t mt-4">
-                  <div class="flex flex-1 justify-end mt-4">
+                  <div class="flex mt-4">
                     <button
-                      class="text-sm bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none transition mr-4"
+                      class="text-sm bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-10 rounded focus:outline-none transition mr-4"
                       @click="leaveRoom"
                     >
                       Yes
                     </button>
                     <button
-                      class="text-sm bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none transition"
+                      class="text-sm bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none transition"
                       @click="leaveModal = false"
                     >
                       No take me back
@@ -70,14 +70,14 @@
           <input
             v-on:keyup.enter="sendMessage"
             v-model="message"
-            class="ml-2 placeholder-text-white mt-1 mb-1 px-3 py-2 text-white bg-indigo-800 text-sm focus:outline-none w-4/5 rounded"
+            class="ml-2 focus:shadow-inner placeholder-text-white mt-1 mb-1 px-3 py-2 text-white bg-indigo-800 text-sm focus:outline-none w-4/5 rounded"
             type="text"
             autofocus
             placeholder="Send message..."
           />
           <button
             v-on:click="sendMessage"
-            class="bg-indigo-600 font-semibold text-sm focus:outline-none mr-2 ml-3 my-1 text-white w-1/5 px-6 py-1 rounded"
+            class="bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm focus:outline-none mr-2 ml-3 my-1 text-white w-1/5 px-6 py-1 rounded transition"
           >
             Send
           </button>
@@ -115,11 +115,11 @@
       <div class="flex-1">
         <button
           @click="leaveModal = true"
-          class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded"
+          class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded transition"
         >
           Leave game
         </button>
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded">
+        <button class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition">
           Cardpacks
         </button>
       </div>
@@ -136,7 +136,7 @@
           </div>
           <div class="text-white"></div>
         </ul>
-        <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game</button>
+        <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full transition"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game</button>
       </div>
     </div>
   </div>
