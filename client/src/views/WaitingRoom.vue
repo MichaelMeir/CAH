@@ -123,7 +123,7 @@
           Cardpacks
         </button>
       </div>
-      <div class="w-1/3">
+      <div class="w-1/3 pl-1">
         <ul
           class="bg-indigo-800 text-white rounded mb-5"
           style="height: 14rem"
