@@ -15,35 +15,35 @@
           <li
             @click="redirect('/')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8"
+            class="cursor-pointer nav-item ml-8 transition"
             v-bind:class="{ 'active': this.$route.path === '/' }"
           >Home</li>
           <li
             @click="redirect('/cardpacks')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8"
+            class="cursor-pointer nav-item ml-8 transition"
             v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
           >Cardpacks</li>
           <li
             @click="redirect('/profile')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8"
+            class="cursor-pointer nav-item ml-8 transition"
             v-bind:class="{ 'active': this.$route.path === '/profile' }"
           >My profile</li>
           <li
             v-if="isAuthenticated"
             @click="logout()"
-            class="cursor-pointer nav-item ml-8"
+            class="cursor-pointer nav-item ml-8 transition"
           >Logout</li>
           <li
             v-if="!isAuthenticated"
             @click="redirect('/register')"
-            class="cursor-pointer nav-item ml-8"
+            class="cursor-pointer nav-item ml-8 transition"
           >Create account</li>
           <li
             v-if="!isAuthenticated"
             @click="redirect('/login')"
-            class="cursor-pointer nav-item ml-8"
+            class="cursor-pointer nav-item ml-8 transition"
           >Login</li>
         </ul>
 

@@ -12,6 +12,26 @@ html {
   scroll-behavior: smooth;
 }
 
+input{
+  @apply .appearance-none;
+}
+
+textarea{
+  @apply .appearance-none;
+}
+
+button{
+  transition: all 0.1s linear;
+  -webkit-transition: all 0.1s linear; /* WebKit */
+  -moz-transition: all 0.1s linear;; /* Mozilla */
+  -o-transition: all 0.1s linear;; /* Opera */
+  -ms-transition: all 0.1s linear;; /* Internet Explorer */
+}
+
 .transition {
   transition: all 0.1s linear;
+  -webkit-transition: all 0.1s linear; /* WebKit */
+  -moz-transition: all 0.1s linear;; /* Mozilla */
+  -o-transition: all 0.1s linear;; /* Opera */
+  -ms-transition: all 0.1s linear;; /* Internet Explorer */
 }
