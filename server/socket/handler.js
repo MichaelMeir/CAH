@@ -202,7 +202,8 @@ module.exports = {
     },
 
     checkRoom(meta, roomId) {
-        return {room: (rooms[roomId] ? roomId : null)}
+        console.log(rooms[roomId])
+        return {room: (rooms[roomId] != undefined && rooms[roomId] != null ? roomId : null), usernames: rooms[roomId] != undefined && rooms[roomId] != null ? rooms[roomId].usernames : null}
     },
 
     getRooms(meta) {
