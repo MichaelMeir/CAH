@@ -257,16 +257,19 @@ export default {
 
       let img = new Image()
       img.src = image
-      img.onload = () => {
+      img.onload = async () => {
         if ((img.naturalWidth > this.required.avatarWidth) || (img.naturalHeight > this.required.avatarHeight)) {
           this.statusError = `The maximum dimensions of an avatar are: ${this.required.avatarWidth} x ${this.required.avatarHeight}, please try again.`
         } else {
           // no error
           this.status = `Your avatar has been uploaded successfully.`
           this.$parent.$refs.navbar.user.avatar = image
-          // todo: crop image to maximum
-          // todo: save image var in avatar column in db (api call)
-          // todo: show success/error message
+
+          await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/avatar', {
+            avatar: image
+          }, {
+            withCredentials: true
+          })
         }
       }
     },

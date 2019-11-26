@@ -92,26 +92,38 @@
             </div>
           </div>
           <div class="bg-indigo-800 text-indigo-100 py-4 px-3 rounded-b text-sm leading-loose">
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All players</option>
-              <option>Most players</option>
-              <option>Least players</option>
+            <select
+              v-model="filters.players"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+            >
+              <option value="allPlayers">All players</option>
+              <option value="mostPlayers">Most players</option>
+              <option value="leastPlayers">Least players</option>
             </select>
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All spectators</option>
-              <option>Most spectators</option>
-              <option>Least spectators</option>
+            <select
+              v-model="filters.spectators"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+            >
+              <option value="allSpectators">All spectators</option>
+              <option value="mostSpectators">Most spectators</option>
+              <option value="leastSpectators">Least spectators</option>
             </select>
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All rooms</option>
-              <option>Public rooms</option>
-              <option>Private rooms</option>
+            <select
+              v-model="filters.rooms"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+            >
+              <option value="allRooms">All rooms</option>
+              <option value="publicRooms">Public rooms</option>
+              <option value="privateRooms">Private rooms</option>
             </select>
 
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs">
-              <option>Created anytime</option>
-              <option>Recently created</option>
-              <option>Longest created</option>
+            <select
+              v-model="filters.creationDate"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs"
+            >
+              <option value="createdAnytime">Created anytime</option>
+              <option value="recentlyCreated">Recently created</option>
+              <option value="longestCreated">Longest created</option>
             </select>
           </div>
         </div>
@@ -233,7 +245,14 @@ export default {
       search: '',
       previous: '',
       colors: [],
-      rooms: []
+      rooms: [],
+
+      filters: {
+        players: 'allPlayers',
+        spectators: 'allSpectators',
+        rooms: 'allRooms',
+        creationDate: 'createdAnytime'
+      }
     }
   },
 

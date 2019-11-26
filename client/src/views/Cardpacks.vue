@@ -156,7 +156,7 @@
               {{ cardpack.description }}
             </div>
 
-            <div class="flex relative items-center border-b pb-6 border-indigo-400">
+            <div class="flex relative items-center">
               <div>
                 <div
                   class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
@@ -173,7 +173,7 @@
               </div>
             </div>
 
-            <!-- List cards -->
+            <!-- List cards TODO -->
             <button @click="$set(cardpack, 'open', !cardpack.open)" :class="!cardpack.open ? 'rounded-lg' : 'rounded-t-lg'" class="focus:outline-none hover:bg-indigo-700 mt-4 relative bg-indigo-600 p-3 text-xs flex justify-between w-full items-center font-semibold relative z-20">
                 <div>Show all cards</div>
                 <div class="opacity-50">
@@ -189,6 +189,7 @@
                 </ul>
               </div>
             </transition>
+            <!-- List cards -->
           </div>
         </div>
       </transition-group>
