@@ -495,6 +495,46 @@ module.exports = {
     });
   },
 
+  saveAvatar: (req, res) => {
+    User(req, (user, err) => {
+      if (err) {
+        response(
+          res,
+          req.body,
+          {},
+          500,
+          "Error while checking if user is authenticated",
+          [errors.New("", errors.code.DatabaseError, err)]
+        );
+        return;
+      }
+      if (!user) {
+        response(res, req.body, {}, 403, "User is not authenticated", []);
+        return;
+      }
+
+      if (req.body.avatar !== undefined || req.body.avatar !== null) {
+        user.avatar = req.body.avatar;
+        user.save(err => {
+          if (err) {
+            response(
+              res,
+              req.body,
+              {},
+              500,
+              "An unexpected error occurred",
+              err
+            );
+            return;
+          } else {
+            response(res, req.body, {}, 200, "Avatar saved", []);
+            return;
+          }
+        });
+      }
+    });
+  },
+
   deleteAccount: (req, res) => {
     User(req, (user, err) => {
       if (err) {

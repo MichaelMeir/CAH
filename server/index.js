@@ -33,7 +33,7 @@ app.use(
 );
 
 app.use(helmet());
-app.use(bodyparser());
+app.use(bodyparser.json({ limit: "50mb" }));
 app.use(cookieParser(fs.readFileSync("private.key").toString()));
 
 app.use(
@@ -42,20 +42,20 @@ app.use(
     {
       define: function(db, models, next) {
         models.user = db.define("users", {
-            uuid: String,
-            username: String,
-            username_withcase: String,
-            password: String,
-            email: String,
-            avatar: String,
-            verification: String,
-            liked_packs: String,
-            reset_token: String,
-            session_id: String,
-            session_ip: String,
-            expire_date: String,
-            created: Number,
-        })
+          uuid: String,
+          username: String,
+          username_withcase: String,
+          password: String,
+          email: String,
+          avatar: { type: "text", big: true },
+          verification: String,
+          liked_packs: String,
+          reset_token: String,
+          session_id: String,
+          session_ip: String,
+          expire_date: String,
+          created: Number
+        });
 
         models.cardpack = db.define("cardpacks", {
           uuid: String,
@@ -260,6 +260,14 @@ app.post("/api/cardpacks/create", Controller("Cardpack@createCardpack"));
  * @yields {Number} JSON response made by the response method to fetch all cards
  */
 app.post("/api/cards/create", Controller("Card@createCard"));
+
+/**
+ * @callback /api/auth/avatar
+ * @description Saves the new avatar of a user
+ *
+ * @yields {Number} JSON response made by the response method to save the avatar
+ */
+app.post("/api/auth/avatar", Controller("Auth@saveAvatar"));
 
 console.log("Server listening on :" + (process.env.SERVER_PORT || 9000));
 
