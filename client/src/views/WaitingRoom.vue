@@ -125,7 +125,7 @@
       </div>
       <div class="w-1/3 pl-1">
         <ul
-          class="bg-indigo-800 text-white rounded mb-5"
+          class="bg-indigo-800 text-whi//te rounded mb-5"
           style="height: 14rem"
         >
           <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
@@ -213,6 +213,8 @@ export default {
     const response = await this.methods.checkRoom(this.$route.params.token)
     if (!response.room) {
       this.$router.push('/')
+    } else {
+      this.usernames = response.usernames
     }
   }
 }
