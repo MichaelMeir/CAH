@@ -53,10 +53,10 @@
       </div>
     </transition>
     <div class="max-w-4xl mx-auto mt-1 flex flex-1">
-      <div class="bg-indigo-700 text-black my-5 rounded w-2/3 pb-1 overflow-y-auto mr-3">
+      <div class="bg-indigo-700 text-black my-5 rounded w-2/3 p-2 overflow-y-auto mr-3">
         <div
           ref="chat"
-          class="bg-white text-black h-56 break-words overflow-y-auto m-2 p-2 text-sm leading-relaxed rounded"
+          class="bg-indigo-800 text-white h-56 break-words overflow-y-auto m-2 p-3 text-sm leading-loose rounded"
         >
           <div
             v-bind:key="index"
@@ -66,18 +66,18 @@
           </div>
         </div>
 
-        <div class="flex">
+        <div class="flex mb-1">
           <input
             v-on:keyup.enter="sendMessage"
             v-model="message"
-            class="ml-2 mt-1 mb-1 px-2 py-1 focus:outline-none w-4/5 rounded"
+            class="ml-2 placeholder-text-white mt-1 mb-1 px-3 py-2 text-white bg-indigo-800 text-sm focus:outline-none w-4/5 rounded"
             type="text"
             autofocus
-            placeholder="Say..."
+            placeholder="Send message..."
           />
           <button
             v-on:click="sendMessage"
-            class="bg-indigo-200 focus:outline-none hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded "
+            class="bg-indigo-600 font-semibold text-sm focus:outline-none mr-2 ml-3 my-1 text-white w-1/5 px-6 py-1 rounded"
           >
             Send
           </button>
@@ -115,11 +115,11 @@
       <div class="flex-1">
         <button
           @click="leaveModal = true"
-          class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 mr-2 rounded"
+          class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded"
         >
-          Leave
+          Leave game
         </button>
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">
+        <button class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded">
           Cardpacks
         </button>
       </div>
