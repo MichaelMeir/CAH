@@ -1,9 +1,5 @@
 <template>
   <div class="relative select-none">
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    >
     <div @click="openInterface">{{ user }}</div>
     <div
       class="h-20 z-20 w-full absolute"
@@ -31,7 +27,7 @@
           <button class="bg-indigo-600 font-semibold mb-2 px-4 ml-2 mt-3 rounded text-xs">Add friend</button>
         </div>
         <div class="flex flex-1 justify-end">
-          <a><i class="material-icons text-black mt-3 mr-1"> more_vert </i></a>
+          <a><i class="fas fa-ellipsis-v text-black mt-5 mr-3"></i></a>
         </div>
       </div>
     </div>
