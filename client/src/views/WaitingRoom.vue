@@ -53,16 +53,25 @@
       </div>
     </transition>
     <div class="max-w-4xl mx-auto mt-1 flex flex-1">
-      <div class="bg-indigo-700 text-black my-5 rounded w-2/3 p-2 overflow-y-auto mr-3">
+      <div class="bg-indigo-700 text-black my-5 rounded w-2/3 p-1 overflow-y-auto mr-3">
         <div
           ref="chat"
           class="bg-indigo-800 text-white h-56 break-words overflow-y-auto m-2 p-3 text-sm leading-loose rounded"
         >
           <div
+            class="flex items-center"
             v-bind:key="index"
             v-for="(message, index) in messages"
           >
-            {{ message }}
+            <div>
+              {{ message.message }}
+            </div>
+            <div class="opacity-25 text-xs flex flex-1 justify-end">
+              {{ message.timestamp.toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit'
+              }) }}
+            </div>
           </div>
         </div>
 
@@ -115,13 +124,65 @@
       <div class="flex-1">
         <button
           @click="leaveModal = true"
-          class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded transition"
+          class="focus:outline-none bg-red-700 hover:bg-red-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded transition"
         >
-          Leave game
+          <i class="fas fa-sign-out-alt mr-2 opacity-50"></i> Leave game
         </button>
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition">
-          Cardpacks
+        <button
+          @click="cardpacksPopupShown = !cardpacksPopupShown"
+          class="focus:outline-none bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition"
+        >
+          <i class="fas fa-layer-group mr-2 text-blue-lightest"></i> Cardpacks
+
+          <i :class="'fas ml-4 ' + (cardpacksPopupShown ? 'fa-caret-up' : 'fa-caret-down')"></i>
         </button>
+
+        <transition name="fade">
+          <div
+            v-if="cardpacksPopupShown"
+            class="bg-indigo-800 shadow-inner text-white rounded mt-6 mr-2 pb-1 mb-8"
+          >
+            <div class="text-white shadow bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t z-20 relative">
+              <div class="flex items-center">
+                <div>Cardpacks</div>
+              </div>
+              <div class="mt-1 font-normal opacity-75">
+                Select cardpacks that should be used during the game
+              </div>
+              <input
+                type="text"
+                class="search w-full rounded mt-4 py-2 px-3 bg-transparent bg-indigo-600 placeholder-indigo-200 focus:outline-none cursor-pointer appearance-none text-white font-semibold text-xs"
+                placeholder="Search cardpacks..."
+                v-model="search"
+              />
+            </div>
+            <div
+              style="height: 20em"
+              class="overflow-y-auto z-10 relative"
+            >
+              <!-- Cardpack -->
+              <div
+                v-for="cardpack in filteredCardpacks"
+                :key="cardpack.id"
+                class="bg-indigo-700 cursor-pointer hover:bg-indigo-600 font-semibold rounded text-sm my-4 mx-4"
+              >
+                <label class="cursor-pointer py-3 px-4 w-full flex flex-row-reverse items-center">
+                  <input
+                    class="form-checkbox focus:shadow-none text-green-500 text-lg bg-indigo-500 border-none"
+                    type="checkbox"
+                  >
+                  <div class="flex flex-1 justify-start">
+                    <a
+                      class="hover:underline"
+                      :href="`/cardpacks/${cardpack.uuid}`"
+                    >{{ cardpack.name }}</a>
+                  </div>
+                </label>
+              </div>
+              <!-- Cardpack -->
+            </div>
+          </div>
+        </transition>
       </div>
       <div class="w-1/3 pl-1">
         <ul
@@ -149,10 +210,23 @@
 </template>
 <script>
 import Interface from '../components/Interface'
+import axios from 'axios'
 
 export default {
   components: {
     Interface
+  },
+
+  computed: {
+    filteredCardpacks () {
+      if (!this.availableCardpacks) return []
+
+      return this.availableCardpacks
+        .filter(cardpack => {
+          return cardpack.name.toLowerCase().match(this.search.toLowerCase())
+        })
+        .slice(0, this.limit)
+    }
   },
 
   data () {
@@ -166,7 +240,12 @@ export default {
       visible: false,
       settings: {
         quantity: 1
-      }
+      },
+      search: '',
+
+      cardpacksPopupShown: false,
+
+      availableCardpacks: []
     }
   },
 
@@ -190,12 +269,15 @@ export default {
 
     sendMessage () {
       if (this.message) {
-        var elem = this.$refs.chat
-        elem.scrollTop = elem.scrollHeight + 100
-
         const methods = window.socket.import(['sendMessage'])
         methods.sendMessage(this.$cookies.get('jwt'), this.message)
         this.message = ''
+
+        // hacky
+        setTimeout(() => {
+          var chat = this.$refs.chat
+          chat.scrollTop = chat.scrollHeight
+        }, 110)
       }
     },
 
@@ -205,10 +287,14 @@ export default {
     },
 
     addMessage (socket, message) {
-      this.messages.push(message)
+      this.messages.push({
+        message: message,
+        timestamp: new Date()
+      })
     },
 
     async leaveRoom (socket, reason) {
+      console.log(reason)
       if (!this.redirected) {
         this.$router.push('/')
       }
@@ -230,9 +316,19 @@ export default {
     } else {
       this.usernames = response.usernames
     }
+
+    let route = await axios.post(
+      `${location.protocol}//${location.hostname}` +
+      (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+      '/api/cardpacks',
+      [],
+      {
+        withCredentials: true
+      }
+    )
+    this.availableCardpacks = route.data.payload
   }
 }
-// $cookies.get("jwt")
 </script>
 
 <style lang="scss" scoped>

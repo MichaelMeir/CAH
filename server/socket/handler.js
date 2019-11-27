@@ -24,23 +24,26 @@ module.exports = {
             meta.timeout = null
         }
         setTimeout(() => {
+            meta.timeout = setTimeout(() => {
+                if(meta.user && meta.room) {
+                    console.log(rooms[meta.room])
+                    if(rooms[meta.room] == undefined || rooms[meta.room].owner == meta.user) {
+                        meta.emit((emitMeta) => {
+                            emitMeta.methods.leaveRoom("Room owner disconnected.")
+                        }, {room: meta.room})
+                        if(rooms[meta.room] != undefined) {
+                            delete rooms[meta.room]
+                        }
+                    }
+                }
+                meta.disconnect()
+            }, TIMEOUT)
             try{
                 meta.methods.ping()
             }catch(e) {
                 console.log(e)
                 meta.disconnect()
             }
-            meta.timeout = setTimeout(() => {
-                if(meta.user && meta.room) {
-                    if(rooms[meta.room].owner == meta.user) {
-                        meta.emit((emitMeta) => {
-                            emitMeta.methods.leaveRoom("Room owner disconnected.")
-                        }, {room: emitMeta.room})
-                        delete rooms[meta.room]
-                    }
-                }
-                meta.disconnect()
-            }, TIMEOUT)
         }, TIMEOUT)
         return [1]
     },
@@ -62,6 +65,8 @@ module.exports = {
             }
             roomId = roomId.toLowerCase()
             if(user && rooms[roomId]) {
+                meta.user = user.uuid
+                meta.username = user.username_withcase
                 if(rooms[roomId].users.length < rooms[roomId].maxPlayers) {
                     meta.room = roomId
                     rooms[roomId].currentPlayers += 1
@@ -98,6 +103,8 @@ module.exports = {
                 return {room: null, err: err, authenticated: false}
             }
             if(user && meta.room && rooms[meta.room]) {
+                meta.user = user.uuid
+                meta.username = user.username_withcase
                 if(rooms[meta.room].owner == user.uuid) {
                     setTimeout(() => {
                         meta.emit((emitMeta) => {
@@ -134,6 +141,8 @@ module.exports = {
                 if(err) console.error(err)
                 return {room: null, err: err, authenticated: false}
             }
+            meta.user = user.uuid
+            meta.username = user.username_withcase
             //create room with random code
             const TRIES = 3
             const CODE_LENGTH = 5
@@ -186,6 +195,8 @@ module.exports = {
             if(err || !user) {
                 return {sent: false, error: err};
             }
+            meta.user = user.uuid
+            meta.username = user.username_withcase
             if(meta.room != null) {
                 meta.emit((emitMeta) => {
                     emitMeta.methods.addMessage(user.username_withcase + ': ' + message)
@@ -216,5 +227,39 @@ module.exports = {
             out.push(room)
         }
         return out
+    },
+
+    isOwner(meta, jwt) {
+        return User(jwt, function(user, err){
+            if(err || !user) {
+                return {sent: false, error: err};
+            }
+            meta.user = user.uuid
+            meta.username = user.username_withcase
+            if(meta.room != null) {
+                return {isOwner: rooms[meta.room].owner == user.uuid, username: user.username_withcase}
+            }
+            return {sent: false, error: "You're not in a room?"};
+        }, meta.db, meta.models, meta.ip)
+    },
+
+    kickUser(meta, jwt, username) {
+        return User(jwt, function(user, err){
+            if(err || !user) {
+                return {sent: false, error: err};
+            }
+            meta.user = user.uuid
+            meta.username = user.username_withcase
+            if(meta.room != null) {
+                meta.emit((emitMeta) => {
+                    emitMeta.methods.leaveRoom("The room owner has kicked you!")
+                    emitMeta.room = null
+                }, {username: username, room: meta.room})
+                meta.emit((emitMeta) => {
+                    emitMeta.methods.addMessage(username + " has been kicked!")
+                }, {room: meta.room})
+            }
+            return {sent: false, error: "You're not in a room?"};
+        }, meta.db, meta.models, meta.ip)
     }
 }
