@@ -259,7 +259,7 @@ export default {
       redirected: false,
       visible: false,
       settings: {
-        maximumPlayers: 2,
+        maximumPlayers: 2
       },
       search: '',
 
