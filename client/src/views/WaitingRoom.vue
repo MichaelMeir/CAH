@@ -59,10 +59,12 @@
           class="bg-indigo-800 text-white h-56 break-words overflow-y-auto m-2 p-3 text-sm leading-loose rounded"
         >
           <div
+            class="flex items-center"
             v-bind:key="index"
             v-for="(message, index) in messages"
           >
-            {{ message }}
+            <div>{{ message.message }}</div>
+            <div class="opacity-25 text-xs flex flex-1 justify-end">{{ message.timestamp }}</div>
           </div>
         </div>
 
@@ -115,17 +117,34 @@
       <div class="flex-1">
         <button
           @click="leaveModal = true"
-          class="bg-red-700 hover:bg-red-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded transition"
+          class="focus:outline-none bg-red-700 hover:bg-red-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded transition"
         >
           <i class="fas fa-sign-out-alt mr-2 opacity-50"></i> Leave game
         </button>
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition">
+        <button class="focus:outline-none bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition">
           <i class="fas fa-layer-group mr-2 opacity-50"></i> Cardpacks
         </button>
+
+        <div class="bg-indigo-800 text-white rounded mt-4 mr-2">
+          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex items-center rounded-t">
+            <div>Cardpacks</div>
+            <div class="flex flex-1 justify-end">
+              <i class="text-xs mt-1 fas fa-layer-group"></i>
+            </div>
+          </div>
+          <div>
+            <ul>
+              <li>Cardpack 1</li>
+              <li>Cardpack 2</li>
+              <li>Cardpack 3</li>
+              <li>Cardpack 4</li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div class="w-1/3 pl-1">
         <ul
-          class="bg-indigo-800 text-whi//te rounded mb-5"
+          class="bg-indigo-800 text-white rounded mb-5"
           style="height: 14rem"
         >
           <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
@@ -194,7 +213,13 @@ export default {
     },
 
     addMessage (socket, message) {
-      this.messages.push(message)
+      this.messages.push({
+        message: message,
+        timestamp: new Date().toLocaleTimeString(undefined, {
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      })
     },
 
     async leaveRoom (socket, reason) {
@@ -221,7 +246,6 @@ export default {
     }
   }
 }
-// $cookies.get("jwt")
 </script>
 
 <style lang="scss" scoped>
