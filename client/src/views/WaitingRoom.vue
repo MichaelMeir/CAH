@@ -63,7 +63,9 @@
             v-bind:key="index"
             v-for="(message, index) in messages"
           >
-            <div>{{ message.message }}</div>
+            <div>
+              {{ message.message }}
+            </div>
             <div class="opacity-25 text-xs flex flex-1 justify-end">
               {{ message.timestamp.toLocaleTimeString(undefined, {
                 hour: '2-digit',
@@ -130,7 +132,9 @@
           @click="cardpacksPopupShown = !cardpacksPopupShown"
           class="focus:outline-none bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition"
         >
-          <i class="fas fa-layer-group mr-2 opacity-50"></i> Cardpacks
+          <i class="fas fa-layer-group mr-2 text-blue-lightest"></i> Cardpacks
+
+          <i :class="'fas ml-4 ' + (cardpacksPopupShown ? 'fa-caret-up' : 'fa-caret-down')"></i>
         </button>
 
         <transition name="fade">
@@ -164,7 +168,7 @@
               >
                 <label class="cursor-pointer py-3 px-4 w-full flex flex-row-reverse items-center">
                   <input
-                    class="form-checkbox text-green-500 text-lg bg-indigo-500 border-none"
+                    class="form-checkbox focus:shadow-none text-green-500 text-lg bg-indigo-500 border-none"
                     type="checkbox"
                   >
                   <div class="flex flex-1 justify-start">
@@ -259,7 +263,7 @@ export default {
         setTimeout(() => {
           var chat = this.$refs.chat
           chat.scrollTop = chat.scrollHeight
-        }, 200)
+        }, 110)
       }
     },
 
