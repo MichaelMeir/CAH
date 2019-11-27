@@ -115,12 +115,12 @@
       <div class="flex-1">
         <button
           @click="leaveModal = true"
-          class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded"
+          class="bg-red-700 hover:bg-red-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded"
         >
-          Leave game
+          <i class="fas fa-sign-out-alt mr-2 opacity-50"></i> Leave game
         </button>
         <button class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded">
-          Cardpacks
+          <i class="fas fa-layer-group mr-2 opacity-50"></i> Cardpacks
         </button>
       </div>
       <div class="w-1/3">
@@ -176,12 +176,15 @@ export default {
 
     sendMessage () {
       if (this.message) {
-        var elem = this.$refs.chat
-        elem.scrollTop = elem.scrollHeight + 100
-
         const methods = window.socket.import(['sendMessage'])
         methods.sendMessage(this.$cookies.get('jwt'), this.message)
         this.message = ''
+
+        // hacky
+        setTimeout(() => {
+          var chat = this.$refs.chat
+          chat.scrollTop = chat.scrollHeight
+        }, 200)
       }
     },
 
