@@ -195,6 +195,12 @@
               <i class="text-xs mt-1 fas fa-cog"></i>
             </div>
           </div>
+          <div class="m-4">
+            <span class="text-white font-bold text-xs">Set Players:</span>
+            <select v-model="settings.quantity" class="ml-32 text-black">
+              <option class="text-black" :key="index" v-for="index in 10">{{ index }}</option>
+            </select>
+          </div>
           <div class="text-white"></div>
         </ul>
         <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full transition"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game</button>
@@ -232,6 +238,9 @@ export default {
       methods: {},
       redirected: false,
       visible: false,
+      settings: {
+        quantity: 1
+      },
       search: '',
 
       cardpacksPopupShown: false,
@@ -251,6 +260,11 @@ export default {
 
     onredirect () {
       this.redirected = true
+    },
+
+    changeSettings () {
+      const methods = window.socket.import(['roomSettings'])
+      methods.roomSettings(this.settings)
     },
 
     sendMessage () {

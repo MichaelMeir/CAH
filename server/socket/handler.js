@@ -159,11 +159,8 @@ module.exports = {
                         owner: user.uuid,
                         name: "Room " + code,
                         currentPlayers: 1,
-                        maxPlayers: 10,
                         spectators: 0,
-                        currentRound: 0,
-                        maxRounds: 10,
-                        type: 'public',
+                        settings: {},
                         previewPlayers: `${user.username_withcase} and 0 more...`,
                         users: [user.uuid],
                         usernames: [user.username_withcase],
@@ -210,6 +207,10 @@ module.exports = {
             }
             return {sent: false, error: "You're not in a room?"};
         }, meta.db, meta.models, meta.ip)
+    },
+
+    roomSettings(meta, settings) {
+        rooms[meta.room].settings = settings;
     },
 
     checkRoom(meta, roomId) {
