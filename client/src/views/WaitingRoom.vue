@@ -195,6 +195,7 @@ export default {
     },
 
     async leaveRoom (socket, reason) {
+      console.log(reason)
       if (!this.redirected) {
         this.$router.push('/')
       }
