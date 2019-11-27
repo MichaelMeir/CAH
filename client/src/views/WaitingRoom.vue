@@ -53,10 +53,16 @@
       </div>
     </transition>
     <div class="max-w-4xl mx-auto mt-1 flex flex-1">
-      <div class="bg-indigo-700 text-black my-5 rounded w-2/3 p-1 overflow-y-auto mr-3">
+      <div class="bg-indigo-800 text-black my-5 rounded-b rounded w-2/3 overflow-y-auto mr-3">
+        <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+          <div>Chat</div>
+          <div class="flex flex-1 justify-end">
+            <i class="text-xs mt-1 fas fa-comments"></i>
+          </div>
+        </div>
         <div
           ref="chat"
-          class="bg-indigo-800 text-white h-56 break-words overflow-y-auto m-2 p-3 text-sm leading-loose rounded"
+          class="bg-indigo-700 text-white h-56 break-words overflow-y-auto m-3 p-3 text-sm leading-loose rounded"
         >
           <div
             class="flex items-center"
@@ -79,14 +85,14 @@
           <input
             v-on:keyup.enter="sendMessage"
             v-model="message"
-            class="ml-2 focus:shadow-inner placeholder-text-white mt-1 mb-1 px-3 py-2 text-white bg-indigo-800 text-sm focus:outline-none w-4/5 rounded"
+            class="ml-3 placeholder-white mb-3 px-3 py-2 text-white bg-indigo-700 text-sm focus:outline-none w-4/5 rounded"
             type="text"
             autofocus
             placeholder="Send message..."
           />
           <button
             v-on:click="sendMessage"
-            class="bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm focus:outline-none mr-2 ml-3 my-1 text-white w-1/5 px-6 py-1 rounded transition"
+            class="bg-indigo-700 hover:bg-indigo-500 font-semibold text-sm focus:outline-none mr-3 ml-3 mb-3 text-white w-1/5 px-6 py-1 rounded transition"
           >
             Send
           </button>
@@ -110,10 +116,7 @@
               class="bg-indigo-700 px-3 py-2 m-3 rounded cursor-pointer font-semibold"
             >
               <div>
-                <Interface
-                  :avatar="$parent.$refs.navbar.user.avatar"
-                  :user="user"
-                />
+                <Interface :user="user" />
               </div>
             </li>
           </div>
@@ -139,14 +142,17 @@
 
         <transition name="fade">
           <div
-            v-if="cardpacksPopupShown"
+            v-show="cardpacksPopupShown"
             class="bg-indigo-800 shadow-inner text-white rounded mt-6 mr-2 pb-1 mb-8"
           >
-            <div class="text-white shadow bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t z-20 relative">
+            <div class="text-white shadow bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t z-20">
               <div class="flex items-center">
                 <div>Cardpacks</div>
+                <div class="flex flex-1 justify-end text-xs font-normal">
+                  {{ selectedCardpacks.length }} cardpacks selected
+                </div>
               </div>
-              <div class="mt-1 font-normal opacity-75">
+              <div class="mt-1 font-normal text-blue-lightest">
                 Select cardpacks that should be used during the game
               </div>
               <input
@@ -158,7 +164,7 @@
             </div>
             <div
               style="height: 20em"
-              class="overflow-y-auto z-10 relative"
+              class="overflow-y-auto z-10"
             >
               <!-- Cardpack -->
               <div
@@ -170,7 +176,12 @@
                   <input
                     class="form-checkbox focus:shadow-none text-green-500 text-lg bg-indigo-500 border-none"
                     type="checkbox"
+                    @change="toggleCardpackSelected(cardpack)"
                   >
+                  <div class="mr-4 bg-indigo-800 text-xs px-2 py-1 rounded text-indigo-100">
+                    {{ cardpack.cardAmount }} cards
+                  </div>
+
                   <div class="flex flex-1 justify-start">
                     <a
                       class="hover:underline"
@@ -197,7 +208,9 @@
           </div>
           <div class="text-white"></div>
         </ul>
-        <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full transition"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game</button>
+        <button class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition">
+          <i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game
+        </button>
       </div>
     </div>
   </div>
@@ -236,7 +249,8 @@ export default {
 
       cardpacksPopupShown: false,
 
-      availableCardpacks: []
+      availableCardpacks: [],
+      selectedCardpacks: []
     }
   },
 
@@ -251,6 +265,16 @@ export default {
 
     onredirect () {
       this.redirected = true
+    },
+
+    toggleCardpackSelected (cardpack) {
+      if (this.selectedCardpacks.includes(cardpack.id)) {
+        this.selectedCardpacks = this.selectedCardpacks.filter(c => {
+          return c !== cardpack.id
+        })
+      } else {
+        this.selectedCardpacks.push(cardpack.id)
+      }
     },
 
     sendMessage () {
