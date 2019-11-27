@@ -125,7 +125,7 @@
       </div>
       <div class="w-1/3 pl-1">
         <ul
-          class="bg-indigo-800 text-whi//te rounded mb-5"
+          class="bg-indigo-800 text-white rounded mb-5"
           style="height: 14rem"
         >
           <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
@@ -133,6 +133,12 @@
             <div class="flex flex-1 justify-end">
               <i class="text-xs mt-1 fas fa-cog"></i>
             </div>
+          </div>
+          <div class="m-4">
+            <span class="text-white font-bold text-xs">Set Players:</span>
+            <select v-model="settings.quantity" class="ml-32 text-black">
+              <option class="text-black" :key="index" v-for="index in 10">{{ index }}</option>
+            </select>
           </div>
           <div class="text-white"></div>
         </ul>
@@ -157,7 +163,10 @@ export default {
       messages: [],
       methods: {},
       redirected: false,
-      visible: false
+      visible: false,
+      settings: {
+        quantity: 1
+      }
     }
   },
 
@@ -172,6 +181,11 @@ export default {
 
     onredirect () {
       this.redirected = true
+    },
+
+    changeSettings () {
+      const methods = window.socket.import(['roomSettings'])
+      methods.roomSettings(this.settings)
     },
 
     sendMessage () {
