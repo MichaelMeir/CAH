@@ -32,13 +32,17 @@
           <button
             class="absolute text-xs font-semibold focus:outline-none"
             @click="closeInterface()"
-          >x</button>
+          ><i class="fas fa-times"></i></button>
         </div>
       </div>
       <div class="flex flex-1 bg-white h-12 rounded mx-2 rounded-t-none flex inline">
         <div class="flex flex-1 justify-start">
           <button class="bg-indigo-600 py-1 mb-2 px-2 ml-2 mt-3 rounded text-xs">Add Friend</button>
-          <button v-if="owner && ownername != user" @click="kickUser(user)" class="bg-indigo-600 py-1 mb-2 px-2 ml-2 mt-3 rounded text-xs">Kick User</button>
+          <button
+            v-if="owner && ownername != user"
+            @click="kickUser(user)"
+            class="bg-indigo-600 py-1 mb-2 px-2 ml-2 mt-3 rounded text-xs"
+          >Kick User</button>
         </div>
         <div class="flex flex-1 justify-end">
           <a><i class="fas fa-ellipsis-v text-black mt-5 mr-3"></i></a>
