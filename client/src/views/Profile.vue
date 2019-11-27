@@ -45,7 +45,7 @@
             <label for="password">Current password</label>
             <input
               @keydown="clearError('deleteCurrentPassword')"
-              :class="(hasError('deleteCurrentPassword') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-full py-1 px-2 text-base rounded border border-indigo-200'"
+              :class="(hasError('deleteCurrentPassword') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-full py-1 px-2 text-base rounded border border-indigo-200'"
               type="password"
               v-model="deleteCurrentPassword"
             >
@@ -72,7 +72,7 @@
           <label for="username">Username</label>
           <input
             @keydown="clearError('username')"
-            :class="(hasError('username') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            :class="(hasError('username') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
             type="text"
             v-model="user.username"
             disabled
@@ -95,7 +95,7 @@
           <label for="username">Email address</label>
           <input
             @keydown="clearError('email')"
-            :class="(hasError('email') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            :class="(hasError('email') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
             type="email"
             v-model="user.email"
           >
@@ -111,7 +111,7 @@
           <label for="new_password">New password</label>
           <input
             @keydown="clearError('new_password')"
-            :class="(hasError('new_password') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            :class="(hasError('new_password') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
             type="password"
             v-model="new_password"
           >
@@ -127,7 +127,7 @@
           <label for="new_password_confirmation">Confirm your new password</label>
           <input
             @keydown="clearError('new_password_confirmation')"
-            :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
             type="password"
             v-model="new_password_confirmation"
           >
