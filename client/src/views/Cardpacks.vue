@@ -36,7 +36,7 @@
       </div>
       <div
         v-if="ownCardpacks.length > 0"
-        class="mb-4 font-semibold text-indigo-700"
+        class="my-4 font-semibold text-indigo-700"
       >
         Your own cardpacks
       </div>
@@ -169,12 +169,6 @@
               <div class="font-semibold text-base w-2/3">
                 {{ cardpack.name }}
               </div>
-              <div
-                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
-                v-if="cardpack.user_id === user_id"
-              >
-                Created by you
-              </div>
 
               <div
                 class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
@@ -189,6 +183,12 @@
                   {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
                 </div>
               </div>
+            </div>
+            <div
+              class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-blue-lightest"
+              v-if="cardpack.user_id === user_id"
+            >
+              Created by you
             </div>
             <div class="mb-4">
               {{ cardpack.description }}
@@ -205,18 +205,18 @@
                 </div>
               </div>
               <div class="flex flex-1 justify-end">
-              <div
-                @click="addLikes(cardpack.id)"
-                :class="
-                  (liked_packs !== null && liked_packs.includes(cardpack.id)
-                    ? 'bg-pink-600 text-pink-200'
-                    : '') +
-                    ' select-none hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded transition hover:text-pink-200 items-center'
-                "
-              >
-                <span class="font-semibold">{{ cardpack.likes }}</span>
-                <i class="ml-2 fa fa-heart text-xs"></i>
-              </div>
+                <div
+                  @click="addLikes(cardpack.id)"
+                  :class="
+                    (liked_packs !== null && liked_packs.includes(cardpack.id)
+                      ? 'bg-pink-600 text-pink-200'
+                      : '') +
+                      ' select-none hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded transition hover:text-pink-200 items-center'
+                  "
+                >
+                  <span class="font-semibold">{{ cardpack.likes }}</span>
+                  <i class="ml-2 fa fa-heart text-xs"></i>
+                </div>
               </div>
             </div>
           </div>
