@@ -1,18 +1,17 @@
 <template>
   <div>
     <CreateCardModal ref="createCardModal" :cardpacks="ownCardpacks" />
-    <CreateCardpackModal ref="createCardpackModal"/>
+    <CreateCardpackModal ref="createCardpackModal" />
     <div class="max-w-4xl mx-auto mt-5">
       <div class="flex mb-2">
         <div class="flex w-full">
-          <div class="w-2/4">
+          <div class="flex w-2/4 bg-indigo-700 rounded">
             <i
-              style="margin-top: 17px"
-              class="opacity-75 ml-4 align-bottom text-white absolute text-xs mt-1 fas fa-search"
+              class="ml-4 text-blue-lightest text-xl text-white text-xs fas fa-search my-auto"
             ></i>
             <input
               type="text"
-              class="search w-full rounded pl-10 pr-3 py-3 focus:bg-indigo-700 focus:outline-none cursor-pointer appearance-none text-white bg-indigo-600 font-semibold text-sm mb-3"
+              class="search w-full rounded pl-10 pr-3 bg-transparent bg-indigo-700 focus:outline-none cursor-pointer appearance-none text-white font-semibold text-sm"
               placeholder="Search cardpacks"
               v-model="search"
             />
@@ -57,34 +56,36 @@
           <div
             class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer"
           >
-            <div class="relative">
-              <div class="font-semibold mb-4 text-base">
+            <div class="flex mb-4">
+              <div class="font-semibold text-base">
                 {{ cardpack.name }}
               </div>
-              <div
-                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
-                v-if="cardpack.user_id === user_id"
-              >
-                Created by you
+              <div class="flex flex-1 justify-end">
+                <div
+                  class="py-1 px-3 font-semibold text-xs bg-indigo-400 rounded"
+                >
+                  {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
+                </div>
               </div>
+            </div>
+            <div
+              class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-blue-lightest"
+              v-if="cardpack.user_id === user_id"
+            >
+              Created by you
+            </div>
 
-              <div
-                class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
-                v-else
-              >
-                Created by someone else
-              </div>
-              <div
-                class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded"
-              >
-                {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
-              </div>
+            <div
+              class="-mt-3 mb-4 font-bold text-xs uppercase tracking-wider text-blue-lightest"
+              v-else
+            >
+              Created by someone else
             </div>
             <div class="mb-4">
               {{ cardpack.description }}
             </div>
 
-            <div class="flex relative items-center">
+            <div class="flex items-center">
               <div>
                 <div
                   class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
@@ -94,18 +95,19 @@
                   {{ tag }}
                 </div>
               </div>
-
-              <div
-                @click="addLikes(cardpack.id)"
-                :class="
-                  (liked_packs !== null && liked_packs.includes(cardpack.id)
-                    ? 'bg-pink-600 text-pink-200 opacity-100'
-                    : '') +
-                    ' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'
-                "
-              >
-                <span class="font-semibold">{{ cardpack.likes }}</span>
-                <i class="ml-2 fa fa-heart text-xs"></i>
+              <div class="flex flex-1 justify-end">
+                <div
+                  @click="addLikes(cardpack.id)"
+                  :class="
+                    (liked_packs !== null && liked_packs.includes(cardpack.id)
+                      ? 'bg-pink-600 text-pink-200'
+                      : '') +
+                      ' hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 rounded transition hover:text-pink-200 items-center'
+                  "
+                >
+                  <span class="font-semibold">{{ cardpack.likes }}</span>
+                  <i class="ml-2 fa fa-heart text-xs"></i>
+                </div>
               </div>
             </div>
 
@@ -113,10 +115,10 @@
             <button
               @click="$set(cardpack, 'open', !cardpack.open)"
               :class="!cardpack.open ? 'rounded-lg' : 'rounded-t-lg'"
-              class="focus:outline-none hover:bg-indigo-700 mt-4 relative bg-indigo-600 p-3 text-xs flex justify-between w-full items-center font-semibold relative z-20"
+              class="focus:outline-none hover:bg-indigo-700 mt-4 bg-indigo-600 p-3 text-xs flex justify-between w-full items-center font-semibold z-20"
             >
               <div>Show all cards</div>
-              <div class="opacity-50">
+              <div class="text-blue-lightest">
                 {{ !cardpack.open ? "&#9660;" : "&#9650;" }}
               </div>
             </button>
@@ -163,8 +165,8 @@
           <div
             class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer"
           >
-            <div class="relative">
-              <div class="font-semibold mb-4 text-base">
+            <div class="flex mb-4">
+              <div class="font-semibold text-base w-2/3">
                 {{ cardpack.name }}
               </div>
               <div
@@ -180,17 +182,19 @@
               >
                 Created by {{ cardpack.username }}
               </div>
-              <div
-                class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded"
-              >
-                {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
+              <div class="flex flex-1 justify-end h-6">
+                <div
+                  class="py-1 px-3 font-semibold text-xs bg-indigo-400 rounded"
+                >
+                  {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
+                </div>
               </div>
             </div>
             <div class="mb-4">
               {{ cardpack.description }}
             </div>
 
-            <div class="flex relative items-center">
+            <div class="flex items-center">
               <div>
                 <div
                   class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
@@ -200,18 +204,19 @@
                   {{ tag }}
                 </div>
               </div>
-
+              <div class="flex flex-1 justify-end">
               <div
                 @click="addLikes(cardpack.id)"
                 :class="
                   (liked_packs !== null && liked_packs.includes(cardpack.id)
-                    ? 'bg-pink-600 text-pink-200 opacity-100'
+                    ? 'bg-pink-600 text-pink-200'
                     : '') +
-                    ' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'
+                    ' select-none hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded transition hover:text-pink-200 items-center'
                 "
               >
                 <span class="font-semibold">{{ cardpack.likes }}</span>
                 <i class="ml-2 fa fa-heart text-xs"></i>
+              </div>
               </div>
             </div>
           </div>
