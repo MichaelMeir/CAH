@@ -12,12 +12,52 @@ html {
   scroll-behavior: smooth;
 }
 
+.text-blue-lightest{
+  color: #8c9eef;
+}
+
 input{
   @apply .appearance-none;
 }
 
 textarea{
   @apply .appearance-none;
+}
+
+.page-fade-enter-active {
+    transition: all .3s ease;
+    -webkit-transition: all .3s ease; /* WebKit */
+    -moz-transition: all .3s ease;; /* Mozilla */
+    -o-transition: all .3s ease;; /* Opera */
+    -ms-transition: all .3s ease;; /* Internet Explorer */
+}
+.page-fade-leave-active {
+    transition: all .3s ease;
+    -webkit-transition: all .3s ease; /* WebKit */
+    -moz-transition: all .3s ease;; /* Mozilla */
+    -o-transition: all .3s ease;; /* Opera */
+    -ms-transition: all .3s ease;; /* Internet Explorer */
+}
+.page-fade-enter, .page-fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-active {
+    transition: all .3s ease;
+    -webkit-transition: all .3s ease; /* WebKit */
+    -moz-transition: all .3s ease;; /* Mozilla */
+    -o-transition: all .3s ease;; /* Opera */
+    -ms-transition: all .3s ease;; /* Internet Explorer */
+}
+.fade-leave-active {
+    transition: all .3s ease;
+    -webkit-transition: all .3s ease; /* WebKit */
+    -moz-transition: all .3s ease;; /* Mozilla */
+    -o-transition: all .3s ease;; /* Opera */
+    -ms-transition: all .3s ease;; /* Internet Explorer */
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
 
 button{

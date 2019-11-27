@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <transition appear appear-class="page-fade-enter" appear-to-class="page-fade-enter-active">
     <div
       v-if="status !== null"
       class="max-w-4xl mt-4 mx-auto bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
@@ -171,7 +171,7 @@
         >Delete my account</button>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
 import AuthService from '../services/AuthService'

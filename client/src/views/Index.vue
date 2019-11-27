@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <transition appear appear-class="page-fade-enter" appear-to-class="page-fade-enter-active">
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
@@ -129,7 +129,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
 
