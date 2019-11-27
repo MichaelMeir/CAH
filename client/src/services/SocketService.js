@@ -22,10 +22,11 @@ function ping (socket) {
 }
 
 function Export (e) {
-  exportedMethods = {
-    ping,
-    ...e
+  for (let i = 0; i < Object.keys(e).length; i++) {
+    const key = Object.keys(e)[i]
+    exportedMethods[key] = e[key]
   }
+  exportedMethods['ping'] = ping
 }
 
 let exportedMethods = {ping}
