@@ -1,10 +1,16 @@
 <template>
-  <div>
+  <transition appear appear-class="page-fade-enter" appear-to-class="page-fade-enter-active">
     <div
       v-if="status !== null"
       class="max-w-4xl mt-4 mx-auto bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
     >
       {{ status }}
+    </div>
+    <div
+      v-if="statusError !== null"
+      class="max-w-4xl mt-4 mx-auto bg-red-200 mb-2 border border-red-300 text-red-700 font-semibold text-sm rounded py-3 px-4"
+    >
+      {{ statusError }}
     </div>
     <div
       @click="deleteModalOpen = false"
@@ -165,7 +171,7 @@
         >Delete my account</button>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
 import AuthService from '../services/AuthService'
@@ -182,6 +188,7 @@ export default {
       },
       errors: [],
       status: null,
+      statusError: null,
 
       new_password: null,
       new_password_confirmation: null,
@@ -191,8 +198,8 @@ export default {
       deleteCurrentPassword: null,
 
       required: {
-        avatarHeight: 128,
-        avatarWidth: 128
+        avatarHeight: 300,
+        avatarWidth: 300
       }
     }
   },
@@ -236,8 +243,11 @@ export default {
 
     async handleAvatarChange () {
       this.clearError('avatar')
+      this.statusError = null
+      this.status = null
 
       const file = document.querySelector('[type=file]').files[0]
+
       let image = await new Promise((resolve, reject) => {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -245,7 +255,23 @@ export default {
         reader.onerror = error => reject(error)
       })
 
-      console.log(image)
+      let img = new Image()
+      img.src = image
+      img.onload = async () => {
+        if ((img.naturalWidth > this.required.avatarWidth) || (img.naturalHeight > this.required.avatarHeight)) {
+          this.statusError = `The maximum dimensions of an avatar are: ${this.required.avatarWidth} x ${this.required.avatarHeight}, please try again.`
+        } else {
+          // no error
+          this.status = `Your avatar has been uploaded successfully.`
+          this.$parent.$refs.navbar.user.avatar = image
+
+          await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/avatar', {
+            avatar: image
+          }, {
+            withCredentials: true
+          })
+        }
+      }
     },
 
     async saveChanges () {

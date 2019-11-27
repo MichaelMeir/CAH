@@ -25,21 +25,21 @@
                     ></path>
                   </svg>
                 </div>
-                <h1 class="mt-6 text-3xl">Are you sure you want to leave?</h1>
-                <p class="font-thin">
+                <h1 class="mt-6 font-bold text-lg uppercase">Are you sure you want to leave?</h1>
+                <p class="text-sm">
                   You are about to leave your room. If you leave you will lose
                   all your points
                 </p>
                 <div class="flex border-t mt-4">
-                  <div class="flex flex-1 justify-end mt-4">
+                  <div class="flex mt-4">
                     <button
-                      class="text-sm bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none transition mr-4"
+                      class="text-sm bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-10 rounded focus:outline-none transition mr-4"
                       @click="leaveRoom"
                     >
                       Yes
                     </button>
                     <button
-                      class="text-sm bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none transition"
+                      class="text-sm bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none transition"
                       @click="leaveModal = false"
                     >
                       No take me back
@@ -52,78 +52,91 @@
         </div>
       </div>
     </transition>
-    <div class="max-w-4xl mx-auto mt-1 flex">
-      <div class="bg-indigo-700 text-black my-5 rounded w-2/3 pb-1 overflow-y-auto mr-3">
-        <div class="bg-white text-black h-56 m-2 rounded">
-          <p
+    <div class="max-w-4xl mx-auto mt-1 flex flex-1">
+      <div class="bg-indigo-700 text-black my-5 rounded w-2/3 p-2 overflow-y-auto mr-3">
+        <div
+          ref="chat"
+          class="bg-indigo-800 text-white h-56 break-words overflow-y-auto m-2 p-3 text-sm leading-loose rounded"
+        >
+          <div
             v-bind:key="index"
             v-for="(message, index) in messages"
           >
             {{ message }}
-          </p>
+          </div>
         </div>
 
-        <div class="flex">
+        <div class="flex mb-1">
           <input
             v-on:keyup.enter="sendMessage"
             v-model="message"
-            class="ml-2 mt-1 mb-1 p-1 w-4/5 rounded"
+            class="ml-2 focus:shadow-inner placeholder-text-white mt-1 mb-1 px-3 py-2 text-white bg-indigo-800 text-sm focus:outline-none w-4/5 rounded"
             type="text"
-            placeholder="Say..."
+            autofocus
+            placeholder="Send message..."
           />
           <button
             v-on:click="sendMessage"
-            class="bg-indigo-200 hover:bg-indigo-300 mr-2 ml-2 my-1 border border-indigo-800 text-indigo-500 w-1/5 px-6 py-1 rounded "
+            class="bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm focus:outline-none mr-2 ml-3 my-1 text-white w-1/5 px-6 py-1 rounded transition"
           >
             Send
           </button>
         </div>
       </div>
-      <div class="bg-indigo-700 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
+      <div class="bg-indigo-800 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
         <ul
           class=""
           style="height: 14rem"
         >
-          <p class="text-center pt-1">Playerlist</p>
-          <div class="text-white">
+          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+            <div>Playerlist</div>
+            <div class="flex flex-1 justify-end">
+              <i class="text-xs mt-1 fas fa-users"></i>
+            </div>
+          </div>
+          <div class="text-white text-sm">
             <li
               v-bind:key="index"
               v-for="(user, index) in usernames"
-              class="bg-indigo-700 m-2 rounded"
+              class="bg-indigo-700 px-3 py-2 m-3 rounded cursor-pointer font-semibold"
             >
               <div>
-                <Interface :user="user" />
+                <Interface
+                  :avatar="$parent.$refs.navbar.user.avatar"
+                  :user="user"
+                />
               </div>
             </li>
           </div>
         </ul>
       </div>
     </div>
-    <div class="max-w-4xl mx-auto mt-1 flex">
+    <div class="max-w-4xl mx-auto mt-1 flex flex-1">
       <div class="flex-1">
         <button
           @click="leaveModal = true"
-          class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 mr-2 rounded"
+          class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 mr-2 rounded transition"
         >
-          Leave
+          Leave game
         </button>
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded">
+        <button class="bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition">
           Cardpacks
         </button>
       </div>
-      <div class="bg-indigo-700 text-white rounded w-1/3 pb-1">
+      <div class="w-1/3 pl-1">
         <ul
-          class=""
+          class="bg-indigo-800 text-whi//te rounded mb-5"
           style="height: 14rem"
         >
-          <p class="text-center pt-1">Settings</p>
+          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+            <div>Room settings</div>
+            <div class="flex flex-1 justify-end">
+              <i class="text-xs mt-1 fas fa-cog"></i>
+            </div>
+          </div>
           <div class="text-white"></div>
         </ul>
-      </div>
-    </div>
-    <div class="max-w-4xl mx-auto mt-1 flex">
-      <div class="w-full flex-1 flex justify-end">
-        <a class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-12 mr-2 rounded ml-auto mr-20 mt-2">Start</a>
+        <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full transition"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game</button>
       </div>
     </div>
   </div>
@@ -162,9 +175,14 @@ export default {
     },
 
     sendMessage () {
-      const methods = window.socket.import(['sendMessage'])
-      methods.sendMessage(this.$cookies.get('jwt'), this.message)
-      this.message = ''
+      if (this.message) {
+        var elem = this.$refs.chat
+        elem.scrollTop = elem.scrollHeight + 100
+
+        const methods = window.socket.import(['sendMessage'])
+        methods.sendMessage(this.$cookies.get('jwt'), this.message)
+        this.message = ''
+      }
     },
 
     updateUserList (socket, list) {
@@ -196,6 +214,8 @@ export default {
     const response = await this.methods.checkRoom(this.$route.params.token)
     if (!response.room) {
       this.$router.push('/')
+    } else {
+      this.usernames = response.usernames
     }
   }
 }

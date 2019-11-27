@@ -1,26 +1,25 @@
 <template>
-  <div>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    >
+  <div class="relative select-none">
     <div @click="openInterface">{{ user }}</div>
     <div
-      class="h-20 mt-3"
+      class="h-20 z-20 w-full absolute"
       v-if="visible"
     >
-      <div class="flex inline p-1 mx-2 bg-black rounded-b-none rounded">
+      <div class="flex inline p-2 mx-2 bg-black rounded-b-none rounded">
         <div class="flex flex-1 justify-start">
-          <div class="p-6 m-1 rounded-t-full rounded-b-full bg-white"></div>
+          <div
+            :style="`background-image: url(${avatar})`"
+            class="p-6 m-1 rounded-t-full rounded-b-full bg-white bg-cover"
+          ></div>
         </div>
-        <div class="flex flex-1 justify-center text-white m-1">
+        <div class="flex flex-1 justify-center text-white ml-3 mt-1">
           <h1 class="mr-16">{{ user }}</h1>
         </div>
         <div class="flex flex-1 justify-end text-white mr-1">
           <button
-            class="absolute text-xs"
+            class="absolute text-xs font-semibold focus:outline-none"
             @click="closeInterface()"
-          >X</button>
+          >x</button>
         </div>
       </div>
       <div class="flex flex-1 bg-white h-12 rounded mx-2 rounded-t-none flex inline">
@@ -29,7 +28,7 @@
           <button v-if="owner && ownername != user" @click="kickUser(user)" class="bg-indigo-600 py-1 mb-2 px-2 ml-2 mt-3 rounded text-xs">Kick User</button>
         </div>
         <div class="flex flex-1 justify-end">
-          <a><i class="material-icons text-black mt-3 mr-1"> more_vert </i></a>
+          <a><i class="fas fa-ellipsis-v text-black mt-5 mr-3"></i></a>
         </div>
       </div>
     </div>
@@ -47,7 +46,8 @@ export default {
   },
 
   props: [
-    'user'
+    'user',
+    'avatar'
   ],
 
   mounted () {

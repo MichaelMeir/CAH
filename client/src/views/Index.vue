@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <transition appear appear-class="page-fade-enter" appear-to-class="page-fade-enter-active">
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
@@ -19,7 +19,7 @@
               :key="index + 1"
               class="w-1/3 p-2"
             >
-              <div :class="'bg-' + getColor(room.id) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
+              <div :class="'bg-' + getColor(index) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
                 <div class="font-semibold mb-4 text-base flex">
                   <div>{{ room.name }}</div>
                   <div class="flex flex-1 justify-end">
@@ -79,7 +79,7 @@
             </div>
           </div>
           <div class="bg-indigo-800 text-indigo-100 py-3 px-4 rounded-b text-sm leading-loose">
-            <div><span class="text-white font-bold">0</span> active games</div>
+            <div><span class="text-white font-bold">{{ rooms.length }}</span> active games</div>
             <div><span class="text-white font-bold">0</span> online users</div>
           </div>
         </div>
@@ -92,32 +92,44 @@
             </div>
           </div>
           <div class="bg-indigo-800 text-indigo-100 py-4 px-3 rounded-b text-sm leading-loose">
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All players</option>
-              <option>Most players</option>
-              <option>Least players</option>
+            <select
+              v-model="filters.players"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+            >
+              <option value="allPlayers">All players</option>
+              <option value="mostPlayers">Most players</option>
+              <option value="leastPlayers">Least players</option>
             </select>
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All spectators</option>
-              <option>Most spectators</option>
-              <option>Least spectators</option>
+            <select
+              v-model="filters.spectators"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+            >
+              <option value="allSpectators">All spectators</option>
+              <option value="mostSpectators">Most spectators</option>
+              <option value="leastSpectators">Least spectators</option>
             </select>
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All rooms</option>
-              <option>Public rooms</option>
-              <option>Private rooms</option>
+            <select
+              v-model="filters.rooms"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+            >
+              <option value="allRooms">All rooms</option>
+              <option value="publicRooms">Public rooms</option>
+              <option value="privateRooms">Private rooms</option>
             </select>
 
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs">
-              <option>Created anytime</option>
-              <option>Recently created</option>
-              <option>Longest created</option>
+            <select
+              v-model="filters.creationDate"
+              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs"
+            >
+              <option value="createdAnytime">Created anytime</option>
+              <option value="recentlyCreated">Recently created</option>
+              <option value="longestCreated">Longest created</option>
             </select>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
 
@@ -233,7 +245,14 @@ export default {
       search: '',
       previous: '',
       colors: [],
-      rooms: []
+      rooms: [],
+
+      filters: {
+        players: 'allPlayers',
+        spectators: 'allSpectators',
+        rooms: 'allRooms',
+        creationDate: 'createdAnytime'
+      }
     }
   },
 
