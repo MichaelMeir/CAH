@@ -41,7 +41,7 @@
                       @keydown="clearError('card.text')"
                       :class="
                         (hasError('card.text') ? 'has-error' : '') +
-                          ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded h-24 border border-indigo-200'
+                          ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-full py-1 px-2 text-sm rounded h-24 border border-indigo-200'
                       "
                     ></textarea>
                     <div v-if="hasError('card.text')" class="error-message">
@@ -57,7 +57,7 @@
                       multiple
                       :class="
                         (hasError('card.cardpacks') ? 'has-error' : '') +
-                          ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'
+                          ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'
                       "
                     >
                       <option disabled selected>Select cardpack(s)</option>
@@ -83,7 +83,7 @@
                       <input
                         type="checkbox"
                         v-model="card.isWhite"
-                        class="mr-2 form-checkbox text-indigo-500 align-middle"
+                        class="mr-2 focus:shadow-none form-checkbox text-indigo-500 align-middle"
                       />
                       This card is a white card
                     </label>

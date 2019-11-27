@@ -76,10 +76,10 @@
           <div class="mb-3">
             <label for="username">Username</label>
             <input
-              @keydown="clearError('username')"
-              :class="(hasError('username') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-              type="text"
-              v-model="user.username"
+              @keydown="clearError('deleteCurrentPassword')"
+              :class="(hasError('deleteCurrentPassword') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-full py-1 px-2 text-base rounded border border-indigo-200'"
+              type="password"
+              v-model="deleteCurrentPassword"
               disabled
             >
             <small>You are not able to modify your username</small>
@@ -111,31 +111,73 @@
               {{ getError('email') }}
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-4xl mx-auto mt-5 flex">
+      <div class="text-indigo-800 bg-indigo-100 rounded p-4 text-sm w-full">
+        <div class="font-semibold mb-4 text-base">Modify your account settings</div>
 
-          <div class="mb-3">
-            <label for="new_password">New password</label>
-            <input
-              @keydown="clearError('new_password')"
-              :class="(hasError('new_password') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-              type="password"
-              v-model="new_password"
-            >
-            <div
-              v-if="hasError('new_password')"
-              class="error-message"
-            >
-              {{ getError('new_password') }}
+        <div class="mb-3">
+          <label for="username">Username</label>
+          <input
+            @keydown="clearError('username')"
+            :class="(hasError('username') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            type="text"
+            v-model="user.username"
+            disabled
+          >
+          <small>You are not able to modify your username</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="avatar">Avatar</label>
+          <input
+            @change="handleAvatarChange()"
+            :class="(hasError('avatar') ? 'has-error' : '') + ' p-3 bg-indigo-600 rounded text-white focus:outline-none mt-1 block w-1/3 mb-1'"
+            type="file"
+            accept="image/*"
+          >
+          <small>The recommended dimensions (in pixels) are: {{ required.avatarHeight }} x {{ required.avatarWidth }}</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="username">Email address</label>
+          <input
+            @keydown="clearError('email')"
+            :class="(hasError('email') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            type="email"
+            v-model="user.email"
+          >
+          <div
+            v-if="hasError('email')"
+            class="error-message"
+          >
+            {{ getError('email') }}
             </div>
           </div>
 
+        <div class="mb-3">
+          <label for="new_password">New password</label>
+          <input
+            @keydown="clearError('new_password')"
+            :class="(hasError('new_password') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            type="password"
+            v-model="new_password"
+          >
+          <div
+            v-if="hasError('new_password')"
+            class="error-message"
+          >
+            {{ getError('new_password') }}
           <div class="mb-3">
-            <label for="new_password_confirmation">Confirm your new password</label>
-            <input
-              @keydown="clearError('new_password_confirmation')"
-              :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-              type="password"
-              v-model="new_password_confirmation"
-            >
+          <label for="new_password_confirmation">Confirm your new password</label>
+          <input
+            @keydown="clearError('new_password_confirmation')"
+            :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+            type="password"
+            v-model="new_password_confirmation"
+          >
             <div
               v-if="hasError('new_password_confirmation')"
               class="error-message"
@@ -143,7 +185,6 @@
               {{ getError('new_password_confirmation') }}
             </div>
           </div>
-
           <div
             v-if="new_password"
             class="mb-3"
