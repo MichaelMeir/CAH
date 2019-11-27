@@ -26,7 +26,7 @@
         class="absolute left-0 right-0 top-0 z-20"
         v-if="deleteModalOpen"
       >
-        <div class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4">
+        <div :class="`shadow bg-${getTheme}-100 text-${getTheme}-800 border border-${getTheme}-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4`">
           <div class="text-base font-semibold flex items-center">
             <div>Please enter your current password</div>
             <div class="flex flex-1 justify-end">
@@ -46,11 +46,11 @@
           <div class="mt-3 text-sm">
             Make sure that this action cannot be undone and that this will permanently delete your account information.
 
-            <div class="mt-4 border-t border-indigo-200 pt-4">
+            <div :class="`mt-4 border-t border-${getTheme}-200 pt-4`">
               <label for="password">Current password</label>
               <input
                 @keydown="clearError('deleteCurrentPassword')"
-                :class="(hasError('deleteCurrentPassword') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-full py-1 px-2 text-base rounded border border-indigo-200'"
+                :class="(hasError('deleteCurrentPassword') ? 'has-error' : '') + ` focus:outline-none mt-1 block w-full py-1 px-2 text-base rounded border border-${getTheme}-200`"
                 type="password"
                 v-model="deleteCurrentPassword"
               >
@@ -70,14 +70,14 @@
         </div>
       </div>
       <div class="max-w-4xl mx-auto mt-5 flex">
-        <div class="text-indigo-800 bg-indigo-100 rounded p-4 text-sm w-full">
+        <div :class="`text-${getTheme}-800 bg-${getTheme}-100 rounded p-4 text-sm w-full`">
           <div class="font-semibold mb-4 text-base">Modify your account settings</div>
 
           <div class="mb-3">
             <label for="username">Username</label>
             <input
               @keydown="clearError('username')"
-              :class="(hasError('username') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+              :class="(hasError('username') ? 'has-error' : '') + ` text-${getTheme}-300 cursor-pointer focus:outline-none mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
               type="text"
               v-model="user.username"
               disabled
@@ -89,7 +89,7 @@
             <label for="avatar">Avatar</label>
             <input
               @change="handleAvatarChange()"
-              :class="(hasError('avatar') ? 'has-error' : '') + ' p-3 bg-indigo-600 rounded text-white focus:outline-none mt-1 block w-1/3 mb-1'"
+              :class="(hasError('avatar') ? 'has-error' : '') + ` p-3 bg-${getTheme}-600 rounded text-white focus:outline-none mt-1 block w-1/3 mb-1`"
               type="file"
               accept="image/*"
             >
@@ -100,7 +100,7 @@
             <label for="username">Email address</label>
             <input
               @keydown="clearError('email')"
-              :class="(hasError('email') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+              :class="(hasError('email') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
               type="email"
               v-model="user.email"
             >
@@ -116,7 +116,7 @@
             <label for="new_password">New password</label>
             <input
               @keydown="clearError('new_password')"
-              :class="(hasError('new_password') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+              :class="(hasError('new_password') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
               type="password"
               v-model="new_password"
             >
@@ -132,7 +132,7 @@
             <label for="new_password_confirmation">Confirm your new password</label>
             <input
               @keydown="clearError('new_password_confirmation')"
-              :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+              :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
               type="password"
               v-model="new_password_confirmation"
             >
@@ -151,7 +151,7 @@
             <label for="username">Enter your current password</label>
             <input
               @keydown="clearError('current_password')"
-              :class="(hasError('current_password') ? 'has-error' : '') + ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
+              :class="(hasError('current_password') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
               type="password"
               v-model="current_password"
             >
@@ -163,9 +163,25 @@
             </div>
           </div>
 
+          <!-- <div class="mb-3">
+            <label for="username">Theme color</label>
+            <select
+              v-model="theme"
+              @change="changeTheme"
+              :class="`focus:shadow-outline form-select block w-1/3 focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200 py-2 capitalize text-sm cursor-pointer`"
+            >
+              <option
+                v-for="(color, index) in availableColors"
+                :key="index"
+              >
+                {{ color }}
+              </option>
+            </select>
+          </div> -->
+
           <button
             @click="saveChanges()"
-            class="focus:outline-none hover:bg-indigo-600 mt-2 bg-indigo-500 rounded py-2 px-4 font-semibold text-white"
+            :class="`focus:outline-none hover:bg-${getTheme}-600 mt-2 bg-${getTheme}-500 rounded py-2 px-4 font-semibold text-white`"
             type="button"
           >Save changes</button>
 
@@ -185,9 +201,32 @@ import AuthService from '../services/AuthService'
 import Clipper from 'image-clipper'
 import axios from 'axios'
 
+import ThemeStore from '../store/ThemeStore'
+
 export default {
+  computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    },
+
+    availableColors () {
+      return [
+        'red',
+        'orange',
+        'yellow',
+        'green',
+        'teal',
+        'blue',
+        'purple',
+        'indigo',
+        'pink'
+      ]
+    }
+  },
+
   data () {
     return {
+      theme: ThemeStore.state.theme,
       user: {
         username: null,
         email: null,
@@ -217,6 +256,10 @@ export default {
   },
 
   methods: {
+    changeTheme () {
+      ThemeStore.commit('changeTheme', this.theme)
+    },
+
     async deleteAccount () {
       if (!this.deleteCurrentPassword) {
         this.errors.push({
@@ -229,8 +272,8 @@ export default {
         try {
           let request = await axios.post(
             `${location.protocol}//${location.hostname}` +
-              (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
-              '/api/auth/deleteAccount',
+            (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+            '/api/auth/deleteAccount',
             {
               deleteCurrentPassword: this.deleteCurrentPassword
             },
@@ -280,8 +323,8 @@ export default {
 
             await axios.post(
               `${location.protocol}//${location.hostname}` +
-                (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
-                '/api/auth/avatar',
+              (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+              '/api/auth/avatar',
               {
                 avatar: dataUrl
               },
@@ -327,8 +370,8 @@ export default {
         try {
           let request = await axios.post(
             `${location.protocol}//${location.hostname}` +
-              (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
-              '/api/auth/profile',
+            (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+            '/api/auth/profile',
             {
               email: this.user.email,
               new_password: this.new_password,
@@ -410,10 +453,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 input {
-  &:disabled {
-    @apply .text-indigo-300 .cursor-not-allowed;
-  }
-
   &.has-error {
     @apply .border .border-red-300 .text-red-500;
 
