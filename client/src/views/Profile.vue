@@ -88,7 +88,7 @@
             type="file"
             accept="image/*"
           >
-          <small>The maximum dimensions (in pixels) are: {{ required.avatarHeight }} x {{ required.avatarWidth }}</small>
+          <small>The recommended dimensions (in pixels) are: {{ required.avatarHeight }} x {{ required.avatarWidth }}</small>
         </div>
 
         <div class="mb-3">
@@ -176,6 +176,7 @@
 <script>
 import AuthService from '../services/AuthService'
 
+import Clipper from 'image-clipper'
 import axios from 'axios'
 
 export default {
@@ -257,21 +258,31 @@ export default {
 
       let img = new Image()
       img.src = image
-      img.onload = async () => {
-        if ((img.naturalWidth > this.required.avatarWidth) || (img.naturalHeight > this.required.avatarHeight)) {
-          this.statusError = `The maximum dimensions of an avatar are: ${this.required.avatarWidth} x ${this.required.avatarHeight}, please try again.`
-        } else {
-          // no error
+
+      img.onload = () => {
+        Clipper(img).resize(this.required.avatarWidth, this.required.avatarHeight).toDataURL(async (dataUrl) => {
           this.status = `Your avatar has been uploaded successfully.`
-          this.$parent.$refs.navbar.user.avatar = image
+          this.$parent.$refs.navbar.user.avatar = dataUrl
 
           await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/avatar', {
-            avatar: image
+            avatar: dataUrl
           }, {
             withCredentials: true
           })
-        }
+        })
       }
+      // if ((img.naturalWidth > this.required.avatarWidth) || (img.naturalHeight > this.required.avatarHeight)) {
+      //   this.statusError = `The maximum dimensions of an avatar are: ${this.required.avatarWidth} x ${this.required.avatarHeight}, please try again.`
+      // } else {
+      //   this.status = `Your avatar has been uploaded successfully.`
+      //   this.$parent.$refs.navbar.user.avatar = image
+
+      //   await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/avatar', {
+      //     avatar: image
+      //   }, {
+      //     withCredentials: true
+      //   })
+      // }
     },
 
     async saveChanges () {

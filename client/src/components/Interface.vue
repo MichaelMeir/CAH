@@ -1,8 +1,21 @@
 <template>
   <div class="relative select-none">
-    <div @click="openInterface">{{ user }}</div>
     <div
-      class="h-20 z-20 w-full absolute"
+      class="flex items-center"
+      @click="openInterface"
+    >
+      <div class="flex items-center mr-3 align-middle">
+        <div
+          :style="`background-image: url(${avatar})`"
+          class="bg-cover bg-center rounded-full h-6 w-6"
+        ></div>
+      </div>
+      <div>
+        {{ user }}
+      </div>
+    </div>
+    <div
+      class="h-20 z-20 w-full absolute cursor-default"
       v-if="visible"
     >
       <div class="flex inline p-2 mx-2 bg-black rounded-b-none rounded">
