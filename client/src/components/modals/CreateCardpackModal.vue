@@ -37,7 +37,7 @@
                   @keydown="clearError('cardpack.title')"
                   :class="
                     (hasError('cardpack.title') ? 'has-error' : '') +
-                      ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'
+                      ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'
                   "
                 />
                 <div v-if="hasError('cardpack.title')" class="error-message">
@@ -50,7 +50,7 @@
                   v-model="cardpack.description"
                   :class="
                     (hasError('cardpack.description') ? 'has-error' : '') +
-                      ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'
+                      ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'
                   "
                 />
                 <div
@@ -68,7 +68,7 @@
                   multiple
                   :class="
                     (hasError('cardpack.tags') ? 'has-error' : '') +
-                      ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'
+                      ' focus:outline-none focus:border-indigo-300 transition mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'
                   "
                 >
                   <option disabled selected>Select tags</option>
