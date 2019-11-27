@@ -1,9 +1,7 @@
 <template>
   <div>
-    <CreateCardModal
-      ref="createCardModal"
-      :cardpacks="ownCardpacks"
-    />
+    <CreateCardModal ref="createCardModal" :cardpacks="ownCardpacks" />
+    <CreateCardpackModal ref="createCardpackModal"/>
     <div class="max-w-4xl mx-auto mt-5">
       <div class="flex mb-2">
         <div class="flex w-full">
@@ -22,7 +20,7 @@
           <div class="w-1/4 ml-4">
             <button
               class="text-sm w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
-              @click="createModalOpen = !createModalOpen"
+              @click="$refs.createCardpackModal.toggleModal()"
             >
               <i class="fas fa-plus-circle mr-2"></i> Create cardpack
             </button>
@@ -35,88 +33,12 @@
               <i class="fas fa-plus-circle mr-2"></i> Create card
             </button>
           </div>
-          <div
-            @click="createModalOpen = false"
-            v-if="createModalOpen"
-            class="absolute z-20 left-0 top-0 bg-white opacity-50 h-full w-full"
-          ></div>
-          <div
-            class="absolute left-0 right-0 top-0 z-50"
-            v-if="createModalOpen"
-          >
-            <div class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4">
-              <div class="text-base font-semibold flex items-center">
-                <div>Creating a cardpack</div>
-                <div class="flex flex-1 justify-end">
-                  <svg
-                    @click="createModalOpen = false"
-                    class="h-4 w-4 cursor-pointer"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      class="close"
-                      d="M10 8.586L2.929 1.515 1.515 2.929 8.585 10l-7.07 7.071 1.414 1.414L10 11.415l7.071 7.07 1.414-1.414L11.415 10l7.07-7.071-1.414-1.414L10 8.585z"
-                      fill-rule="evenodd"
-                    /></svg>
-                </div>
-              </div>
-              <div class="mt-3 text-sm">
-                Please fill in all the fields to create your cardpack
-
-                <div class="mt-4 border-t border-indigo-200 pt-4">
-                  <div>
-                    <label>Name</label>
-                    <input
-                      v-model="cardpack.title"
-                      @keydown="clearError('cardpack.title')"
-                      :class="(hasError('cardpack.title') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'"
-                    >
-                    <div
-                      v-if="hasError('cardpack.title')"
-                      class="error-message"
-                    >
-                      {{ getError('cardpack.title') }}
-                    </div>
-                  </div>
-                  <div class="my-4">
-                    <label class="mt-4">Description</label>
-                    <textarea
-                      v-model="cardpack.description"
-                      :class="(hasError('cardpack.description') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'"
-                    />
-                    <div
-                      v-if="hasError('cardpack.description')"
-                      class="error-message"
-                    >
-                      {{ getError('cardpack.description') }}
-                    </div>
-                    </div>
-                  <div>
-                    <label class="mt-4">Tags</label>
-                    <select @change="clearError('cardpack.tags')" v-model="cardpack.tags" multiple :class="(hasError('cardpack.tags') ? 'has-error' : '') +' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'">
-                        <option disabled selected>Select tags</option>
-                        <option v-bind:key="category.id" :value="category" v-for="category in categories">{{ category }}</option>
-                    </select>
-                    <div
-                      v-if="hasError('cardpack.tags')"
-                      class="error-message"
-                    >
-                      {{ getError('cardpack.tags') }}
-                    </div>
-                  </div>
-                  <button
-                    class="mt-8 focus:outline-none hover:bg-indigo-600 mt-2 bg-indigo-500 rounded py-2 px-4 font-semibold text-white"
-                    type="button"
-                    @click="saveChanges"
-                  >Create pack</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-      <div v-if="ownCardpacks.length > 0" class="mb-4 font-semibold text-indigo-700">
+      <div
+        v-if="ownCardpacks.length > 0"
+        class="mb-4 font-semibold text-indigo-700"
+      >
         Your own cardpacks
       </div>
       <transition-group
@@ -132,9 +54,13 @@
         >
           <div class="border-t-10 border-indigo-600 rounded-t"></div>
 
-          <div class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer">
+          <div
+            class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer"
+          >
             <div class="relative">
-              <div class="font-semibold mb-4 text-base">{{ cardpack.name }}</div>
+              <div class="font-semibold mb-4 text-base">
+                {{ cardpack.name }}
+              </div>
               <div
                 class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
                 v-if="cardpack.user_id === user_id"
@@ -148,8 +74,10 @@
               >
                 Created by someone else
               </div>
-              <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
-                {{ cardpack.cardAmount ? cardpack.cardAmount :  0 }} cards
+              <div
+                class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded"
+              >
+                {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
               </div>
             </div>
             <div class="mb-4">
@@ -167,24 +95,41 @@
                 </div>
               </div>
 
-              <div @click="addLikes(cardpack.id)" :class="((liked_packs !== null && liked_packs.includes(cardpack.id)) ? 'bg-pink-600 text-pink-200 opacity-100' : '') +' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'">
+              <div
+                @click="addLikes(cardpack.id)"
+                :class="
+                  (liked_packs !== null && liked_packs.includes(cardpack.id)
+                    ? 'bg-pink-600 text-pink-200 opacity-100'
+                    : '') +
+                    ' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'
+                "
+              >
                 <span class="font-semibold">{{ cardpack.likes }}</span>
                 <i class="ml-2 fa fa-heart text-xs"></i>
               </div>
             </div>
 
             <!-- List cards TODO -->
-            <button @click="$set(cardpack, 'open', !cardpack.open)" :class="!cardpack.open ? 'rounded-lg' : 'rounded-t-lg'" class="focus:outline-none hover:bg-indigo-700 mt-4 relative bg-indigo-600 p-3 text-xs flex justify-between w-full items-center font-semibold relative z-20">
-                <div>Show all cards</div>
-                <div class="opacity-50">
-                  {{ !cardpack.open ? '&#9660;' : '&#9650;'}}
-                </div>
+            <button
+              @click="$set(cardpack, 'open', !cardpack.open)"
+              :class="!cardpack.open ? 'rounded-lg' : 'rounded-t-lg'"
+              class="focus:outline-none hover:bg-indigo-700 mt-4 relative bg-indigo-600 p-3 text-xs flex justify-between w-full items-center font-semibold relative z-20"
+            >
+              <div>Show all cards</div>
+              <div class="opacity-50">
+                {{ !cardpack.open ? "&#9660;" : "&#9650;" }}
+              </div>
             </button>
             <transition name="list-secondary">
-              <div class="z-10 relative bg-indigo-700 text-xs rounded-b-lg p-3" v-if="cardpack.open">
+              <div
+                class="z-10 relative bg-indigo-700 text-xs rounded-b-lg p-3"
+                v-if="cardpack.open"
+              >
                 <ul>
                   <li class="list-disc ml-4">
-                    <a class="no-underline hover:underline" href="">Test card 1</a>
+                    <a class="no-underline hover:underline" href=""
+                      >Test card 1</a
+                    >
                   </li>
                 </ul>
               </div>
@@ -193,10 +138,16 @@
           </div>
         </div>
       </transition-group>
-      <div v-if="ownCardpacks.length > 3" class="font-semibold text-sm text-gray-600 mt-1 flex flex-1 justify-end items-center">
+      <div
+        v-if="ownCardpacks.length > 3"
+        class="font-semibold text-sm text-gray-600 mt-1 flex flex-1 justify-end items-center"
+      >
         Scroll for more <i class="fas fa-long-arrow-alt-right ml-4"></i>
       </div>
-      <div v-if="ownCardpacks.length > 0" class="border-b border-indigo-100 pt-3"></div>
+      <div
+        v-if="ownCardpacks.length > 0"
+        class="border-b border-indigo-100 pt-3"
+      ></div>
       <transition-group
         name="list"
         tag="div"
@@ -209,9 +160,13 @@
         >
           <div class="border-t-10 border-indigo-600 rounded-t"></div>
 
-          <div class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer">
+          <div
+            class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer"
+          >
             <div class="relative">
-              <div class="font-semibold mb-4 text-base">{{ cardpack.name }}</div>
+              <div class="font-semibold mb-4 text-base">
+                {{ cardpack.name }}
+              </div>
               <div
                 class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
                 v-if="cardpack.user_id === user_id"
@@ -221,12 +176,14 @@
 
               <div
                 class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider opacity-25"
-                v-if="(cardpack.user_id !== user_id) && cardpack.user_id !== null"
+                v-if="cardpack.user_id !== user_id && cardpack.user_id !== null"
               >
                 Created by {{ cardpack.username }}
               </div>
-              <div class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded">
-                {{ cardpack.cardAmount ? cardpack.cardAmount :  0 }} cards
+              <div
+                class="py-1 px-3 font-semibold text-xs bg-indigo-400 right-0 absolute top-0 rounded"
+              >
+                {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
               </div>
             </div>
             <div class="mb-4">
@@ -244,7 +201,15 @@
                 </div>
               </div>
 
-              <div @click="addLikes(cardpack.id)" :class="((liked_packs !== null && liked_packs.includes(cardpack.id)) ? 'bg-pink-600 text-pink-200 opacity-100' : '') +' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'">
+              <div
+                @click="addLikes(cardpack.id)"
+                :class="
+                  (liked_packs !== null && liked_packs.includes(cardpack.id)
+                    ? 'bg-pink-600 text-pink-200 opacity-100'
+                    : '') +
+                    ' select-none absolute right-0 hover:shadow flex flex-1 justify-end text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded opacity-50 hover:opacity-100 transition hover:text-pink-200 items-center'
+                "
+              >
                 <span class="font-semibold">{{ cardpack.likes }}</span>
                 <i class="ml-2 fa fa-heart text-xs"></i>
               </div>
@@ -252,9 +217,14 @@
           </div>
         </div>
       </transition-group>
-      <div v-if="cardpacks && ((cardpacks.length - limit) > 0) && !search">
-        <div @click="loadMoreCardpacks()" class="select-none fixed bottom-0 z-10 mb-8 cursor-pointer bg-indigo-200 text-indigo-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-indigo-300">
-        Load {{ ((cardpacks.length - limit) > 9) ? '9' : (cardpacks.length - limit) }} of {{ cardpacks.length - limit }} more..
+      <div v-if="cardpacks && cardpacks.length - limit > 0 && !search">
+        <div
+          @click="loadMoreCardpacks()"
+          class="select-none fixed bottom-0 z-10 mb-8 cursor-pointer bg-indigo-200 text-indigo-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-indigo-300"
+        >
+          Load
+          {{ cardpacks.length - limit > 9 ? "9" : cardpacks.length - limit }}
+          of {{ cardpacks.length - limit }} more..
         </div>
       </div>
     </div>
@@ -262,13 +232,15 @@
 </template>
 <script>
 import CreateCardModal from '../components/modals/CreateCardModal'
+import CreateCardpackModal from '../components/modals/CreateCardpackModal'
 import AuthService from '../services/AuthService'
 
 import axios from 'axios'
 
 export default {
   components: {
-    CreateCardModal
+    CreateCardModal,
+    CreateCardpackModal
   },
 
   async mounted () {
@@ -277,10 +249,15 @@ export default {
     this.user_id = user.payload.user.id
     this.liked_packs = JSON.parse(user.payload.user.liked_packs) || []
 
-    let response = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/cardpacks', [], {
-      withCredentials: true
-    })
-
+    let response = await axios.post(
+      `${location.protocol}//${location.hostname}` +
+        (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+        '/api/cardpacks',
+      [],
+      {
+        withCredentials: true
+      }
+    )
     this.cardpacks = response.data.payload
   },
 
@@ -288,16 +265,18 @@ export default {
     filteredCardpacks () {
       if (!this.cardpacks) return []
 
-      return this.cardpacks.filter(cardpack => {
-        return ((cardpack.name.toLowerCase()).match(this.search.toLowerCase()))
-      }).slice(0, this.limit)
+      return this.cardpacks
+        .filter(cardpack => {
+          return cardpack.name.toLowerCase().match(this.search.toLowerCase())
+        })
+        .slice(0, this.limit)
     },
 
     ownCardpacks () {
       if (!this.cardpacks) return []
 
       return this.cardpacks.filter(cardpack => {
-        return (cardpack.user_id === this.user_id)
+        return cardpack.user_id === this.user_id
       })
     }
   },
@@ -314,17 +293,23 @@ export default {
         return cardpack.id === id
       })
 
-      let request = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/cardpacks/addlike', {
-        currentPack: curPack.id
-      }, {
-        withCredentials: true
-      })
+      let request = await axios.post(
+        `${location.protocol}//${location.hostname}` +
+          (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+          '/api/cardpacks/addlike',
+        {
+          currentPack: curPack.id
+        },
+        {
+          withCredentials: true
+        }
+      )
 
       if (request.status === 200) {
-        if ((this.liked_packs.includes(id))) {
+        if (this.liked_packs.includes(id)) {
           curPack.likes -= 1
 
-          this.liked_packs = (this.liked_packs).filter(item => {
+          this.liked_packs = this.liked_packs.filter(item => {
             return item !== id
           })
         } else {
@@ -333,115 +318,6 @@ export default {
           this.liked_packs.push(id)
         }
       }
-    },
-
-    async saveChanges () {
-      if (!this.cardpack.title) {
-        this.errors.push({
-          field: 'cardpack.title',
-          error: 'Please enter a title'
-        })
-      }
-
-      if (!this.cardpack.description) {
-        this.errors.push({
-          field: 'cardpack.description',
-          error: 'Please enter a description'
-        })
-      }
-
-      if (!this.cardpack.tags.length > 0) {
-        this.errors.push({
-          field: 'cardpack.tags',
-          error: 'Please select atleast one tag'
-        })
-      }
-
-      if (this.cardpack.tags.length > 3) {
-        this.errors.push({
-          field: 'cardpack.tags',
-          error: 'Please limit your selection to three tags'
-        })
-      }
-
-      if (this.errors.length === 0) {
-        try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/cardpacks/create', {
-            name: this.cardpack.title,
-            description: this.cardpack.description,
-            tags: this.cardpack.tags
-          }, {
-            withCredentials: true
-          })
-
-          if (request.status === 200) {
-            this.createModalOpen = false
-            this.cardpacks.push(request.data.payload)
-            this.$parent.$refs.toast.openToast('success', 5, 'Your cardpack has been created successfully')
-            this.cardpack = {
-              title: '',
-              description: '',
-              tags: []
-            }
-          }
-        } catch (err) {
-          err.response.data.errors.forEach(error => {
-            this.errors.push({
-              field: error.field,
-              error: error.message
-            })
-          })
-        }
-      }
-    },
-    /**
-     * A helper function to check if the field parameter has an active error
-     *
-     * @param {String} field
-     *
-     * @return {Boolean}
-     */
-    hasError (field) {
-      return (this.errors.find(e => {
-        return e.field === field
-      })) !== undefined
-    },
-
-    /**
-     * A helper function to retrieve the active error of a specified field
-     *
-     * @param {String} field
-     *
-     * @return {String}
-     */
-    getError (field) {
-      return this.errors.find(e => {
-        return e.field === field
-      }).error
-    },
-
-    /**
-     * A helper function to clear the active error of a specified field
-
-     * @param {String} field
-     *
-     * @return {Boolean}
-     */
-    clearError (field) {
-      if (!this.hasError(field)) return
-
-      this.errors = this.errors.filter(e => {
-        return e.field !== field
-      })
-    },
-
-    /**
-     * A helper function clear all errors
-     *
-     * @return {Boolean}
-     */
-    clearErrors () {
-      this.errors = []
     }
   },
 
@@ -452,14 +328,7 @@ export default {
       search: '',
       cardpacks: null,
       user_id: null,
-      liked_packs: [],
-      errors: [],
-      categories: ['Fantasy', 'TV', 'Technical', 'Comedy', 'Games', 'Food'],
-      cardpack: {
-        title: '',
-        description: '',
-        tags: []
-      }
+      liked_packs: []
     }
   }
 }
