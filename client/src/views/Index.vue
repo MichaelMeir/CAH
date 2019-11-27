@@ -1,10 +1,14 @@
 <template>
-  <transition appear appear-class="page-fade-enter" appear-to-class="page-fade-enter-active">
+  <transition
+    appear
+    appear-class="page-fade-enter"
+    appear-to-class="page-fade-enter-active"
+  >
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
           <div
-            class="font-semibold text-indigo-700"
+            :class="`font-semibold text-${getTheme}-700`"
             v-if="!filteredRooms.length > 0"
           >
             There are no rooms available.
@@ -56,7 +60,7 @@
         <div class="mb-5">
           <button
             @click="createRoom()"
-            class="text-sm w-full text-indigo-600 border border-indigo-300 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
+            :class="`text-sm w-full text-${getTheme}-600 border border-${getTheme}-300 focus:outline-none font-semibold bg-${getTheme}-100 rounded px-5 py-3`"
           >Create a room</button>
         </div>
         <div class="flex mb-2">
@@ -66,35 +70,35 @@
           ></i>
           <input
             type="text"
-            class="search w-full rounded pl-10 pr-3 py-3 focus:outline-none cursor-pointer appearance-none text-white bg-indigo-700 font-semibold text-sm mb-3"
+            :class="`search w-full rounded pl-10 pr-3 py-3 focus:outline-none cursor-pointer appearance-none text-white bg-${getTheme}-700 font-semibold text-sm mb-3`"
             placeholder="Search rooms"
             v-model="search"
           />
         </div>
         <div class="mb-5">
-          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+          <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 flex rounded-t`">
             <div>Statistics</div>
             <div class="flex flex-1 justify-end">
               <i class="text-xs mt-1 fas fa-chart-pie"></i>
             </div>
           </div>
-          <div class="bg-indigo-800 text-indigo-100 py-3 px-4 rounded-b text-sm leading-loose">
+          <div :class="`bg-${getTheme}-800 text-${getTheme}-100 py-3 px-4 rounded-b text-sm leading-loose`">
             <div><span class="text-white font-bold">{{ rooms.length }}</span> active games</div>
             <div><span class="text-white font-bold">0</span> online users</div>
           </div>
         </div>
 
         <div>
-          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t flex">
+          <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 rounded-t flex`">
             <div>Filter by</div>
             <div class="flex flex-1 justify-end">
               <i class="text-xs mt-1 fas fa-filter"></i>
             </div>
           </div>
-          <div class="bg-indigo-800 text-indigo-100 py-4 px-3 rounded-b text-sm leading-loose">
+          <div :class="`bg-${getTheme}-800 text-${getTheme}-100 py-4 px-3 rounded-b text-sm leading-loose`">
             <select
               v-model="filters.players"
-              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs mb-3`"
             >
               <option value="allPlayers">All players</option>
               <option value="mostPlayers">Most players</option>
@@ -102,7 +106,7 @@
             </select>
             <select
               v-model="filters.spectators"
-              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs mb-3`"
             >
               <option value="allSpectators">All spectators</option>
               <option value="mostSpectators">Most spectators</option>
@@ -110,7 +114,7 @@
             </select>
             <select
               v-model="filters.rooms"
-              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs mb-3`"
             >
               <option value="allRooms">All rooms</option>
               <option value="publicRooms">Public rooms</option>
@@ -119,7 +123,7 @@
 
             <select
               v-model="filters.creationDate"
-              class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs`"
             >
               <option value="createdAnytime">Created anytime</option>
               <option value="recentlyCreated">Recently created</option>
@@ -132,9 +136,14 @@
   </transition>
 </template>
 <script>
+import ThemeStore from '../store/ThemeStore'
 
 export default {
   computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    },
+
     filteredRooms () {
       return this.rooms.filter(room => {
         return (room.name.toLowerCase().match(this.search.toLowerCase())) || (room.previewPlayers.toLowerCase().match(this.search.toLowerCase()))
@@ -148,7 +157,7 @@ export default {
       if (color) {
         return color
       }
-      return 'indigo'
+      return this.getTheme
     },
 
     getRandomColors (amount, inrow = 3, tries = 3) {

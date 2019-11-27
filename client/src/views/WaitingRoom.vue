@@ -33,7 +33,7 @@
                 <div class="flex border-t mt-4">
                   <div class="flex mt-4">
                     <button
-                      class="text-sm bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-10 rounded focus:outline-none transition mr-4"
+                      :class="`text-sm bg-${getTheme}-700 hover:bg-${getTheme}-800 text-white font-bold py-2 px-10 rounded focus:outline-none transition mr-4`"
                       @click="leaveRoom"
                     >
                       Yes
@@ -53,8 +53,8 @@
       </div>
     </transition>
     <div class="max-w-4xl mx-auto mt-1 flex flex-1">
-      <div class="bg-indigo-800 text-black my-5 rounded-b rounded w-2/3 overflow-y-auto mr-3">
-        <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+      <div :class="`bg-${getTheme}-800 text-black my-5 rounded-b rounded w-2/3 overflow-y-auto mr-3`">
+        <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 flex rounded-t`">
           <div>Chat</div>
           <div class="flex flex-1 justify-end">
             <i class="text-xs mt-1 fas fa-comments"></i>
@@ -62,7 +62,7 @@
         </div>
         <div
           ref="chat"
-          class="bg-indigo-700 text-white h-56 break-words overflow-y-auto m-3 p-3 text-sm leading-loose rounded"
+          :class="`bg-${getTheme}-700 text-white h-56 break-words overflow-y-auto m-3 p-3 text-sm leading-loose rounded`"
         >
           <div
             class="flex items-center"
@@ -85,25 +85,25 @@
           <input
             v-on:keyup.enter="sendMessage"
             v-model="message"
-            class="ml-3 placeholder-white mb-3 px-3 py-2 text-white bg-indigo-700 text-sm focus:outline-none w-4/5 rounded"
+            :class="`ml-3 placeholder-white mb-3 px-3 py-2 text-white bg-${getTheme}-700 text-sm focus:outline-none w-4/5 rounded`"
             type="text"
             autofocus
             placeholder="Send message..."
           />
           <button
             v-on:click="sendMessage"
-            class="bg-indigo-700 hover:bg-indigo-500 font-semibold text-sm focus:outline-none mr-3 ml-3 mb-3 text-white w-1/5 px-6 py-1 rounded transition"
+            :class="`bg-${getTheme}-700 hover:bg-${getTheme}-500 font-semibold text-sm focus:outline-none mr-3 ml-3 mb-3 text-white w-1/5 px-6 py-1 rounded transition`"
           >
             Send
           </button>
         </div>
       </div>
-      <div class="bg-indigo-800 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
+      <div :class="`bg-${getTheme}-800 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto`">
         <ul
           class=""
           style="height: 14rem"
         >
-          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+          <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 flex rounded-t`">
             <div>Playerlist</div>
             <div class="flex flex-1 justify-end">
               <i class="text-xs mt-1 fas fa-users"></i>
@@ -113,7 +113,7 @@
             <li
               v-bind:key="index"
               v-for="(user, index) in usernames"
-              class="bg-indigo-700 px-3 py-2 m-3 rounded cursor-pointer font-semibold"
+              :class="`bg-${getTheme}-700 px-3 py-2 m-3 rounded cursor-pointer font-semibold`"
             >
               <div>
                 <Interface :user="user" />
@@ -133,9 +133,9 @@
         </button>
         <button
           @click="cardpacksPopupShown = !cardpacksPopupShown"
-          class="focus:outline-none bg-indigo-700 hover:bg-indigo-800 text-sm text-white font-bold py-2 px-4 rounded transition"
+          :class="`focus:outline-none bg-${getTheme}-700 hover:bg-${getTheme}-800 text-sm text-white font-bold py-2 px-4 rounded transition`"
         >
-          <i class="fas fa-layer-group mr-2 text-blue-lightest"></i> Cardpacks
+          <i class="fas fa-layer-group mr-2 opacity-50"></i> Cardpacks
 
           <i :class="'fas ml-4 ' + (cardpacksPopupShown ? 'fa-caret-up' : 'fa-caret-down')"></i>
         </button>
@@ -143,21 +143,21 @@
         <transition name="fade">
           <div
             v-show="cardpacksPopupShown"
-            class="bg-indigo-800 shadow-inner text-white rounded mt-6 mr-2 pb-1 mb-8"
+            :class="`bg-${getTheme}-800 shadow-inner text-white rounded mt-6 mr-2 pb-1 mb-8`"
           >
-            <div class="text-white shadow bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t z-20">
+            <div :class="`text-white shadow bg-${getTheme}-700 text-sm font-bold px-4 py-4 rounded-t z-20`">
               <div class="flex items-center">
                 <div>Cardpacks</div>
                 <div class="flex flex-1 justify-end text-xs font-normal">
                   {{ selectedCardpacks.length }} cardpacks selected
                 </div>
               </div>
-              <div class="mt-1 font-normal text-blue-lightest">
+              <div class="mt-1 font-normal opacity-50">
                 Select cardpacks that should be used during the game
               </div>
               <input
                 type="text"
-                class="search w-full rounded mt-4 py-2 px-3 bg-transparent bg-indigo-600 placeholder-indigo-200 focus:outline-none cursor-pointer appearance-none text-white font-semibold text-xs"
+                :class="`search w-full rounded mt-4 py-2 px-3 bg-transparent bg-${getTheme}-600 placeholder-${getTheme}-200 focus:outline-none cursor-pointer appearance-none text-white font-semibold text-xs`"
                 placeholder="Search cardpacks..."
                 v-model="search"
               />
@@ -170,15 +170,15 @@
               <div
                 v-for="cardpack in filteredCardpacks"
                 :key="cardpack.id"
-                class="bg-indigo-700 cursor-pointer hover:bg-indigo-600 font-semibold rounded text-sm my-4 mx-4"
+                :class="`bg-${getTheme}-700 cursor-pointer hover:bg-${getTheme}-600 font-semibold rounded text-sm my-4 mx-4`"
               >
                 <label class="cursor-pointer py-3 px-4 w-full flex flex-row-reverse items-center">
                   <input
-                    class="form-checkbox focus:shadow-none text-green-500 text-lg bg-indigo-500 border-none"
+                    :class="`form-checkbox focus:shadow-none text-green-500 text-lg bg-${getTheme}-500 border-none`"
                     type="checkbox"
                     @change="toggleCardpackSelected(cardpack)"
                   >
-                  <div class="mr-4 bg-indigo-800 text-xs px-2 py-1 rounded text-indigo-100">
+                  <div :class="`mr-4 bg-${getTheme}-800 text-xs px-2 py-1 rounded text-${getTheme}-100`">
                     {{ cardpack.cardAmount }} cards
                   </div>
 
@@ -197,10 +197,10 @@
       </div>
       <div class="w-1/3 pl-1">
         <ul
-          class="bg-indigo-800 text-white rounded mb-5"
+          :class="`bg-${getTheme}-800 text-white rounded mb-5`"
           style="height: 14rem"
         >
-          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+          <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 flex rounded-t`">
             <div>Room settings</div>
             <div class="flex flex-1 justify-end">
               <i class="text-xs mt-1 fas fa-cog"></i>
@@ -210,7 +210,7 @@
             <span class="text-white font-bold text-xs">Maximum players</span>
             <select
               v-model="settings.maximumPlayers"
-              class="mt-1 text-black form-select w-full bg-indigo-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white"
+              :class="`mt-1 text-black form-select w-full bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white`"
             >
               <option
                 class="text-black"
@@ -232,12 +232,18 @@
 import Interface from '../components/Interface'
 import axios from 'axios'
 
+import ThemeStore from '../store/ThemeStore'
+
 export default {
   components: {
     Interface
   },
 
   computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    },
+
     filteredCardpacks () {
       if (!this.availableCardpacks) return []
 

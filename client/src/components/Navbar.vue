@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="bg-indigo-700 py-6 px-8 mt-5 rounded flex text-white max-w-4xl mx-auto items-center">
+    <nav :class="`bg-${getTheme}-700 py-6 px-8 mt-5 rounded flex text-white max-w-4xl mx-auto items-center`">
       <div class="text-sm leading-snug tracking-wider text-center">
         <span
           @click="redirect('/')"
@@ -15,35 +15,32 @@
           <li
             @click="redirect('/')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8 transition"
-            v-bind:class="{ 'active': this.$route.path === '/' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/' }"
           >Home</li>
           <li
             @click="redirect('/cardpacks')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8 transition"
-            v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/cardpacks' }"
           >Cardpacks</li>
           <li
             @click="redirect('/profile')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8 transition"
-            v-bind:class="{ 'active': this.$route.path === '/profile' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/profile' }"
           >My profile</li>
           <li
             v-if="isAuthenticated"
             @click="logout()"
-            class="cursor-pointer nav-item ml-8 transition"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition`"
           >Logout</li>
           <li
             v-if="!isAuthenticated"
             @click="redirect('/register')"
-            class="cursor-pointer nav-item ml-8 transition"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition`"
           >Create account</li>
           <li
             v-if="!isAuthenticated"
             @click="redirect('/login')"
-            class="cursor-pointer nav-item ml-8 transition"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition`"
           >Login</li>
         </ul>
 
@@ -77,10 +74,16 @@
 <script>
 import axios from 'axios'
 import AuthService from '../services/AuthService'
+import ThemeStore from '../store/ThemeStore'
 
 export default {
-
   props: ['onredirect'],
+
+  computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    }
+  },
 
   data () {
     return {
@@ -139,7 +142,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .nav-item {
-  @apply .text-indigo-200;
   &.active {
     @apply .font-bold .text-white;
   }
