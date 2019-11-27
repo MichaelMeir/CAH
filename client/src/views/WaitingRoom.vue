@@ -206,17 +206,17 @@
               <i class="text-xs mt-1 fas fa-cog"></i>
             </div>
           </div>
-          <div class="m-4">
-            <span class="text-white font-bold text-xs">Set Players:</span>
+          <div class="m-3">
+            <span class="text-white font-bold text-xs">Maximum players</span>
             <select
-              v-model="settings.quantity"
-              class="ml-32 text-black"
+              v-model="settings.maximumPlayers"
+              class="mt-1 text-black form-select w-full bg-indigo-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white"
             >
               <option
                 class="text-black"
                 :key="index"
-                v-for="index in 10"
-              >{{ index }}</option>
+                v-for="index in 9"
+              >{{ index + 1 }}</option>
             </select>
           </div>
           <div class="text-white"></div>
@@ -259,7 +259,7 @@ export default {
       redirected: false,
       visible: false,
       settings: {
-        quantity: 1
+        maximumPlayers: 2,
       },
       search: '',
 
