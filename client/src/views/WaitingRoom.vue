@@ -196,10 +196,7 @@
         </transition>
       </div>
       <div class="w-1/3 pl-1">
-        <ul
-          :class="`bg-${getTheme}-800 text-white rounded mb-5`"
-          style="height: 14rem"
-        >
+        <ul :class="`bg-${getTheme}-800 text-white rounded mb-5 overflow-y-auto`">
           <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 flex rounded-t`">
             <div>Room settings</div>
             <div class="flex flex-1 justify-end">
@@ -219,7 +216,58 @@
               >{{ index + 1 }}</option>
             </select>
           </div>
-          <div class="text-white"></div>
+          <div class="text-black m-3">
+            <span class="text-white font-bold text-xs">Time per round (in minutes)</span>
+            <input
+              type="number"
+              :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
+              v-model="settings.roundtimer"
+            />
+          </div>
+          <div class="text-black m-3">
+            <span class="text-white font-bold text-xs">Points to win</span>
+            <input
+              type="number"
+              :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
+              v-model="settings.points"
+            />
+          </div>
+          <div class="text-black m-3">
+            <span class="text-white font-bold text-xs">Amount of blank cards</span>
+            <input
+              type="number"
+              :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
+              v-model="settings.blankcards"
+            />
+          </div>
+          <div class="text-black m-3">
+            <div class="flex mt-5">
+              <div class="text-white font-bold text-xs">Password</div>
+              <div class="flex flex-1 justify-end">
+                <input
+                  type="checkbox"
+                  :class="`form-checkbox text-${getTheme}-600 focus:shadow-none`"
+                  v-model="settings.passwordenabled"
+                />
+              </div>
+            </div>
+            <input
+              v-if="settings.passwordenabled"
+              type="password"
+              :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
+              v-model="settings.password"
+            />
+          </div>
+          <div class="flex mt-5 m-3">
+            <div class="text-white font-bold text-xs">Votekick</div>
+            <div class="flex flex-1 justify-end">
+              <input
+                type="checkbox"
+                :class="`form-checkbox text-${getTheme}-600 focus:shadow-none`"
+                v-model="settings.votekick"
+              />
+            </div>
+          </div>
         </ul>
         <button class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition">
           <i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game
@@ -265,7 +313,13 @@ export default {
       redirected: false,
       visible: false,
       settings: {
-        maximumPlayers: 2
+        maximumPlayers: 2,
+        roundtimer: 30,
+        points: 10,
+        blankcards: 10,
+        passwordenabled: false,
+        password: null,
+        votekick: false
       },
       search: '',
 
