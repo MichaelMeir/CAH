@@ -163,7 +163,7 @@
             </div>
           </div>
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="username">Theme color</label>
             <select
               v-model="theme"
@@ -177,14 +177,7 @@
                 {{ color }}
               </option>
             </select>
-
-            <div
-              v-if="hasError('current_password')"
-              class="error-message"
-            >
-              {{ getError('current_password') }}
-            </div>
-          </div>
+          </div> -->
 
           <button
             @click="saveChanges()"
