@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Navbar />
     <div class="max-w-md mx-auto flex mt-8 flex-col">
       <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t">
         Create account
@@ -74,7 +73,7 @@
           </div>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 flex items-center">
           <label :class="(hasError('tos') ? 'error-message underline' : '') + ' flex text-xs items-center cursor-pointer text-white'">
             <input
               @change="clearError('tos')"
@@ -82,8 +81,12 @@
               type="checkbox"
               v-model="tos"
             >
-            I agree to the terms &amp; conditions
+            I agree to the
           </label>
+          <span
+            @click="$router.push('/terms-and-conditions')"
+            class="underline ml-1 text-xs text-white cursor-pointer hover:text-indigo-200"
+          >terms &amp; conditions</span>
         </div>
 
         <div>
@@ -113,13 +116,7 @@
 <script>
 import axios from 'axios'
 
-import Navbar from '../components/Navbar'
-
 export default {
-  components: {
-    Navbar
-  },
-
   data () {
     return {
       username: null,

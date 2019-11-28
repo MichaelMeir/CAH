@@ -1,188 +1,252 @@
 <template>
-  <div>
-    <Navbar ref="navbar" />
-    <div
-      v-if="status !== null"
-      class="max-w-4xl mt-4 mx-auto bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
-    >
-      {{ status }}
-    </div>
-    <div
-      @click="deleteModalOpen = false"
-      v-if="deleteModalOpen"
-      class="absolute z-10 left-0 top-0 bg-white opacity-50 h-full w-full"
-    ></div>
-    <div
-      class="absolute left-0 right-0 top-0 z-20"
-      v-if="deleteModalOpen"
-    >
-      <div class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4">
-        <div class="text-base font-semibold flex items-center">
-          <div>Please enter your current password</div>
-          <div class="flex flex-1 justify-end">
-            <svg
-              @click="deleteModalOpen = false"
-              class="h-4 w-4 cursor-pointer"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                class="close"
-                d="M10 8.586L2.929 1.515 1.515 2.929 8.585 10l-7.07 7.071 1.414 1.414L10 11.415l7.071 7.07 1.414-1.414L11.415 10l7.07-7.071-1.414-1.414L10 8.585z"
-                fill-rule="evenodd"
-              /></svg>
+  <transition
+    appear
+    appear-class="page-fade-enter"
+    appear-to-class="page-fade-enter-active"
+  >
+    <div>
+      <div
+        v-if="status !== null"
+        class="max-w-4xl mt-4 mx-auto bg-green-200 mb-2 border border-green-300 text-green-700 font-semibold text-sm rounded py-3 px-4"
+      >
+        {{ status }}
+      </div>
+      <div
+        v-if="statusError !== null"
+        class="max-w-4xl mt-4 mx-auto bg-red-200 mb-2 border border-red-300 text-red-700 font-semibold text-sm rounded py-3 px-4"
+      >
+        {{ statusError }}
+      </div>
+      <div
+        @click="deleteModalOpen = false"
+        v-if="deleteModalOpen"
+        class="absolute z-10 left-0 top-0 bg-white opacity-50 h-full w-full"
+      ></div>
+      <div
+        class="absolute left-0 right-0 top-0 z-20"
+        v-if="deleteModalOpen"
+      >
+        <div :class="`shadow bg-${getTheme}-100 text-${getTheme}-800 border border-${getTheme}-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4`">
+          <div class="text-base font-semibold flex items-center">
+            <div>Please enter your current password</div>
+            <div class="flex flex-1 justify-end">
+              <svg
+                @click="deleteModalOpen = false"
+                class="h-4 w-4 cursor-pointer"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  class="close"
+                  d="M10 8.586L2.929 1.515 1.515 2.929 8.585 10l-7.07 7.071 1.414 1.414L10 11.415l7.071 7.07 1.414-1.414L11.415 10l7.07-7.071-1.414-1.414L10 8.585z"
+                  fill-rule="evenodd"
+                /></svg>
+            </div>
+          </div>
+          <div class="mt-3 text-sm">
+            Make sure that this action cannot be undone and that this will permanently delete your account information.
+
+            <div :class="`mt-4 border-t border-${getTheme}-200 pt-4`">
+              <label for="password">Current password</label>
+              <input
+                @keydown="clearError('deleteCurrentPassword')"
+                :class="(hasError('deleteCurrentPassword') ? 'has-error' : '') + ` focus:outline-none mt-1 block w-full py-1 px-2 text-base rounded border border-${getTheme}-200`"
+                type="password"
+                v-model="deleteCurrentPassword"
+              >
+              <div
+                v-if="hasError('deleteCurrentPassword')"
+                class="error-message"
+              >
+                {{ getError('deleteCurrentPassword') }}
+              </div>
+              <button
+                @click="deleteAccount()"
+                class="mt-8 focus:outline-none hover:bg-red-600 mt-2 bg-red-500 rounded py-2 px-4 font-semibold text-white"
+                type="button"
+              >Delete account</button>
+            </div>
           </div>
         </div>
-        <div class="mt-3 text-sm">
-          Make sure that this action cannot be undone and that this will permanently delete your account information.
+      </div>
+      <div class="max-w-4xl mx-auto mt-5 flex">
+        <div :class="`text-${getTheme}-800 bg-${getTheme}-100 rounded p-4 text-sm w-full`">
+          <div class="font-semibold mb-4 text-base">Modify your account settings</div>
 
-          <div class="mt-4 border-t border-indigo-200 pt-4">
-            <label for="password">Current password</label>
+          <div class="mb-3">
+            <label for="username">Username</label>
             <input
-              @keydown="clearError('deleteCurrentPassword')"
-              :class="(hasError('deleteCurrentPassword') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-full py-1 px-2 text-base rounded border border-indigo-200'"
-              type="password"
-              v-model="deleteCurrentPassword"
+              @keydown="clearError('username')"
+              :class="(hasError('username') ? 'has-error' : '') + ` text-${getTheme}-300 cursor-pointer focus:outline-none mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
+              type="text"
+              v-model="user.username"
+              disabled
+            >
+            <small>You are not able to modify your username</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="avatar">Avatar</label>
+            <input
+              @change="handleAvatarChange()"
+              :class="(hasError('avatar') ? 'has-error' : '') + ` p-3 bg-${getTheme}-600 rounded text-white focus:outline-none mt-1 block w-1/3 mb-1`"
+              type="file"
+              accept="image/*"
+            >
+            <small>The recommended dimensions (in pixels) are: {{ required.avatarHeight }} x {{ required.avatarWidth }}</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="username">Email address</label>
+            <input
+              @keydown="clearError('email')"
+              :class="(hasError('email') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
+              type="email"
+              v-model="user.email"
             >
             <div
-              v-if="hasError('deleteCurrentPassword')"
+              v-if="hasError('email')"
               class="error-message"
             >
-              {{ getError('deleteCurrentPassword') }}
+              {{ getError('email') }}
             </div>
-            <button
-              @click="deleteAccount()"
-              class="mt-8 focus:outline-none hover:bg-red-600 mt-2 bg-red-500 rounded py-2 px-4 font-semibold text-white"
-              type="button"
-            >Delete account</button>
           </div>
+
+          <div class="mb-3">
+            <label for="new_password">New password</label>
+            <input
+              @keydown="clearError('new_password')"
+              :class="(hasError('new_password') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
+              type="password"
+              v-model="new_password"
+            >
+            <div
+              v-if="hasError('new_password')"
+              class="error-message"
+            >
+              {{ getError('new_password') }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="new_password_confirmation">Confirm your new password</label>
+            <input
+              @keydown="clearError('new_password_confirmation')"
+              :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
+              type="password"
+              v-model="new_password_confirmation"
+            >
+            <div
+              v-if="hasError('new_password_confirmation')"
+              class="error-message"
+            >
+              {{ getError('new_password_confirmation') }}
+            </div>
+          </div>
+
+          <div
+            v-if="new_password"
+            class="mb-3"
+          >
+            <label for="username">Enter your current password</label>
+            <input
+              @keydown="clearError('current_password')"
+              :class="(hasError('current_password') ? 'has-error' : '') + ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
+              type="password"
+              v-model="current_password"
+            >
+            <div
+              v-if="hasError('current_password')"
+              class="error-message"
+            >
+              {{ getError('current_password') }}
+            </div>
+          </div>
+
+          <!-- <div class="mb-3">
+            <label for="username">Theme color</label>
+            <select
+              v-model="theme"
+              @change="changeTheme"
+              :class="`focus:shadow-outline form-select block w-1/3 focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200 py-2 capitalize text-sm cursor-pointer`"
+            >
+              <option
+                v-for="(color, index) in availableColors"
+                :key="index"
+              >
+                {{ color }}
+              </option>
+            </select>
+          </div> -->
+
+          <button
+            @click="saveChanges()"
+            :class="`focus:outline-none hover:bg-${getTheme}-600 mt-2 bg-${getTheme}-500 rounded py-2 px-4 font-semibold text-white`"
+            type="button"
+          >Save changes</button>
+
+          <button
+            @click="deleteModalOpen = !deleteModalOpen"
+            class="focus:outline-none hover:bg-red-600 mt-2 bg-red-500 rounded py-2 px-4 font-semibold text-white"
+            type="button"
+          >Delete my account</button>
         </div>
       </div>
     </div>
-    <div class="max-w-4xl mx-auto mt-5 flex">
-      <div class="text-indigo-800 bg-indigo-100 rounded p-4 text-sm w-full">
-        <div class="font-semibold mb-4 text-base">Modify your account settings</div>
-
-        <div class="mb-3">
-          <label for="username">Username</label>
-          <input
-            @keydown="clearError('username')"
-            :class="(hasError('username') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-            type="text"
-            v-model="user.username"
-            disabled
-          >
-          <small>You are not able to modify your username</small>
-        </div>
-
-        <div class="mb-3">
-          <label for="username">Email address</label>
-          <input
-            @keydown="clearError('email')"
-            :class="(hasError('email') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-            type="email"
-            v-model="user.email"
-          >
-          <div
-            v-if="hasError('email')"
-            class="error-message"
-          >
-            {{ getError('email') }}
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="new_password">New password</label>
-          <input
-            @keydown="clearError('new_password')"
-            :class="(hasError('new_password') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-            type="password"
-            v-model="new_password"
-          >
-          <div
-            v-if="hasError('new_password')"
-            class="error-message"
-          >
-            {{ getError('new_password') }}
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="new_password_confirmation">Confirm your new password</label>
-          <input
-            @keydown="clearError('new_password_confirmation')"
-            :class="(hasError('new_password_confirmation') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-            type="password"
-            v-model="new_password_confirmation"
-          >
-          <div
-            v-if="hasError('new_password_confirmation')"
-            class="error-message"
-          >
-            {{ getError('new_password_confirmation') }}
-          </div>
-        </div>
-
-        <div
-          v-if="new_password"
-          class="mb-3"
-        >
-          <label for="username">Enter your current password</label>
-          <input
-            @keydown="clearError('current_password')"
-            :class="(hasError('current_password') ? 'has-error' : '') + ' focus:outline-none mt-1 block w-1/3 p-2 rounded border border-indigo-200'"
-            type="password"
-            v-model="current_password"
-          >
-          <div
-            v-if="hasError('current_password')"
-            class="error-message"
-          >
-            {{ getError('current_password') }}
-          </div>
-        </div>
-
-        <button
-          @click="saveChanges()"
-          class="focus:outline-none hover:bg-indigo-600 mt-2 bg-indigo-500 rounded py-2 px-4 font-semibold text-white"
-          type="button"
-        >Save changes</button>
-
-        <button
-          @click="deleteModalOpen = !deleteModalOpen"
-          class="focus:outline-none hover:bg-red-600 mt-2 bg-red-500 rounded py-2 px-4 font-semibold text-white"
-          type="button"
-        >Delete my account</button>
-      </div>
-    </div>
-  </div>
+  </transition>
 </template>
 <script>
-import Navbar from '../components/Navbar'
 import AuthService from '../services/AuthService'
 
+import Clipper from 'image-clipper'
 import axios from 'axios'
 
+import ThemeStore from '../store/ThemeStore'
+
 export default {
-  components: {
-    Navbar
+  computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    },
+
+    availableColors () {
+      return [
+        'red',
+        'orange',
+        'yellow',
+        'green',
+        'teal',
+        'blue',
+        'purple',
+        'indigo',
+        'pink'
+      ]
+    }
   },
 
   data () {
     return {
+      theme: ThemeStore.state.theme,
       user: {
         username: null,
-        email: null
+        email: null,
+        avatar: null
       },
       errors: [],
       status: null,
+      statusError: null,
 
       new_password: null,
       new_password_confirmation: null,
       current_password: null,
 
       deleteModalOpen: false,
-      deleteCurrentPassword: null
+      deleteCurrentPassword: null,
+
+      required: {
+        avatarHeight: 300,
+        avatarWidth: 300
+      }
     }
   },
 
@@ -192,6 +256,10 @@ export default {
   },
 
   methods: {
+    changeTheme () {
+      ThemeStore.commit('changeTheme', this.theme)
+    },
+
     async deleteAccount () {
       if (!this.deleteCurrentPassword) {
         this.errors.push({
@@ -202,11 +270,17 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/deleteAccount', {
-            deleteCurrentPassword: this.deleteCurrentPassword
-          }, {
-            withCredentials: true
-          })
+          let request = await axios.post(
+            `${location.protocol}//${location.hostname}` +
+            (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+            '/api/auth/deleteAccount',
+            {
+              deleteCurrentPassword: this.deleteCurrentPassword
+            },
+            {
+              withCredentials: true
+            }
+          )
 
           if (request.status === 200) {
             AuthService.logout()
@@ -223,6 +297,57 @@ export default {
       }
     },
 
+    async handleAvatarChange () {
+      this.clearError('avatar')
+      this.statusError = null
+      this.status = null
+
+      const file = document.querySelector('[type=file]').files[0]
+
+      let image = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
+
+      let img = new Image()
+      img.src = image
+
+      img.onload = () => {
+        Clipper(img)
+          .resize(this.required.avatarWidth, this.required.avatarHeight)
+          .toDataURL(async dataUrl => {
+            this.status = `Your avatar has been uploaded successfully.`
+            this.$parent.$refs.navbar.user.avatar = dataUrl
+
+            await axios.post(
+              `${location.protocol}//${location.hostname}` +
+              (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+              '/api/auth/avatar',
+              {
+                avatar: dataUrl
+              },
+              {
+                withCredentials: true
+              }
+            )
+          })
+      }
+      // if ((img.naturalWidth > this.required.avatarWidth) || (img.naturalHeight > this.required.avatarHeight)) {
+      //   this.statusError = `The maximum dimensions of an avatar are: ${this.required.avatarWidth} x ${this.required.avatarHeight}, please try again.`
+      // } else {
+      //   this.status = `Your avatar has been uploaded successfully.`
+      //   this.$parent.$refs.navbar.user.avatar = image
+
+      //   await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/avatar', {
+      //     avatar: image
+      //   }, {
+      //     withCredentials: true
+      //   })
+      // }
+    },
+
     async saveChanges () {
       if (this.new_password && !this.new_password_confirmation) {
         this.errors.push({
@@ -231,7 +356,10 @@ export default {
         })
       }
 
-      if (this.new_password && (this.new_password !== this.new_password_confirmation)) {
+      if (
+        this.new_password &&
+        this.new_password !== this.new_password_confirmation
+      ) {
         this.errors.push({
           field: 'new_password_confirmation',
           error: 'Your new password does not match.'
@@ -240,14 +368,20 @@ export default {
 
       if (this.errors.length === 0) {
         try {
-          let request = await axios.post(`${location.protocol}//${location.hostname}` + (!process.env.DEV ? '' : (':' + process.env.SERVER_PORT)) + '/api/auth/profile', {
-            email: this.user.email,
-            new_password: this.new_password,
-            new_password_confirmation: this.new_password_confirmation,
-            current_password: this.current_password
-          }, {
-            withCredentials: true
-          })
+          let request = await axios.post(
+            `${location.protocol}//${location.hostname}` +
+            (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+            '/api/auth/profile',
+            {
+              email: this.user.email,
+              new_password: this.new_password,
+              new_password_confirmation: this.new_password_confirmation,
+              current_password: this.current_password
+            },
+            {
+              withCredentials: true
+            }
+          )
 
           if (request.status === 200) {
             this.status = 'Your changes has been saved'
@@ -271,9 +405,11 @@ export default {
      * @return {Boolean}
      */
     hasError (field) {
-      return (this.errors.find(e => {
-        return e.field === field
-      })) !== undefined
+      return (
+        this.errors.find(e => {
+          return e.field === field
+        }) !== undefined
+      )
     },
 
     /**
@@ -317,10 +453,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 input {
-  &:disabled {
-    @apply .text-indigo-300 .cursor-not-allowed;
-  }
-
   &.has-error {
     @apply .border .border-red-300 .text-red-500;
 

@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <Navbar />
-    <Toast ref="toast" />
+  <transition
+    appear
+    appear-class="page-fade-enter"
+    appear-to-class="page-fade-enter-active"
+  >
     <div class="max-w-4xl mx-auto mt-5 flex">
       <div class="w-3/4">
         <div>
           <div
-            class="font-semibold text-indigo-700"
+            :class="`font-semibold text-${getTheme}-700`"
             v-if="!filteredRooms.length > 0"
           >
             There are no rooms available.
@@ -21,7 +23,7 @@
               :key="index + 1"
               class="w-1/3 p-2"
             >
-              <div :class="'bg-' + getColor(room.id) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
+              <div :class="'bg-' + getColor(index) + '-500 text-white text-sm rounded p-4 cursor-pointer'">
                 <div class="font-semibold mb-4 text-base flex">
                   <div>{{ room.name }}</div>
                   <div class="flex flex-1 justify-end">
@@ -58,7 +60,7 @@
         <div class="mb-5">
           <button
             @click="createRoom()"
-            class="text-sm w-full text-indigo-600 border border-indigo-300 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
+            :class="`text-sm w-full text-${getTheme}-600 border border-${getTheme}-300 focus:outline-none font-semibold bg-${getTheme}-100 rounded px-5 py-3`"
           >Create a room</button>
         </div>
         <div class="flex mb-2">
@@ -68,70 +70,80 @@
           ></i>
           <input
             type="text"
-            class="search w-full rounded pl-10 pr-3 py-3 focus:outline-none cursor-pointer appearance-none text-white bg-indigo-700 font-semibold text-sm mb-3"
+            :class="`search w-full rounded pl-10 pr-3 py-3 focus:outline-none cursor-pointer appearance-none text-white bg-${getTheme}-700 font-semibold text-sm mb-3`"
             placeholder="Search rooms"
             v-model="search"
           />
         </div>
         <div class="mb-5">
-          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 flex rounded-t">
+          <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 flex rounded-t`">
             <div>Statistics</div>
             <div class="flex flex-1 justify-end">
               <i class="text-xs mt-1 fas fa-chart-pie"></i>
             </div>
           </div>
-          <div class="bg-indigo-800 text-indigo-100 py-3 px-4 rounded-b text-sm leading-loose">
-            <div><span class="text-white font-bold">0</span> active games</div>
+          <div :class="`bg-${getTheme}-800 text-${getTheme}-100 py-3 px-4 rounded-b text-sm leading-loose`">
+            <div><span class="text-white font-bold">{{ rooms.length }}</span> active games</div>
             <div><span class="text-white font-bold">0</span> online users</div>
           </div>
         </div>
 
         <div>
-          <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t flex">
+          <div :class="`text-white bg-${getTheme}-700 text-sm font-bold px-4 py-4 rounded-t flex`">
             <div>Filter by</div>
             <div class="flex flex-1 justify-end">
               <i class="text-xs mt-1 fas fa-filter"></i>
             </div>
           </div>
-          <div class="bg-indigo-800 text-indigo-100 py-4 px-3 rounded-b text-sm leading-loose">
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All players</option>
-              <option>Most players</option>
-              <option>Least players</option>
+          <div :class="`bg-${getTheme}-800 text-${getTheme}-100 py-4 px-3 rounded-b text-sm leading-loose`">
+            <select
+              v-model="filters.players"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs mb-3`"
+            >
+              <option value="allPlayers">All players</option>
+              <option value="mostPlayers">Most players</option>
+              <option value="leastPlayers">Least players</option>
             </select>
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All spectators</option>
-              <option>Most spectators</option>
-              <option>Least spectators</option>
+            <select
+              v-model="filters.spectators"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs mb-3`"
+            >
+              <option value="allSpectators">All spectators</option>
+              <option value="mostSpectators">Most spectators</option>
+              <option value="leastSpectators">Least spectators</option>
             </select>
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs mb-3">
-              <option>All rooms</option>
-              <option>Public rooms</option>
-              <option>Private rooms</option>
+            <select
+              v-model="filters.rooms"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs mb-3`"
+            >
+              <option value="allRooms">All rooms</option>
+              <option value="publicRooms">Public rooms</option>
+              <option value="privateRooms">Private rooms</option>
             </select>
 
-            <select class="w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-indigo-100 bg-indigo-900 font-semibold text-xs">
-              <option>Created anytime</option>
-              <option>Recently created</option>
-              <option>Longest created</option>
+            <select
+              v-model="filters.creationDate"
+              :class="`w-full rounded px-3 py-1 focus:outline-none shadow-inner cursor-pointer appearance-none text-${getTheme}-100 bg-${getTheme}-900 font-semibold text-xs`"
+            >
+              <option value="createdAnytime">Created anytime</option>
+              <option value="recentlyCreated">Recently created</option>
+              <option value="longestCreated">Longest created</option>
             </select>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
-import Navbar from '../components/Navbar'
-import Toast from '../components/Toast'
+import ThemeStore from '../store/ThemeStore'
 
 export default {
-  components: {
-    Navbar,
-    Toast
-  },
-
   computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    },
+
     filteredRooms () {
       return this.rooms.filter(room => {
         return (room.name.toLowerCase().match(this.search.toLowerCase())) || (room.previewPlayers.toLowerCase().match(this.search.toLowerCase()))
@@ -145,7 +157,7 @@ export default {
       if (color) {
         return color
       }
-      return 'indigo'
+      return this.getTheme
     },
 
     getRandomColors (amount, inrow = 3, tries = 3) {
@@ -192,7 +204,7 @@ export default {
     async createRoom () {
       const jwt = this.$cookies.get('jwt')
       if (!jwt) {
-        this.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
+        this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
         return
       }
       const methods = window.socket.import([
@@ -202,7 +214,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        this.$refs.toast.openToast('danger', 5, 'Server failed to supply a game room code.')
+        this.$parent.$refs.toast.openToast('danger', 5, 'Server failed to supply a game room code.')
       }
     },
 
@@ -219,7 +231,7 @@ export default {
       if (response.room) {
         this.$router.push('/waitingroom/' + response.room)
       } else {
-        this.$refs.toast.openToast('danger', 5, response.message)
+        this.$parent.$refs.toast.openToast('danger', 5, response.message)
         this.updateRooms()
       }
     },
@@ -232,8 +244,8 @@ export default {
       this.getRandomColors(this.rooms.length)
     },
 
-    async leaveRoom (socket, reason) {
-      this.$refs.toast.openToast('danger', 5, reason)
+    async leaveRoomClient (socket, reason) {
+      this.$parent.$refs.toast.openToast('danger', 5, reason)
     }
   },
 
@@ -242,12 +254,19 @@ export default {
       search: '',
       previous: '',
       colors: [],
-      rooms: []
+      rooms: [],
+
+      filters: {
+        players: 'allPlayers',
+        spectators: 'allSpectators',
+        rooms: 'allRooms',
+        creationDate: 'createdAnytime'
+      }
     }
   },
 
   async created () {
-    window.socket.export({ leaveRoom: this.leaveRoom })
+    window.socket.export({ leaveRoom: this.leaveRoomClient })
     this.updateRooms()
   }
 }

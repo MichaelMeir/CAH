@@ -9,6 +9,7 @@ import Reset from '@/views/Reset'
 import ForgotPassword from '@/views/ForgotPassword'
 import Room from '@/views/Room'
 import WaitingRoom from '@/views/WaitingRoom'
+import TOS from '@/views/TOS'
 
 import Register from '@/views/Register'
 import Login from '@/views/Login'
@@ -59,6 +60,14 @@ const router = new Router({
       component: Profile,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: '/terms-and-conditions',
+      name: 'TOS',
+      component: TOS,
+      meta: {
+        requiresAuth: false
       }
     },
     {

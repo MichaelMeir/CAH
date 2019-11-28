@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="bg-indigo-700 py-6 px-8 mt-5 rounded flex text-white max-w-4xl mx-auto items-center">
+    <nav :class="`bg-${getTheme}-700 py-6 px-8 mt-5 rounded flex text-white max-w-4xl mx-auto items-center`">
       <div class="text-sm leading-snug tracking-wider text-center">
         <span
           @click="redirect('/')"
@@ -8,53 +8,50 @@
         >Cards Against Me</span>
       </div>
       <div class="flex flex-1 justify-end text-sm">
-        <ul class="flex items-center">
+        <ul
+          class="flex items-center"
+          v-if="loaded"
+        >
           <li
             @click="redirect('/')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8"
-            v-bind:class="{ 'active': this.$route.path === '/' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/' }"
           >Home</li>
           <li
             @click="redirect('/cardpacks')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8"
-            v-bind:class="{ 'active': this.$route.path === '/cardpacks' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/cardpacks' }"
           >Cardpacks</li>
           <li
             @click="redirect('/profile')"
             v-if="isAuthenticated"
-            class="cursor-pointer nav-item ml-8"
-            v-bind:class="{ 'active': this.$route.path === '/profile' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/profile' }"
           >My profile</li>
           <li
             v-if="isAuthenticated"
             @click="logout()"
-            class="cursor-pointer nav-item ml-8"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition`"
           >Logout</li>
           <li
             v-if="!isAuthenticated"
             @click="redirect('/register')"
-            class="cursor-pointer nav-item ml-8"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition`"
           >Create account</li>
           <li
             v-if="!isAuthenticated"
             @click="redirect('/login')"
-            class="cursor-pointer nav-item ml-8"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition`"
           >Login</li>
         </ul>
 
         <div
           class="flex items-center ml-8"
-          v-if="isAuthenticated"
+          v-if="isAuthenticated && user.avatar !== null"
         >
-          <!-- <div
-            :style="(user.avatar !== null) ? `background-image: url(data:image/jpeg;base64,${user.avatar})` : `background-image: url(https://clinicforspecialchildren.org/wp-content/uploads/2016/08/avatar-placeholder.gif)`"
+          <div
+            :style="`background-image: url(${user.avatar})`"
             class="bg-cover bg-center rounded-full h-8 w-8"
           >
-          </div> -->
-          <div>
-
           </div>
         </div>
       </div>
@@ -77,16 +74,23 @@
 <script>
 import axios from 'axios'
 import AuthService from '../services/AuthService'
+import ThemeStore from '../store/ThemeStore'
 
 export default {
-
   props: ['onredirect'],
+
+  computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    }
+  },
 
   data () {
     return {
       isAuthenticated: false,
       isVerified: true,
-      user: null
+      user: null,
+      loaded: false
     }
   },
 
@@ -94,16 +98,21 @@ export default {
     let isAuthenticated = await AuthService.isAuthenticated()
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
-
       let user = await AuthService.getUser()
       this.user = user.payload.user
 
       if (!isVerified) this.isVerified = false
       this.isAuthenticated = true
+      this.loaded = true
+    } else {
+      this.loaded = true
     }
   },
 
   methods: {
+    getAvatarFromBuffer (buffer) {
+      return Buffer.from(buffer).toString('base64')
+    },
 
     redirect (url) {
       if (this.onredirect) this.onredirect(url)
@@ -133,7 +142,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .nav-item {
-  @apply .text-indigo-200;
   &.active {
     @apply .font-bold .text-white;
   }

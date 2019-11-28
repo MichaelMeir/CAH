@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Navbar />
     <div class="max-w-md mx-auto flex mt-8 flex-col">
       <div class="text-white bg-indigo-700 text-sm font-bold px-4 py-4 rounded-t">
         Login
@@ -86,13 +85,7 @@
 <script>
 import axios from 'axios'
 
-import Navbar from '../components/Navbar'
-
 export default {
-  components: {
-    Navbar
-  },
-
   data () {
     return {
       email: null,

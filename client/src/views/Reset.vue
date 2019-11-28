@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Navbar />
     <div
       class="text-center mt-8 bg-indigo-700 rounded w-1/4 mx-auto text-white font-bold p-10"
       v-if="error"
@@ -70,12 +69,8 @@
 </template>
 <script>
 import axios from 'axios'
-import Navbar from '../components/Navbar'
 
 export default {
-  components: {
-    Navbar
-  },
   data () {
     return {
       verified: false,
