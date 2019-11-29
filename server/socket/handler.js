@@ -68,7 +68,7 @@ module.exports = {
             if(user && rooms[roomId]) {
                 meta.user = user.uuid
                 meta.username = user.username_withcase
-                if(rooms[roomId].users.length < rooms[roomId].maxPlayers) {
+                if(rooms[roomId].users.length < rooms[roomId].settings.maximumPlayers) {
                     meta.room = roomId
                     rooms[roomId].currentPlayers += 1
                     rooms[roomId].users.push(user.uuid)
