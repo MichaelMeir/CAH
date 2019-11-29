@@ -6,9 +6,7 @@
         class="fixed z-40 left-0 top-0 bg-black opacity-50 h-full w-full"
       ></div>
       <div class="fixed left-0 right-0 top-0 z-50">
-        <div
-          class="shadow bg-indigo-100 text-indigo-800 border border-indigo-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4"
-        >
+        <div :class="`shadow bg-${getTheme}-100 text-${getTheme}-800 border border-${getTheme}-200 rounded max-w-2xl mx-auto flex flex-col mt-32 p-4`">
           <div class="text-base font-semibold flex items-center">
             <div>Creating a cardpack</div>
             <div class="flex flex-1 justify-end">
@@ -29,7 +27,7 @@
           <div class="mt-3 text-sm">
             Please fill in all the fields to create your cardpack
 
-            <div class="mt-4 border-t border-indigo-200 pt-4">
+            <div :class="`mt-4 border-t border-${getTheme}-200 pt-4`">
               <div>
                 <label>Name</label>
                 <input
@@ -37,10 +35,13 @@
                   @keydown="clearError('cardpack.title')"
                   :class="
                     (hasError('cardpack.title') ? 'has-error' : '') +
-                      ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'
+                      ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-full py-1 px-2 text-sm rounded border border-${getTheme}-200`
                   "
                 />
-                <div v-if="hasError('cardpack.title')" class="error-message">
+                <div
+                  v-if="hasError('cardpack.title')"
+                  class="error-message"
+                >
                   {{ getError("cardpack.title") }}
                 </div>
               </div>
@@ -50,7 +51,7 @@
                   v-model="cardpack.description"
                   :class="
                     (hasError('cardpack.description') ? 'has-error' : '') +
-                      ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200'
+                      ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-full py-1 px-2 text-sm rounded border border-${getTheme}-200`
                   "
                 />
                 <div
@@ -68,7 +69,7 @@
                   multiple
                   :class="
                     (hasError('cardpack.tags') ? 'has-error' : '') +
-                      ' focus:outline-none mt-1 block w-full py-1 px-2 text-sm rounded border border-indigo-200 text-gray-700'
+                      ` focus:outline-none focus:border-${getTheme}-300 transition mt-1 block w-full py-1 px-2 text-sm rounded border border-${getTheme}-200 text-gray-700`
                   "
                 >
                   <option disabled selected>Select tags</option>
@@ -84,7 +85,7 @@
                 </div>
               </div>
               <button
-                class="mt-8 focus:outline-none hover:bg-indigo-600 mt-2 bg-indigo-500 rounded py-2 px-4 font-semibold text-white"
+                :class="`mt-8 focus:outline-none hover:bg-${getTheme}-600 mt-2 bg-${getTheme}-500 rounded py-2 px-4 font-semibold text-white`"
                 type="button"
                 @click="saveChanges"
               >
@@ -100,7 +101,15 @@
 
 <script>
 import axios from 'axios'
+import ThemeStore from '../../store/ThemeStore'
+
 export default {
+  computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    }
+  },
+
   data () {
     return {
       open: false,
@@ -151,8 +160,8 @@ export default {
         try {
           let request = await axios.post(
             `${location.protocol}//${location.hostname}` +
-              (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
-              '/api/cardpacks/create',
+            (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+            '/api/cardpacks/create',
             {
               name: this.cardpack.title,
               description: this.cardpack.description,

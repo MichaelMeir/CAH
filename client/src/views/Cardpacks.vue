@@ -1,24 +1,25 @@
 <template>
   <div>
-    <CreateCardModal ref="createCardModal" :cardpacks="ownCardpacks" />
+    <CreateCardModal
+      ref="createCardModal"
+      :cardpacks="ownCardpacks"
+    />
     <CreateCardpackModal ref="createCardpackModal" />
     <div class="max-w-4xl mx-auto mt-5">
       <div class="flex mb-2">
         <div class="flex w-full">
-          <div class="flex w-2/4 bg-indigo-700 rounded">
-            <i
-              class="ml-4 text-blue-lightest text-xl text-white text-xs fas fa-search my-auto"
-            ></i>
+          <div :class="`flex w-2/4 bg-${getTheme}-700 rounded`">
+            <i :class="`ml-4 text-${getTheme}-400 text-white text-base fas fa-search my-auto`"></i>
             <input
               type="text"
-              class="search w-full rounded pl-10 pr-3 bg-transparent bg-indigo-700 focus:outline-none cursor-pointer appearance-none text-white font-semibold text-sm"
+              :class="`search w-full rounded pl-5 pr-3 bg-transparent bg-${getTheme}-700 focus:outline-none cursor-pointer appearance-none text-white font-semibold text-sm`"
               placeholder="Search cardpacks"
               v-model="search"
             />
           </div>
           <div class="w-1/4 ml-4">
             <button
-              class="text-sm w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
+              :class="`text-sm w-full text-white bg-${getTheme}-600 hover:bg-${getTheme}-700 focus:outline-none font-semibold bg-${getTheme}-100 rounded px-5 py-3`"
               @click="$refs.createCardpackModal.toggleModal()"
             >
               <i class="fas fa-plus-circle mr-2"></i> Create cardpack
@@ -26,7 +27,7 @@
           </div>
           <div class="w-1/4 ml-4">
             <button
-              class="text-sm w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none font-semibold bg-indigo-100 rounded px-5 py-3"
+              :class="`text-sm w-full text-white bg-${getTheme}-600 hover:bg-${getTheme}-700 focus:outline-none font-semibold bg-${getTheme}-100 rounded px-5 py-3`"
               @click="$refs.createCardModal.toggleModal()"
             >
               <i class="fas fa-plus-circle mr-2"></i> Create card
@@ -36,7 +37,7 @@
       </div>
       <div
         v-if="ownCardpacks.length > 0"
-        class="my-4 font-semibold text-indigo-700"
+        :class="`my-4 font-semibold text-${getTheme}-700`"
       >
         Your own cardpacks
       </div>
@@ -51,19 +52,15 @@
           :key="index + 1"
           class="w-1/3 p-2 flex-none stacked-parent"
         >
-          <div class="border-t-10 border-indigo-600 rounded-t"></div>
+          <div :class="`border-t-10 border-${getTheme}-600 rounded-t`"></div>
 
-          <div
-            class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer"
-          >
+          <div :class="`bg-${getTheme}-500 text-white text-sm rounded-b p-4 cursor-pointer`">
             <div class="flex mb-4">
               <div class="font-semibold text-base">
                 {{ cardpack.name }}
               </div>
               <div class="flex flex-1 justify-end">
-                <div
-                  class="py-1 px-3 font-semibold text-xs bg-indigo-400 rounded"
-                >
+                <div :class="`py-1 px-3 font-semibold text-xs bg-${getTheme}-400 rounded`">
                   {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
                 </div>
               </div>
@@ -88,7 +85,7 @@
             <div class="flex items-center">
               <div>
                 <div
-                  class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
+                  :class="`text-xs font-semibold text-white px-3 inline-block py-1 bg-${getTheme}-600 hover:bg-${getTheme}-700 shadow-inner transition rounded-full mr-2 mt-1`"
                   v-for="(tag, index) in JSON.parse(cardpack.tags)"
                   :key="index"
                 >
@@ -102,7 +99,7 @@
                     (liked_packs !== null && liked_packs.includes(cardpack.id)
                       ? 'bg-pink-600 text-pink-200'
                       : '') +
-                      ' hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 rounded transition hover:text-pink-200 items-center'
+                      ` hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-${getTheme}-600 hover:bg-pink-600 rounded transition hover:text-pink-200 items-center`
                   "
                 >
                   <span class="font-semibold">{{ cardpack.likes }}</span>
@@ -114,8 +111,7 @@
             <!-- List cards TODO -->
             <button
               @click="$set(cardpack, 'open', !cardpack.open)"
-              :class="!cardpack.open ? 'rounded-lg' : 'rounded-t-lg'"
-              class="focus:outline-none hover:bg-indigo-700 mt-4 bg-indigo-600 p-3 text-xs flex justify-between w-full items-center font-semibold z-20"
+              :class="`focus:outline-none hover:bg-${getTheme}-700 mt-4 bg-${getTheme}-600 p-3 text-xs flex justify-between w-full items-center font-semibold z-20 ` + (!cardpack.open ? 'rounded-lg' : 'rounded-t-lg')"
             >
               <div>Show all cards</div>
               <div class="text-blue-lightest">
@@ -124,14 +120,15 @@
             </button>
             <transition name="list-secondary">
               <div
-                class="z-10 relative bg-indigo-700 text-xs rounded-b-lg p-3"
+                :class="`z-10 relative bg-${getTheme}-700 text-xs rounded-b-lg p-3`"
                 v-if="cardpack.open"
               >
                 <ul>
                   <li class="list-disc ml-4">
-                    <a class="no-underline hover:underline" href=""
-                      >Test card 1</a
-                    >
+                    <a
+                      class="no-underline hover:underline"
+                      href=""
+                    >Test card 1</a>
                   </li>
                 </ul>
               </div>
@@ -148,7 +145,7 @@
       </div>
       <div
         v-if="ownCardpacks.length > 0"
-        class="border-b border-indigo-100 pt-3"
+        :class="`border-b border-${getTheme}-100 pt-3`"
       ></div>
       <transition-group
         name="list"
@@ -160,11 +157,9 @@
           :key="index + 1"
           class="w-1/3 p-2 stacked-parent"
         >
-          <div class="border-t-10 border-indigo-600 rounded-t"></div>
+          <div :class="`border-t-10 border-${getTheme}-600 rounded-t`"></div>
 
-          <div
-            class="bg-indigo-500 text-white text-sm rounded-b p-4 cursor-pointer"
-          >
+          <div :class="`bg-${getTheme}-500 text-white text-sm rounded-b p-4 cursor-pointer`">
             <div class="flex mb-4">
               <div class="font-semibold text-base w-2/3">
                 {{ cardpack.name }}
@@ -177,9 +172,7 @@
                 Created by {{ cardpack.username }}
               </div>
               <div class="flex flex-1 justify-end h-6">
-                <div
-                  class="py-1 px-3 font-semibold text-xs bg-indigo-400 rounded"
-                >
+                <div :class="`py-1 px-3 font-semibold text-xs bg-${getTheme}-400 rounded`">
                   {{ cardpack.cardAmount ? cardpack.cardAmount : 0 }} cards
                 </div>
               </div>
@@ -197,7 +190,7 @@
             <div class="flex items-center">
               <div>
                 <div
-                  class="text-xs font-semibold text-white px-3 inline-block py-1 bg-indigo-600 hover:bg-indigo-700 shadow-inner transition rounded-full mr-2 mt-1"
+                  :class="`text-xs font-semibold text-white px-3 inline-block py-1 bg-${getTheme}-600 hover:bg-${getTheme}-700 shadow-inner transition rounded-full mr-2 mt-1`"
                   v-for="(tag, index) in JSON.parse(cardpack.tags)"
                   :key="index"
                 >
@@ -211,7 +204,7 @@
                     (liked_packs !== null && liked_packs.includes(cardpack.id)
                       ? 'bg-pink-600 text-pink-200'
                       : '') +
-                      ' select-none hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-indigo-600 hover:bg-pink-600 transition rounded transition hover:text-pink-200 items-center'
+                      ` select-none hover:shadow text-xs font-semibold text-white px-3 inline-block py-2 bg-${getTheme}-600 hover:bg-pink-600 transition rounded transition hover:text-pink-200 items-center`
                   "
                 >
                   <span class="font-semibold">{{ cardpack.likes }}</span>
@@ -225,7 +218,7 @@
       <div v-if="cardpacks && cardpacks.length - limit > 0 && !search">
         <div
           @click="loadMoreCardpacks()"
-          class="select-none fixed bottom-0 z-10 mb-8 cursor-pointer bg-indigo-200 text-indigo-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-indigo-300"
+          :class="`select-none fixed bottom-0 z-10 mb-8 cursor-pointer bg-${getTheme}-200 text-${getTheme}-800 shadow-lg font-semibold text-xs py-2 rounded-full px-5 border border-${getTheme}-300`"
         >
           Load
           {{ cardpacks.length - limit > 9 ? "9" : cardpacks.length - limit }}
@@ -239,6 +232,7 @@
 import CreateCardModal from '../components/modals/CreateCardModal'
 import CreateCardpackModal from '../components/modals/CreateCardpackModal'
 import AuthService from '../services/AuthService'
+import ThemeStore from '../store/ThemeStore'
 
 import axios from 'axios'
 
@@ -256,8 +250,8 @@ export default {
 
     let response = await axios.post(
       `${location.protocol}//${location.hostname}` +
-        (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
-        '/api/cardpacks',
+      (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+      '/api/cardpacks',
       [],
       {
         withCredentials: true
@@ -267,6 +261,10 @@ export default {
   },
 
   computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    },
+
     filteredCardpacks () {
       if (!this.cardpacks) return []
 
@@ -300,8 +298,8 @@ export default {
 
       let request = await axios.post(
         `${location.protocol}//${location.hostname}` +
-          (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
-          '/api/cardpacks/addlike',
+        (!process.env.DEV ? '' : ':' + process.env.SERVER_PORT) +
+        '/api/cardpacks/addlike',
         {
           currentPack: curPack.id
         },
