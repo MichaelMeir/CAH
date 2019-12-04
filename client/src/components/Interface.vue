@@ -6,6 +6,7 @@
     >
       <div class="flex items-center mr-3 align-middle">
         <div
+          v-if="$parent.$parent.$refs.navbar.user.avatar !== null"
           :style="`background-image: url(${$parent.$parent.$refs.navbar.user.username !== user ? avatar : $parent.$parent.$refs.navbar.user.avatar})`"
           class="bg-cover bg-center rounded-full h-6 w-6"
         ></div>

@@ -47,7 +47,10 @@ app.use(
           username_withcase: String,
           password: String,
           email: String,
-          avatar: { type: "text", big: true },
+          avatar: {
+            type: "text",
+            big: true
+          },
           verification: String,
           liked_packs: String,
           reset_token: String,
