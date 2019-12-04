@@ -24,6 +24,23 @@
 
         <div class="mb-3">
           <input
+            @keydown="clearError('email')"
+            :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
+            type="email"
+            placeholder="Email address"
+            autocomplete="off"
+            v-model="email"
+          />
+          <div
+            v-if="hasError('email')"
+            class="error-message"
+          >
+            {{ getError('email') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <input
             @keydown="clearError('password')"
             :class="(hasError('password') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="password"
@@ -53,23 +70,6 @@
             class="error-message"
           >
             {{ getError('password_confirmation') }}
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <input
-            @keydown="clearError('email')"
-            :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
-            type="email"
-            placeholder="Email address"
-            autocomplete="off"
-            v-model="email"
-          />
-          <div
-            v-if="hasError('email')"
-            class="error-message"
-          >
-            {{ getError('email') }}
           </div>
         </div>
 
