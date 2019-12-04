@@ -5,16 +5,9 @@ const uuidv4 = require("uuid/v4");
 
 module.exports = {
   getCardpacks: (req, res) => {
-    req.db.sync(function(err) {
+    req.db.sync(function (err) {
       if (err) {
-        response(
-          res,
-          req.body,
-          {},
-          500,
-          "Error while synchronizing database.",
-          []
-        );
+        response(res, req.body, {}, 500, "Error while synchronizing database.", []);
         return;
       }
 
@@ -35,14 +28,7 @@ module.exports = {
           // }
 
           if (err) {
-            response(
-              res,
-              req.body,
-              {},
-              500,
-              "Error while fetching cardpacks.",
-              []
-            );
+            response(res, req.body, {}, 500, "Error while fetching cardpacks.", []);
             return;
           }
 
@@ -55,17 +41,10 @@ module.exports = {
   createCardpack: (req, res) => {
     User(req, (user, err) => {
       if (err) {
-        response(
-          res,
-          req.body,
-          {},
-          500,
-          "Error while checking if user is authenticated",
-          [errors.New("", errors.code.DatabaseError, err)]
-        );
+        response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)]);
         return;
       }
-      if (user) {
+      if (user.verification === null) {
         let [success, err] = validator(req.body, {
           name: "string",
           description: "string",
@@ -73,16 +52,9 @@ module.exports = {
         });
 
         if (success) {
-          req.db.sync(function(err) {
+          req.db.sync(function (err) {
             if (err) {
-              response(
-                res,
-                req.body,
-                {},
-                500,
-                "Unexpected error while synchronizing database.",
-                [err]
-              );
+              response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [err]);
               return;
             }
 
@@ -97,14 +69,7 @@ module.exports = {
               },
               (err, result) => {
                 if (err) {
-                  response(
-                    res,
-                    req.body,
-                    {},
-                    500,
-                    "Unexpected error while requesting users from database.",
-                    [err]
-                  );
+                  response(res, req.body, {}, 500, "Unexpected error while requesting users from database.", [err]);
                   return;
                 }
 
@@ -114,15 +79,10 @@ module.exports = {
             );
           });
         } else {
-          response(
-            res,
-            req.body,
-            {},
-            400,
-            "Request did not validate to required parameters and its rules",
-            err
-          );
+          response(res, req.body, {}, 400, "Request did not validate to required parameters and its rules", err);
         }
+      } else {
+        response(res, req.body, {}, 400, "User is not validated", err);
       }
     });
   },
@@ -130,27 +90,13 @@ module.exports = {
   addLike: (req, res) => {
     User(req, (user, err) => {
       if (err) {
-        response(
-          res,
-          req.body,
-          {},
-          500,
-          "Error while checking if user is authenticated",
-          [errors.New("", errors.code.DatabaseError, err)]
-        );
+        response(res, req.body, {}, 500, "Error while checking if user is authenticated", [errors.New("", errors.code.DatabaseError, err)]);
         return;
       }
-      if (user) {
+      if (user.verification === null) {
         req.db.sync(err => {
           if (err) {
-            response(
-              res,
-              req.body,
-              {},
-              500,
-              "Unexpected error while synchronizing database.",
-              [err]
-            );
+            response(res, req.body, {}, 500, "Unexpected error while synchronizing database.", [err]);
             return;
           }
 
@@ -188,6 +134,8 @@ module.exports = {
             }
           );
         });
+      } else {
+        response(res, req.body, {}, 200, "User not validated", []);
       }
     });
   }
