@@ -163,7 +163,7 @@
             </div>
           </div>
 
-          <!-- <div class="mb-3">
+          <div class="mb-3">
             <label for="username">Theme color</label>
             <select
               v-model="theme"
@@ -177,7 +177,7 @@
                 {{ color }}
               </option>
             </select>
-          </div> -->
+          </div>
 
           <button
             @click="saveChanges()"
