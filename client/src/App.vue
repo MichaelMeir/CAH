@@ -14,6 +14,12 @@ export default {
   components: {
     Navbar,
     Toast
+  },
+
+  data () {
+    return {
+      googleKey: process.env.GOOGLE_RECAPTCHA
+    }
   }
 }
 </script>

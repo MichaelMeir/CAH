@@ -140,6 +140,10 @@ import ThemeStore from '../store/ThemeStore'
 
 export default {
   computed: {
+    isVerified () {
+      return !this.$parent.$refs.navbar.user.verification
+    },
+
     getTheme () {
       return ThemeStore.state.theme
     },
@@ -202,6 +206,11 @@ export default {
     },
 
     async createRoom () {
+      if (!this.isVerified) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'You must verify your account to perform this action.')
+        return
+      }
+
       const jwt = this.$cookies.get('jwt')
       if (!jwt) {
         this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
@@ -219,6 +228,11 @@ export default {
     },
 
     async joinRoom (roomId) {
+      if (!this.isVerified) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'You must verify your account to perform this action.')
+        return
+      }
+
       const jwt = this.$cookies.get('jwt')
       if (!jwt) {
         console.error('could not get jwt token')
