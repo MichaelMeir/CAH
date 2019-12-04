@@ -376,10 +376,12 @@ export default {
 .list-secondary-enter-active,
 .list-secondary-leave-active {
   transition: all 0.5s;
+  max-height: 200px;
 }
 .list-secondary-enter, .list-secondary-leave-to /* .list-secondary-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(-20px);
+  max-height: 0px;
 }
 
 .search {
