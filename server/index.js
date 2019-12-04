@@ -54,6 +54,7 @@ app.use(
           session_id: String,
           session_ip: String,
           expire_date: String,
+          ver_expire_date: String,
           created: Number
         });
 
