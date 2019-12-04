@@ -123,6 +123,7 @@ export default {
 
     logout () {
       AuthService.logout()
+      ThemeStore.commit('resetTheme')
     },
 
     async resendMail () {

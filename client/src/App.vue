@@ -18,7 +18,7 @@ export default {
 
   data () {
     return {
-      googleKey: process.env.GOOGLE_RECAPTCHA
+      googleKey: '6LeQ_cUUAAAAADT6b0VZeUM4Ir1krMAnVbspCC7N'
     }
   }
 }

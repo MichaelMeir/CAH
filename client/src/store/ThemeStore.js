@@ -5,9 +5,7 @@ import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  plugins: [
-    createPersistedState()
-  ],
+  plugins: [createPersistedState()],
 
   state: {
     theme: 'indigo'
@@ -16,6 +14,10 @@ const store = new Vuex.Store({
   mutations: {
     changeTheme (state, color) {
       state.theme = color
+    },
+
+    resetTheme (state) {
+      state.theme = 'indigo'
     }
   }
 })

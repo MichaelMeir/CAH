@@ -90,6 +90,19 @@
         </div>
 
         <div>
+          <vue-recaptcha
+            @verify="verifyCaptcha"
+            :sitekey="$parent.googleKey"
+          ></vue-recaptcha>
+          <div
+            v-if="hasError('captcha')"
+            class="error-message"
+          >
+            {{ getError('captcha') }}
+          </div>
+        </div>
+
+        <div>
           <button
             class="focus:outline-none w-full text-sm hover:bg-indigo-600 mt-2 bg-indigo-600 rounded py-2 px-4 font-semibold text-white"
             @click="submit()"
@@ -115,8 +128,13 @@
 </template>
 <script>
 import axios from 'axios'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
+  components: {
+    VueRecaptcha
+  },
+
   data () {
     return {
       username: null,
@@ -124,12 +142,23 @@ export default {
       password_confirmation: null,
       email: null,
       tos: false,
+      captchaVerified: false,
+      captchaToken: null,
 
       errors: []
     }
   },
 
+  watch: {
+    captchaToken () {
+      this.clearError('captcha')
+    }
+  },
+
   methods: {
+    async verifyCaptcha (token) {
+      this.captchaToken = token
+    },
     /**
      * Submits the data the user has entered and also validates the fields.
      *
@@ -140,6 +169,13 @@ export default {
         this.errors.push({
           field: 'username',
           error: 'Please fill in a username.'
+        })
+      }
+
+      if (!this.captchaToken) {
+        this.errors.push({
+          field: 'captcha',
+          error: 'Please complete the captcha.'
         })
       }
 
@@ -183,7 +219,8 @@ export default {
             username: this.username,
             email: this.email,
             password: this.password,
-            password_confirmation: this.password_confirmation
+            password_confirmation: this.password_confirmation,
+            captchaToken: this.captchaToken
           })
 
           if (request.status === 200) {
