@@ -17,14 +17,14 @@ module.exports = {
         );
         return;
       }
-      if (user) {
+      if (user.verification === null) {
         let [success, err] = validator(req.body, {
           text: "string",
           cardpacks: "arrayMax:3 arrayMin:1"
         });
 
         if (success) {
-          req.db.sync(function(err) {
+          req.db.sync(function (err) {
             if (err) {
               response(
                 res,
@@ -80,6 +80,15 @@ module.exports = {
             err
           );
         }
+      } else {
+        response(
+          res,
+          req.body,
+          {},
+          400,
+          "User is not validated",
+          err
+        );
       }
     });
   }
