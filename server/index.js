@@ -269,6 +269,14 @@ app.post("/api/cards/create", Controller("Card@createCard"));
  */
 app.post("/api/auth/avatar", Controller("Auth@saveAvatar"));
 
+/**
+ * @callback /api/auth/avatar
+ * @description Verifies the captcha token
+ *
+ * @yields {Number} JSON response made by the response method to verify the captcha
+ */
+app.post("/api/captcha", Controller("Captcha@verify"));
+
 console.log("Server listening on :" + (process.env.SERVER_PORT || 9000));
 
 app.listen(process.env.SERVER_PORT || 9000);
