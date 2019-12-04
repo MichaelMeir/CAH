@@ -92,6 +92,7 @@ module.exports = {
                         ),
                         email: req.body.email.toLowerCase(),
                         verification: uuidv4(),
+                        ver_expire_date: null,
                         reset_token: null,
                         session_id: "",
                         session_ip: "",

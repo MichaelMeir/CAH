@@ -8,7 +8,8 @@ module.exports = {
         "ping",
         "leaveRoom",
         "addMessage",
-        "updateUserList"
+        "updateUserList",
+        "startRoom"
     ],
     
     /**
@@ -67,7 +68,7 @@ module.exports = {
             if(user && rooms[roomId]) {
                 meta.user = user.uuid
                 meta.username = user.username_withcase
-                if(rooms[roomId].users.length < rooms[roomId].maxPlayers) {
+                if(rooms[roomId].users.length < rooms[roomId].settings.maximumPlayers) {
                     meta.room = roomId
                     rooms[roomId].currentPlayers += 1
                     rooms[roomId].users.push(user.uuid)
@@ -259,6 +260,42 @@ module.exports = {
                     emitMeta.methods.addMessage(username + " has been kicked!")
                 }, {room: meta.room})
             }
+            return {sent: false, error: "You're not in a room?"};
+        }, meta.db, meta.models, meta.ip)
+    },
+
+    startGame(meta, jwt) {
+        return User(jwt, function(user, err){
+            if(err || !user) {
+                return {sent: false, error: err};
+            }
+            meta.user = user.uuid
+            meta.username = user.username_withcase
+            if(meta.room != null && user.uuid == rooms[meta.room].owner) {
+                if(rooms[meta.room].currentPlayers > 1) {
+                    meta.emit((emitMeta) => {
+                        emitMeta.methods.startRoom(meta.room)
+                    }, {room: meta.room})
+                }
+            }
+            return {sent: false, error: "You're not in a room?"};
+        }, meta.db, meta.models, meta.ip)
+    },
+
+    stopGame(meta, jwt) {
+        return User(jwt, function(user, err){
+            if(err || !user) {
+                return {sent: false, error: err};
+            }
+            meta.user = user.uuid
+            meta.username = user.username_withcase
+            if(meta.room != null && user.uuid == rooms[meta.room].owner) {
+                if(rooms[meta.room].currentPlayers > 1) {
+                    meta.emit((emitMeta) => {
+                        emitMeta.methods.startRoom(meta.room)
+                    }, {room: meta.room})
+                }
+            } //userData[user.username] = user
             return {sent: false, error: "You're not in a room?"};
         }, meta.db, meta.models, meta.ip)
     }

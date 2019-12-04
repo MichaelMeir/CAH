@@ -133,9 +133,19 @@ export default {
 
         if (request.status === 200) {
           this.$refs['resendButton'].innerText = 'Check your inbox'
+          this.$parent.$refs.toast.openToast(
+            'success',
+            5,
+            'Verification mail has been sent'
+          )
           this.$refs['resendButton'].disabled = true
         }
       } catch (err) {
+        this.$parent.$refs.toast.openToast(
+          'danger',
+          5,
+          err.response.data.message
+        )
         this.$refs['resendButton'].innerText = 'Try again later'
       }
     }
