@@ -164,7 +164,7 @@ module.exports = {
                         settings: {},
                         previewPlayers: `${user.username_withcase} and 0 more...`,
                         users: [user.uuid],
-                        usernames: [user.username_withcase],
+                        usernames: [user.username_withcase],    
                     }
                     setTimeout(() => {
                         meta.methods.updateUserList(rooms[code].usernames)
