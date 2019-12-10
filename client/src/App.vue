@@ -14,6 +14,12 @@ export default {
   components: {
     Navbar,
     Toast
+  },
+
+  data () {
+    return {
+      googleKey: '6LeQ_cUUAAAAADT6b0VZeUM4Ir1krMAnVbspCC7N'
+    }
   }
 }
 </script>

@@ -69,9 +69,7 @@
             v-bind:key="index"
             v-for="(message, index) in messages"
           >
-            <div>
-              {{ message.message }}
-            </div>
+            <div v-html="message.message"></div>
             <div class="opacity-25 text-xs flex flex-1 justify-end">
               {{ message.timestamp.toLocaleTimeString(undefined, {
                 hour: '2-digit',
@@ -113,7 +111,7 @@
             <li
               v-bind:key="index"
               v-for="(user, index) in usernames"
-              :class="`bg-${getTheme}-700 px-3 py-2 m-3 rounded cursor-pointer font-semibold`"
+              :class="`bg-${getTheme}-700 m-3 rounded cursor-pointer font-semibold`"
             >
               <div>
                 <Interface :user="user" />
@@ -220,6 +218,7 @@
             <span class="text-white font-bold text-xs">Time per round (in minutes)</span>
             <input
               type="number"
+              min="0"
               :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
               v-model="settings.roundtimer"
             />
@@ -228,6 +227,7 @@
             <span class="text-white font-bold text-xs">Points to win</span>
             <input
               type="number"
+              min="0"
               :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
               v-model="settings.points"
             />
@@ -236,17 +236,18 @@
             <span class="text-white font-bold text-xs">Amount of blank cards</span>
             <input
               type="number"
+              min="0"
               :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
               v-model="settings.blankcards"
             />
           </div>
           <div class="text-black m-3">
             <div class="flex mt-5">
-              <div class="text-white font-bold text-xs">Password</div>
+              <div class="text-white font-bold text-xs">Room password</div>
               <div class="flex flex-1 justify-end">
                 <input
                   type="checkbox"
-                  :class="`form-checkbox text-${getTheme}-600 focus:shadow-none`"
+                  :class="`cursor-pointer form-checkbox text-${getTheme}-600 focus:shadow-none`"
                   v-model="settings.passwordenabled"
                 />
               </div>
@@ -254,23 +255,24 @@
             <input
               v-if="settings.passwordenabled"
               type="password"
-              :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2`"
+              :class="`focus:outline-none mt-1 text-black form-text bg-${getTheme}-700 text-sm font-semibold cursor-pointer focus:shadow-none border-none text-white rounded w-full py-2 px-2 placeholder-${getTheme}-200`"
               v-model="settings.password"
+              placeholder="Please enter a password"
             />
           </div>
-          <div class="flex mt-5 m-3">
-            <div class="text-white font-bold text-xs">Votekick</div>
+          <div class="flex mt-5 m-3 mb-6">
+            <div class="text-white font-bold text-xs">Votekick enabled</div>
             <div class="flex flex-1 justify-end">
               <input
                 type="checkbox"
-                :class="`form-checkbox text-${getTheme}-600 focus:shadow-none`"
+                :class="`cursor-pointer form-checkbox text-${getTheme}-600 focus:shadow-none`"
                 v-model="settings.votekick"
               />
             </div>
           </div>
         </ul>
-        <button class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition">
-          <i class="fas fa-flag-checkered mr-2 opacity-50" @click="startGame"></i> Start game
+        <button @click="startGame" class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition focus:outline-none">
+          <i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game
         </button>
       </div>
     </div>
@@ -360,13 +362,17 @@ export default {
 
     sendMessage () {
       if (this.message) {
+        this.message = this.stripHtml(this.message)
+
+        this.message = this.message.replace('gif', '<img style="width: 50%" src="https://media.discordapp.net/attachments/508739822932721664/545264636283453501/image0.gif">')
+
         const methods = window.socket.import(['sendMessage'])
         methods.sendMessage(this.$cookies.get('jwt'), this.message)
         this.message = ''
 
         // hacky
         setTimeout(() => {
-          var chat = this.$refs.chat
+          let chat = this.$refs.chat
           chat.scrollTop = chat.scrollHeight
         }, 110)
       }
@@ -387,6 +393,12 @@ export default {
       return true
     },
 
+    stripHtml (html) {
+      let tmp = document.createElement('DIV')
+      tmp.innerHTML = html
+      return tmp.textContent || tmp.innerText || ''
+    },
+
     addMessage (socket, message) {
       this.messages.push({
         message: message,
@@ -399,6 +411,10 @@ export default {
       if (!this.redirected) {
         this.$router.push('/')
       }
+    },
+
+    async startRoom (socket, room) {
+      this.$router.push('/room/' + room)
     }
   },
 
@@ -408,7 +424,8 @@ export default {
     window.socket.export({
       addMessage: this.addMessage,
       updateUserList: this.updateUserList,
-      leaveRoom: this.leaveRoomClient
+      leaveRoom: this.leaveRoomClient,
+      startRoom: this.startRoom
     })
 
     const response = await this.methods.checkRoom(this.$route.params.token)

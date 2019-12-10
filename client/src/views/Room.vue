@@ -2,7 +2,7 @@
   <div>
     <div class="max-w-4xl mx-auto mt-1 flex flex-1">
       <div class="w-1/3 pl-1">
-        <button class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full transition"><i class="fas fa-flag-checkered mr-2 opacity-50" @click="stopGame"></i> Stop game</button>
+        <button @click="stopGame" class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full transition"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Stop game</button>
       </div>
     </div>
   </div>
@@ -31,11 +31,19 @@ export default {
         return
       }
       methods.stopGame(jwt)
+    },
+
+    async stopRoom (socket, room) {
+      this.$router.push('/waitingroom/' + room)
     }
   },
 
   async mounted () {
     this.methods = window.socket.import(['checkRoom'])
+
+    window.socket.export({
+      stopRoom: this.stopRoom
+    })
 
     const response = await this.methods.checkRoom(this.$route.params.token)
     if (!response.room) {

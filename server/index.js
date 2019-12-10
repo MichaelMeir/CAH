@@ -47,13 +47,17 @@ app.use(
           username_withcase: String,
           password: String,
           email: String,
-          avatar: { type: "text", big: true },
+          avatar: {
+            type: "text",
+            big: true
+          },
           verification: String,
           liked_packs: String,
           reset_token: String,
           session_id: String,
           session_ip: String,
           expire_date: String,
+          ver_expire_date: String,
           created: Number
         });
 
@@ -268,6 +272,14 @@ app.post("/api/cards/create", Controller("Card@createCard"));
  * @yields {Number} JSON response made by the response method to save the avatar
  */
 app.post("/api/auth/avatar", Controller("Auth@saveAvatar"));
+
+/**
+ * @callback /api/auth/avatar
+ * @description Verifies the captcha token
+ *
+ * @yields {Number} JSON response made by the response method to verify the captcha
+ */
+app.post("/api/captcha", Controller("Captcha@verify"));
 
 console.log("Server listening on :" + (process.env.SERVER_PORT || 9000));
 
