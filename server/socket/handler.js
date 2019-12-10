@@ -9,7 +9,8 @@ module.exports = {
         "leaveRoom",
         "addMessage",
         "updateUserList",
-        "startRoom"
+        "startRoom",
+        "stopRoom"
     ],
     
     /**
@@ -277,6 +278,7 @@ module.exports = {
                         emitMeta.methods.startRoom(meta.room)
                     }, {room: meta.room})
                 }
+                return meta.room
             }
             return {sent: false, error: "You're not in a room?"};
         }, meta.db, meta.models, meta.ip)
@@ -292,9 +294,10 @@ module.exports = {
             if(meta.room != null && user.uuid == rooms[meta.room].owner) {
                 if(rooms[meta.room].currentPlayers > 1) {
                     meta.emit((emitMeta) => {
-                        emitMeta.methods.startRoom(meta.room)
+                        emitMeta.methods.stopRoom(meta.room)
                     }, {room: meta.room})
                 }
+                return meta.room
             } //userData[user.username] = user
             return {sent: false, error: "You're not in a room?"};
         }, meta.db, meta.models, meta.ip)

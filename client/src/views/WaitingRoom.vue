@@ -271,7 +271,7 @@
             </div>
           </div>
         </ul>
-        <button class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition focus:outline-none">
+        <button @click="startGame" class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition focus:outline-none">
           <i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game
         </button>
       </div>
@@ -378,6 +378,16 @@ export default {
       }
     },
 
+    async startGame () {
+      const methods = window.socket.import(['startGame'])
+      const jwt = this.$cookies.get('jwt')
+      if (!jwt) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
+        return
+      }
+      methods.startGame(jwt)
+    },
+
     updateUserList (socket, list) {
       this.usernames = list
       return true
@@ -401,6 +411,10 @@ export default {
       if (!this.redirected) {
         this.$router.push('/')
       }
+    },
+
+    async startRoom (socket, room) {
+      this.$router.push('/room/' + room)
     }
   },
 
@@ -410,7 +424,8 @@ export default {
     window.socket.export({
       addMessage: this.addMessage,
       updateUserList: this.updateUserList,
-      leaveRoom: this.leaveRoomClient
+      leaveRoom: this.leaveRoomClient,
+      startRoom: this.startRoom
     })
 
     const response = await this.methods.checkRoom(this.$route.params.token)
