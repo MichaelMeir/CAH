@@ -270,7 +270,7 @@
           </div>
         </ul>
         <button class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition">
-          <i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game
+          <i class="fas fa-flag-checkered mr-2 opacity-50" @click="startGame"></i> Start game
         </button>
       </div>
     </div>
@@ -370,6 +370,16 @@ export default {
           chat.scrollTop = chat.scrollHeight
         }, 110)
       }
+    },
+
+    async startGame () {
+      const methods = window.socket.import(['startGame'])
+      const jwt = this.$cookies.get('jwt')
+      if (!jwt) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
+        return
+      }
+      methods.startGame(jwt)
     },
 
     updateUserList (socket, list) {
