@@ -66,14 +66,14 @@
               </div>
             </div>
             <div
-              class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-blue-lightest"
+              :class="`-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-${getTheme}-lightest`"
               v-if="cardpack.user_id === user_id"
             >
               Created by you
             </div>
 
             <div
-              class="-mt-3 mb-4 font-bold text-xs uppercase tracking-wider text-blue-lightest"
+              :class="`-mt-3 mb-4 font-bold text-xs uppercase tracking-wider text-${getTheme}-lightest`"
               v-else
             >
               Created by someone else
@@ -114,7 +114,7 @@
               :class="`focus:outline-none hover:bg-${getTheme}-700 mt-4 bg-${getTheme}-600 p-3 text-xs flex justify-between w-full items-center font-semibold z-20 ` + (!cardpack.open ? 'rounded-lg' : 'rounded-t-lg')"
             >
               <div>Show all cards</div>
-              <div class="text-blue-lightest">
+              <div :class="`text-${getTheme}-lightest`">
                 {{ !cardpack.open ? "&#9660;" : "&#9650;" }}
               </div>
             </button>
@@ -178,7 +178,7 @@
               </div>
             </div>
             <div
-              class="-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-blue-lightest"
+              :class="`-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-${getTheme}-lightest`"
               v-if="cardpack.user_id === user_id"
             >
               Created by you
