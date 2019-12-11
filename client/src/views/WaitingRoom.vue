@@ -271,7 +271,10 @@
             </div>
           </div>
         </ul>
-        <button @click="startGame" class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition focus:outline-none">
+        <button
+          @click="startGame"
+          class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition focus:outline-none"
+        >
           <i class="fas fa-flag-checkered mr-2 opacity-50"></i> Start game
         </button>
       </div>
@@ -445,6 +448,17 @@ export default {
       }
     )
     this.availableCardpacks = route.data.payload
+
+    this.changeSettings()
+  },
+
+  watch: {
+    settings: {
+      handler (value) {
+        this.changeSettings()
+      },
+      deep: true
+    }
   }
 }
 </script>

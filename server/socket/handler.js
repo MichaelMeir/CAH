@@ -79,6 +79,8 @@ module.exports = {
                         meta.emit((emitMeta) => {
                             emitMeta.methods.addMessage(user.username_withcase + " joined the game room!") // chat when user joins room
                             emitMeta.methods.updateUserList(rooms[roomId].usernames)
+                        }, {
+                            room: meta.room
                         })
                     }, 100)
                     return {room: roomId}
@@ -111,6 +113,8 @@ module.exports = {
                     setTimeout(() => {
                         meta.emit((emitMeta) => {
                             emitMeta.methods.leaveRoom("The room you were in has been disbanded.")
+                        }, {
+                            room: meta.room
                         })
                     }, 100)
                     rooms[meta.room] = undefined
