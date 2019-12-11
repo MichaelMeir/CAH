@@ -15,17 +15,17 @@
           <li
             @click="redirect('/')"
             v-if="isAuthenticated"
-            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + (this.$route.path === '/' ? 'active' : '')"
           >Home</li>
           <li
             @click="redirect('/cardpacks')"
             v-if="isAuthenticated"
-            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/cardpacks' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + (this.$route.path === '/cardpacks' ? 'active' : '')"
           >Cardpacks</li>
           <li
             @click="redirect('/profile')"
             v-if="isAuthenticated"
-            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + { 'active': this.$route.path === '/profile' }"
+            :class="`cursor-pointer nav-item text-${getTheme}-200 ml-8 transition ` + (this.$route.path === '/profile' ? 'active' : '')"
           >My profile</li>
           <li
             v-if="isAuthenticated"
@@ -96,12 +96,14 @@ export default {
 
   async mounted () {
     let isAuthenticated = await AuthService.isAuthenticated()
+
     if (isAuthenticated) {
       let isVerified = await AuthService.isVerified()
       let user = await AuthService.getUser()
       this.user = user.payload.user
 
       if (!isVerified) this.isVerified = false
+
       this.isAuthenticated = true
       this.loaded = true
     } else {
@@ -121,6 +123,7 @@ export default {
 
     logout () {
       AuthService.logout()
+      ThemeStore.commit('resetTheme')
     },
 
     async resendMail () {
@@ -131,9 +134,19 @@ export default {
 
         if (request.status === 200) {
           this.$refs['resendButton'].innerText = 'Check your inbox'
+          this.$parent.$refs.toast.openToast(
+            'success',
+            5,
+            'Verification mail has been sent'
+          )
           this.$refs['resendButton'].disabled = true
         }
       } catch (err) {
+        this.$parent.$refs.toast.openToast(
+          'danger',
+          5,
+          err.response.data.message
+        )
         this.$refs['resendButton'].innerText = 'Try again later'
       }
     }

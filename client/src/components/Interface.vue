@@ -1,12 +1,13 @@
 <template>
-  <div class="relative select-none">
+  <div class="select-none">
     <div
-      class="flex items-center"
-      @click="openInterface"
+      @click="openInterface($event)"
+      class="flex items-center p-3"
     >
       <div class="flex items-center mr-3 align-middle">
         <div
-          :style="`background-image: url(${avatar})`"
+          v-if="$parent.$parent.$refs.navbar.user.avatar !== null"
+          :style="`background-image: url(${$parent.$parent.$refs.navbar.user.username !== user ? avatar : $parent.$parent.$refs.navbar.user.avatar})`"
           class="bg-cover bg-center rounded-full h-6 w-6"
         ></div>
       </div>
@@ -16,37 +17,47 @@
     </div>
     <transition name="fade">
       <div
-        class="h-20 z-20 w-full absolute cursor-default"
-        v-if="visible"
+        ref="interface"
+        class="h-20 z-20 w-1/5 absolute cursor-default"
+        v-show="visible"
       >
-        <div class="flex inline p-2 mx-2 bg-black rounded-b-none rounded">
-          <div class="flex flex-1 justify-start">
+        <div :class="`flex relative p-3 mx-2 shadow rounded-b-none rounded items-center bg-${getTheme}-900`">
+          <div>
             <div
-              :style="`background-image: url(${avatar})`"
-              class="p-6 m-1 rounded-t-full rounded-b-full bg-white bg-cover"
+              :style="`background-image: url(${$parent.$parent.$refs.navbar.user.username !== user ? avatar : $parent.$parent.$refs.navbar.user.avatar})`"
+              :class="`p-6 m-1 rounded-t-full rounded-b-full bg-${getTheme}-700 bg-cover`"
             ></div>
           </div>
-          <div class="flex flex-1 justify-center text-white ml-3 mt-1">
-            <h1 class="mr-16">{{ user }}</h1>
+          <div class="flex flex-1 text-white ml-3 mt-1">
+            <div>
+              <div>{{ user }}</div>
+              <div class="text-xs font-normal opacity-75">Created on 1th February 2016</div>
+            </div>
           </div>
-          <div class="flex flex-1 justify-end text-white mr-1">
+          <div class="absolute mt-3 mr-3 right-0 top-0 flex flex-1 justify-end text-white mr-1">
             <button
-              class="absolute text-xs font-semibold focus:outline-none"
+              class="text-xs font-semibold focus:outline-none"
               @click="closeInterface()"
             ><i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="flex flex-1 bg-white h-12 rounded mx-2 rounded-t-none flex inline">
-          <div class="flex flex-1 justify-start">
-            <button class="bg-indigo-600 py-1 mb-2 px-2 ml-2 mt-3 rounded text-xs">Add friend</button>
+        <div :class="`flex bg-white rounded mx-2 p-1 rounded-t-none shadow items-center`">
+          <div class="flex items-center my-2 mx-1">
+            <button :class="`bg-${getTheme}-600 hover:bg-${getTheme}-700 py-2 px-4 ml-1 font-semibold rounded text-xs focus:outline-none`">
+              <i class="fas fa-user-plus mr-2 opacity-50"></i> Add friend
+            </button>
             <button
               v-if="owner && ownername != user"
               @click="kickUser(user)"
-              class="bg-indigo-600 py-1 mb-2 px-2 ml-2 mt-3 rounded text-xs"
-            >Kick user</button>
+              :class="`bg-${getTheme}-600 hover:bg-${getTheme}-700 py-2 px-4 ml-2 font-semibold rounded text-xs focus:outline-none`"
+            >
+              <i class="fas fa-door-open mr-2 opacity-50"></i> Kick user
+            </button>
           </div>
-          <div class="flex flex-1 justify-end">
-            <a><i class="fas fa-ellipsis-v text-black mt-5 mr-3"></i></a>
+          <div class="flex flex-1 justify-end ml-8">
+            <div class="cursor-pointer">
+              <i :class="`transition fas fa-ellipsis-v text-${getTheme}-800 hover:text-${getTheme}-600 mr-3`"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -54,7 +65,15 @@
   </div>
 </template>
 <script>
+import ThemeStore from '../store/ThemeStore'
+
 export default {
+  computed: {
+    getTheme () {
+      return ThemeStore.state.theme
+    }
+  },
+
   data () {
     return {
       visible: false,
@@ -82,8 +101,13 @@ export default {
   },
 
   methods: {
-    openInterface () {
-      this.visible = true
+    openInterface (e) {
+      this.visible = !this.visible
+
+      if (this.visible) {
+        this.$refs.interface.style.left = `${e.clientX - 100}px`
+        this.$refs.interface.style.top = `${(e.clientY + window.scrollY) + 15}px`
+      }
     },
 
     closeInterface () {

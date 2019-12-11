@@ -20,7 +20,7 @@
           <div class="w-1/4 ml-4">
             <button
               :class="`text-sm w-full text-white bg-${getTheme}-600 hover:bg-${getTheme}-700 focus:outline-none font-semibold bg-${getTheme}-100 rounded px-5 py-3`"
-              @click="$refs.createCardpackModal.toggleModal()"
+              @click="toggleCreateCardpackModal"
             >
               <i class="fas fa-plus-circle mr-2"></i> Create cardpack
             </button>
@@ -28,7 +28,7 @@
           <div class="w-1/4 ml-4">
             <button
               :class="`text-sm w-full text-white bg-${getTheme}-600 hover:bg-${getTheme}-700 focus:outline-none font-semibold bg-${getTheme}-100 rounded px-5 py-3`"
-              @click="$refs.createCardModal.toggleModal()"
+              @click="toggleCreateCardModal"
             >
               <i class="fas fa-plus-circle mr-2"></i> Create card
             </button>
@@ -265,6 +265,10 @@ export default {
       return ThemeStore.state.theme
     },
 
+    isVerified () {
+      return !this.$parent.$refs.navbar.user.verification
+    },
+
     filteredCardpacks () {
       if (!this.cardpacks) return []
 
@@ -285,6 +289,24 @@ export default {
   },
 
   methods: {
+    toggleCreateCardpackModal () {
+      if (!this.isVerified) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'You must verify your account to perform this action.')
+        return
+      }
+
+      this.$refs.createCardpackModal.toggleModal()
+    },
+
+    toggleCreateCardModal () {
+      if (!this.isVerified) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'You must verify your account to perform this action.')
+        return
+      }
+
+      this.$refs.createCardModal.toggleModal()
+    },
+
     loadMoreCardpacks () {
       this.limit = this.limit + 9
 
@@ -292,6 +314,11 @@ export default {
     },
 
     async addLikes (id) {
+      if (!this.isVerified) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'You must verify your account to perform this action.')
+        return
+      }
+
       var curPack = this.cardpacks.find(cardpack => {
         return cardpack.id === id
       })
@@ -349,10 +376,12 @@ export default {
 .list-secondary-enter-active,
 .list-secondary-leave-active {
   transition: all 0.5s;
+  max-height: 200px;
 }
 .list-secondary-enter, .list-secondary-leave-to /* .list-secondary-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(-20px);
+  max-height: 0px;
 }
 
 .search {

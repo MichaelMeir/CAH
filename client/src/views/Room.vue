@@ -1,56 +1,67 @@
 <template>
   <div>
-    <div class="max-w-4xl mx-auto mt-5 flex">
-      <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 my-5 rounded">Leave</button>
-      <div class="flex flex-1 justify-end">
-        <button class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 my-5 rounded">Cardpacks</button>
-      </div>
-    </div>
-    <div class="max-w-4xl mx-auto mt-5 flex">
-      <div class="bg-indigo-700 text-white my-5 rounded w-1/3 pb-1 overflow-y-auto">
-        <ul
-          class=""
-          style="height: 14rem"
-        >
-          <p class="text-center pt-1">Playerlist</p>
-          <li class="bg-yellow-600 m-2 rounded">
-            <p class="mx-2">1.</p>
-          </li>
-          <li class="bg-gray-500 m-2 rounded">
-            <p class="mx-2">2.</p>
-          </li>
-          <li class="bg-yellow-800 m-2 rounded">
-            <p class="mx-2">3.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">4.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">5.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">6.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">7.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">8.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">9.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">10.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">11.</p>
-          </li>
-          <li class="bg-gray-700 m-2 rounded">
-            <p class="mx-2">12.</p>
-          </li>
-        </ul>
+    <div class="max-w-4xl mx-auto mt-1 flex flex-1">
+      <div class="w-1/3 pl-1">
+        <button @click="stopGame" class="cursor-pointer bg-indigo-700 text-center hover:bg-indigo-800 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 mt-2 w-full transition"><i class="fas fa-flag-checkered mr-2 opacity-50"></i> Stop game</button>
       </div>
     </div>
   </div>
 </template>
+<script>
+import Interface from '../components/Interface'
+
+export default {
+  components: {
+    Interface
+  },
+
+  data () {
+    return {
+      methods: {},
+      usernames: []
+    }
+  },
+
+  methods: {
+    async stopGame () {
+      const methods = window.socket.import(['stopGame'])
+      const jwt = this.$cookies.get('jwt')
+      if (!jwt) {
+        this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
+        return
+      }
+      methods.stopGame(jwt)
+    },
+
+    async stopRoom (socket, room) {
+      this.$router.push('/waitingroom/' + room)
+    }
+  },
+
+  async mounted () {
+    this.methods = window.socket.import(['checkRoom'])
+
+    window.socket.export({
+      stopRoom: this.stopRoom
+    })
+
+    const response = await this.methods.checkRoom(this.$route.params.token)
+    if (!response.room) {
+      this.$router.push('/')
+    } else {
+      this.usernames = response.usernames
+    }
+  }
+}
+// $cookies.get("jwt")
+</script>
+
+<style lang="scss" scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s;
+}
+.fade-enter, .fade-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>

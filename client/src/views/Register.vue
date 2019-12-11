@@ -24,6 +24,23 @@
 
         <div class="mb-3">
           <input
+            @keydown="clearError('email')"
+            :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
+            type="email"
+            placeholder="Email address"
+            autocomplete="off"
+            v-model="email"
+          />
+          <div
+            v-if="hasError('email')"
+            class="error-message"
+          >
+            {{ getError('email') }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <input
             @keydown="clearError('password')"
             :class="(hasError('password') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="password"
@@ -56,23 +73,6 @@
           </div>
         </div>
 
-        <div class="mb-3">
-          <input
-            @keydown="clearError('email')"
-            :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
-            type="email"
-            placeholder="Email address"
-            autocomplete="off"
-            v-model="email"
-          />
-          <div
-            v-if="hasError('email')"
-            class="error-message"
-          >
-            {{ getError('email') }}
-          </div>
-        </div>
-
         <div class="mb-4 flex items-center">
           <label :class="(hasError('tos') ? 'error-message underline' : '') + ' flex text-xs items-center cursor-pointer text-white'">
             <input
@@ -87,6 +87,19 @@
             @click="$router.push('/terms-and-conditions')"
             class="underline ml-1 text-xs text-white cursor-pointer hover:text-indigo-200"
           >terms &amp; conditions</span>
+        </div>
+
+        <div>
+          <vue-recaptcha
+            @verify="verifyCaptcha"
+            :sitekey="$parent.googleKey"
+          ></vue-recaptcha>
+          <div
+            v-if="hasError('captcha')"
+            class="error-message"
+          >
+            {{ getError('captcha') }}
+          </div>
         </div>
 
         <div>
@@ -115,8 +128,13 @@
 </template>
 <script>
 import axios from 'axios'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
+  components: {
+    VueRecaptcha
+  },
+
   data () {
     return {
       username: null,
@@ -124,12 +142,23 @@ export default {
       password_confirmation: null,
       email: null,
       tos: false,
+      captchaVerified: false,
+      captchaToken: null,
 
       errors: []
     }
   },
 
+  watch: {
+    captchaToken () {
+      this.clearError('captcha')
+    }
+  },
+
   methods: {
+    async verifyCaptcha (token) {
+      this.captchaToken = token
+    },
     /**
      * Submits the data the user has entered and also validates the fields.
      *
@@ -140,6 +169,13 @@ export default {
         this.errors.push({
           field: 'username',
           error: 'Please fill in a username.'
+        })
+      }
+
+      if (!this.captchaToken) {
+        this.errors.push({
+          field: 'captcha',
+          error: 'Please complete the captcha.'
         })
       }
 
@@ -183,7 +219,8 @@ export default {
             username: this.username,
             email: this.email,
             password: this.password,
-            password_confirmation: this.password_confirmation
+            password_confirmation: this.password_confirmation,
+            captchaToken: this.captchaToken
           })
 
           if (request.status === 200) {
