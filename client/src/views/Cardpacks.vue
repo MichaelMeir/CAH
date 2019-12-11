@@ -66,14 +66,14 @@
               </div>
             </div>
             <div
-              :class="`-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-${getTheme}-lightest`"
+              :class="`-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-${getTheme}-400`"
               v-if="cardpack.user_id === user_id"
             >
               Created by you
             </div>
 
             <div
-              :class="`-mt-3 mb-4 font-bold text-xs uppercase tracking-wider text-${getTheme}-lightest`"
+              :class="`-mt-3 mb-4 font-bold text-xs uppercase tracking-wider text-${getTheme}-400`"
               v-else
             >
               Created by someone else
@@ -178,7 +178,7 @@
               </div>
             </div>
             <div
-              :class="`-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-${getTheme}-lightest`"
+              :class="`-mt-3 mb-4 font-bold text-xxs uppercase tracking-wider text-${getTheme}-400`"
               v-if="cardpack.user_id === user_id"
             >
               Created by you
