@@ -272,6 +272,7 @@
           </div>
         </ul>
         <button
+          v-if="owner && ownername != $parent.$refs['navbar'].user.username"
           @click="startGame"
           class="cursor-pointer bg-green-600 text-center hover:bg-green-700 text-white font-bold py-3 text-sm mr-2 rounded ml-auto mr-20 w-full transition focus:outline-none"
         >
@@ -331,7 +332,9 @@ export default {
       cardpacksPopupShown: false,
 
       availableCardpacks: [],
-      selectedCardpacks: []
+      selectedCardpacks: [],
+      owner: null,
+      ownername: null
     }
   },
 
@@ -382,13 +385,15 @@ export default {
     },
 
     async startGame () {
-      const methods = window.socket.import(['startGame'])
-      const jwt = this.$cookies.get('jwt')
-      if (!jwt) {
-        this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
-        return
+      if (this.owner && this.ownername !== this.$parent.$refs['navbar'].user.username) {
+        const methods = window.socket.import(['startGame'])
+        const jwt = this.$cookies.get('jwt')
+        if (!jwt) {
+          this.$parent.$refs.toast.openToast('danger', 5, 'Could not get authentication token.')
+          return
+        }
+        methods.startGame(jwt)
       }
-      methods.startGame(jwt)
     },
 
     updateUserList (socket, list) {
@@ -422,7 +427,7 @@ export default {
   },
 
   async mounted () {
-    this.methods = window.socket.import(['checkRoom', 'sendMessage'])
+    this.methods = window.socket.import(['checkRoom', 'sendMessage', 'isOwner'])
 
     window.socket.export({
       addMessage: this.addMessage,
@@ -430,6 +435,16 @@ export default {
       leaveRoom: this.leaveRoomClient,
       startRoom: this.startRoom
     })
+
+    const jwt = this.$cookies.get('jwt')
+    if (!jwt) {
+      console.error('could not get jwt token')
+      return
+    }
+
+    let resp = await this.methods.isOwner(jwt)
+    this.owner = resp.isOwner
+    this.ownername = resp.username
 
     const response = await this.methods.checkRoom(this.$route.params.token)
     if (!response.room) {
