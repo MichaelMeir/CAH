@@ -316,7 +316,6 @@ export default {
       messages: [],
       methods: {},
       redirected: false,
-      visible: false,
       settings: {
         maximumPlayers: 2,
         roundtimer: 30,
@@ -336,14 +335,6 @@ export default {
   },
 
   methods: {
-    openInterface () {
-      this.visible = true
-    },
-
-    closeInterface () {
-      this.visible = false
-    },
-
     onredirect () {
       this.redirected = true
     },

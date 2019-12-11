@@ -100,7 +100,6 @@ export default {
   methods: {
     openInterface (e) {
       this.visible = !this.visible
-
       if (this.visible) {
         this.$refs.interface.style.left = `${e.clientX - 100}px`
         this.$refs.interface.style.top = `${(e.clientY + window.scrollY) + 15}px`
