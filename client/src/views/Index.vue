@@ -28,16 +28,12 @@
                   <div>{{ room.name }}</div>
                   <div class="flex flex-1 justify-end">
                     <i
-                      v-if="room.type === 'public'"
-                      class="text-xs mt-1 fas fa-lock-open"
-                    ></i>
-                    <i
-                      v-if="room.type === 'password'"
+                      v-if="room.settings.passwordenabled"
                       class="text-xs mt-1 fas fa-lock"
                     ></i>
                   </div>
                 </div>
-                <div>Players: <span class="float-right">{{ room.currentPlayers }}/{{ room.maxPlayers }}</span></div>
+                <div>Players: <span class="float-right">{{ room.currentPlayers }}/{{ room.settings.maximumPlayers }}</span></div>
                 <div>Spectators: <span class="float-right">{{ room.spectators }}</span></div>
                 <div>Round: <span class="float-right">{{ room.currentRound }}/{{ room.maxRounds }}</span></div>
                 <div class="text-xs mt-4">{{ room.previewPlayers }}</div>
