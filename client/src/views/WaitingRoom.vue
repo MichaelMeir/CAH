@@ -368,8 +368,7 @@ export default {
         this.message = this.stripHtml(this.message)
 
         this.message = this.message.replace('gif', '<img style="width: 50%" src="https://media.discordapp.net/attachments/508739822932721664/545264636283453501/image0.gif">')
-
-        this.message = this.message.replace('dilano', '<img style="width: 50%" src="https://cdn.discordapp.com/attachments/387714042640203776/654276332334874649/image0.jpg">')
+        this.message = this.message.replace('erdogan', '<img style="width: 50%" src="https://images-ext-2.discordapp.net/external/U4xv8JzMdkYhQg3czRPHbaNzdkaHZhoveVhUNCE2-ZM/https/media.discordapp.net/attachments/547704472646844417/595552405660237844/quality.PNG">')
 
         const methods = window.socket.import(['sendMessage'])
         methods.sendMessage(this.$cookies.get('jwt'), this.message)
