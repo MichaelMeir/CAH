@@ -46,11 +46,8 @@
             <button :class="`bg-${getTheme}-600 hover:bg-${getTheme}-700 py-2 px-4 ml-1 font-semibold rounded text-xs focus:outline-none`">
               <i class="fas fa-user-plus mr-2 opacity-50"></i> Add friend
             </button>
-            <button
-              v-if="owner && ownername != user"
-              @click="kickUser(user)"
-              :class="`bg-${getTheme}-600 hover:bg-${getTheme}-700 py-2 px-4 ml-2 font-semibold rounded text-xs focus:outline-none`"
-            >
+            <button  v-if="owner && ownername != user"
+              @click="kickUser(user)" :class="`bg-${getTheme}-600 hover:bg-${getTheme}-700 py-2 px-4 ml-1 font-semibold rounded text-xs focus:outline-none`">
               <i class="fas fa-door-open mr-2 opacity-50"></i> Kick user
             </button>
           </div>
@@ -120,7 +117,7 @@ export default {
         console.error('could not get jwt token')
         return
       }
-      let resp = this.methods.isOwner(jwt)
+      let resp = await this.methods.isOwner(jwt)
       this.owner = resp.isOwner
       this.ownername = resp.username
     },
