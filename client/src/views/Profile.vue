@@ -77,9 +77,9 @@
             <label for="username">Username</label>
             <input
               @keydown="clearError('username')"
-              :class="(hasError('username') ? 'has-error' : '') + ` text-${getTheme}-300 cursor-pointer focus:outline-none mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
+              :class="(hasError('username') ? 'has-error' : '') + ` text-${getTheme}-300 cursor-not-allowed focus:outline-none mt-1 block w-1/3 p-2 rounded border border-${getTheme}-200`"
               type="text"
-              v-model="user.username"
+              v-model="user.username_withcase"
               disabled
             >
             <small>You are not able to modify your username</small>
@@ -228,8 +228,6 @@ export default {
     return {
       theme: ThemeStore.state.theme,
       user: {
-        username: null,
-        email: null,
         avatar: null
       },
       errors: [],
