@@ -26,6 +26,7 @@
         <div class="mb-3">
           <input
             @keydown="clearErrors()"
+            @keyup.enter="submit"
             :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="text"
             placeholder="Email address"
@@ -43,6 +44,7 @@
         <div class="mb-3">
           <input
             @keydown="clearErrors()"
+            @keyup.enter="submit"
             :class="(hasError('password') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="password"
             placeholder="Password"
