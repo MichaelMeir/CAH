@@ -61,7 +61,7 @@
 
         <div class="mt-8">
           <button
-            class="focus:outline-none w-full text-sm hover:bg-indigo-600 mt-2 bg-indigo-600 rounded py-2 px-4 font-semibold text-white"
+            class="focus:outline-none w-full text-sm hover:bg-indigo-600 mt-2 bg-indigo-600 hover:bg-indigo-700 rounded py-2 px-4 font-semibold text-white"
             @click="submit()"
           >
             Login

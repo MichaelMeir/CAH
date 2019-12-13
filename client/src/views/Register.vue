@@ -7,6 +7,7 @@
       <div class="px-4 py-4 bg-indigo-800 rounded-b">
         <div class="mb-3">
           <input
+            @keyup.enter="submit"
             @keydown="clearError('username')"
             :class="(hasError('username') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="text"
@@ -24,6 +25,7 @@
 
         <div class="mb-3">
           <input
+            @keyup.enter="submit"
             @keydown="clearError('email')"
             :class="(hasError('email') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="email"
@@ -41,6 +43,7 @@
 
         <div class="mb-3">
           <input
+            @keyup.enter="submit"
             @keydown="clearError('password')"
             :class="(hasError('password') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="password"
@@ -58,6 +61,7 @@
 
         <div class="mb-3">
           <input
+            @keyup.enter="submit"
             @keydown="clearError('password_confirmation')"
             :class="(hasError('password_confirmation') ? 'has-error' : '') + ' mt-1 block w-full px-3 border border-transparent bg-indigo-700 text-white focus:outline-none py-2 text-sm rounded shadow'"
             type="password"
@@ -104,7 +108,7 @@
 
         <div>
           <button
-            class="focus:outline-none w-full text-sm hover:bg-indigo-600 mt-2 bg-indigo-600 rounded py-2 px-4 font-semibold text-white"
+            class="focus:outline-none w-full text-sm hover:bg-indigo-600 mt-2 bg-indigo-600 hover:bg-indigo-700 rounded py-2 px-4 font-semibold text-white"
             @click="submit()"
           >
             Create account
